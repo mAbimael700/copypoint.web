@@ -1,0 +1,201 @@
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    UseQueryOptions,
+    UseMutationOptions
+} from '@tanstack/react-query';
+
+import ServiceService from '../ServiceService';
+import { useAuth } from '@/stores/authStore';
+import { PageResponse } from '@/api/HttpResponse.type';
+import { Service, ServiceCreationDTO } from '../Service.type';
+import { toast } from 'sonner';
+
+// Tipos para los parámetros
+interface ServicesQueryParams {
+    storeId: number | string;
+    enabled?: boolean;
+}
+
+interface CreateServiceParams {
+    storeId: number | string;
+    data: ServiceCreationDTO;
+}
+
+// Keys para el cache de queries
+export const serviceKeys = {
+    all: ['services'] as const,
+    byStore: (storeId: number | string) => [...serviceKeys.all, 'store', storeId] as const,
+    detail: (storeId: number | string, id: number | string) =>
+        [...serviceKeys.byStore(storeId), 'detail', id] as const,
+};
+
+/**
+ * Hook para obtener todos los copypoints de una tienda
+ */
+export const useServices = (
+    params: ServicesQueryParams,
+    options?: Omit<UseQueryOptions<PageResponse<Service>>, 'queryKey' | 'queryFn'>
+) => {
+    const { accessToken, isAuthenticated } = useAuth();
+
+    return useQuery({
+        queryKey: serviceKeys.byStore(params.storeId),
+        queryFn: async (): Promise<PageResponse<Service>> => {
+            if (!accessToken) {
+                throw new Error('Token de acceso no disponible');
+            }
+            return await ServiceService.getAll(params.storeId, accessToken);
+        },
+        enabled: isAuthenticated() && !!params.storeId && (params.enabled ?? true),
+        staleTime: 5 * 60 * 1000, // 5 minutos
+        retry: (failureCount, error: any) => {
+            // No reintentar si es error de autorización
+            if (error?.response?.status === 401 || error?.response?.status === 403) {
+                return false;
+            }
+            return failureCount < 3;
+        },
+        ...options,
+    });
+};
+
+/**
+ * Hook para crear un nuevo copypoint
+ */
+export const useCreateService = (
+    options?: UseMutationOptions<Service, Error, CreateServiceParams>
+) => {
+    const queryClient = useQueryClient();
+    const { accessToken } = useAuth();
+
+    return useMutation({
+        mutationFn: async (params: CreateServiceParams): Promise<Service> => {
+            if (!accessToken) {
+                throw new Error('Token de acceso no disponible');
+            }
+            return await ServiceService.create(params.storeId, accessToken, params.data);
+        },
+        onSuccess: (data, variables) => {
+            // Invalidar y actualizar cache
+            queryClient.invalidateQueries({
+                queryKey: serviceKeys.byStore(variables.storeId)
+            });
+
+            // Opcional: Actualizar cache optimísticamente
+            queryClient.setQueryData<PageResponse<Service>>(
+                serviceKeys.byStore(variables.storeId),
+                (oldData) => {
+                    if (!oldData) return oldData;
+                    return {
+                        ...oldData,
+                        content: [data, ...oldData.content],
+                        totalElements: oldData.totalElements + 1,
+                    };
+                }
+            );
+
+            toast.success('Service created succesfully');
+        },
+        onError: (error) => {
+            console.error('Error creating service:', error);
+            toast.error('Error creating service');
+        },
+        ...options,
+    });
+};
+
+/**
+ * Hook principal que agrupa todas las funcionalidades
+ */
+export const useServiceOperations = (storeId: number | string) => {
+    const { isAuthenticated } = useAuth();
+    const queryClient = useQueryClient();
+
+    // Query para obtener copypoints
+    const servicessQuery = useServices({
+        storeId,
+        enabled: !!storeId && isAuthenticated()
+    });
+
+    // Mutation para crear
+    const createMutation = useCreateService();
+
+    // Función para refrescar datos
+    const refetch = () => {
+        return servicessQuery.refetch();
+    };
+
+    // Función para invalidar cache
+    const invalidateCache = () => {
+        queryClient.invalidateQueries({
+            queryKey: serviceKeys.byStore(storeId)
+        });
+    };
+
+    // Función para crear copypoint
+    const createService = (data: ServiceCreationDTO) => {
+        return createMutation.mutateAsync({ storeId, data });
+    };
+
+    // Estados derivados
+    const isLoading = servicessQuery.isLoading;
+    const isError = servicessQuery.isError;
+    const isSuccess = servicessQuery.isSuccess;
+    const data = servicessQuery.data;
+    const error = servicessQuery.error;
+
+    // Estados de mutación
+    const isCreating = createMutation.isPending;
+    const createError = createMutation.error;
+
+    return {
+        // Datos
+        services: data?.content || [],
+        totalElements: data?.totalElements || 0,
+        totalPages: data?.totalPages || 0,
+
+        // Estados de query
+        isLoading,
+        isError,
+        isSuccess,
+        error,
+
+        // Estados de mutación
+        isCreating,
+        createError,
+
+        // Funciones
+        createService,
+        refetch,
+        invalidateCache,
+
+        // Query original (por si necesitas acceso completo)
+        query: servicessQuery,
+        createMutation,
+    };
+};
+
+/**
+ * Hook para prefetch de copypoints (útil para optimizaciones)
+ */
+export const usePrefetchServices = () => {
+    const queryClient = useQueryClient();
+    const { accessToken } = useAuth();
+
+    const prefetchServices = async (storeId: number | string) => {
+        if (!accessToken) return;
+
+        await queryClient.prefetchQuery({
+            queryKey: serviceKeys.byStore(storeId),
+            queryFn: () => ServiceService.getAll(storeId, accessToken),
+            staleTime: 5 * 60 * 1000,
+        });
+    };
+
+    return { prefetchServices };
+};
+
+// Export por defecto del hook principal
+export default useServiceOperations;
