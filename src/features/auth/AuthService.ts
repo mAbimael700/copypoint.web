@@ -1,6 +1,6 @@
 import { LoginCredentials } from "./LoginCredentials.type";
 import { AuthUser } from "@/features/auth/AuthUser.type";
-import ApiClient from "@/config/ConfigAPI";
+import ApiHttpClient from "@/config/ApiHttpClient";
 import { SignInResponse } from "./sign-in/SignInResponse";
 
 export default class AuthService {
@@ -8,7 +8,7 @@ export default class AuthService {
 
     static async login(credentials: LoginCredentials) {
         try {
-            const response = await ApiClient.post<SignInResponse>(`${this.endpoint}/login`, credentials);
+            const response = await ApiHttpClient.post<SignInResponse>(`${this.endpoint}/login`, credentials);
             return response.data
         } catch (error) {
             console.error('Error en login:', error);
@@ -21,7 +21,7 @@ export default class AuthService {
    */
     static async getUserProfile(accessToken: string): Promise<AuthUser> {
         try {
-            const response = await ApiClient.get<AuthUser>(`${this.endpoint}/my-profile`,
+            const response = await ApiHttpClient.get<AuthUser>(`${this.endpoint}/my-profile`,
                 { headers: { 'Authorization': `Bearer ${accessToken}` } });
 
             return response.data;
@@ -45,7 +45,7 @@ export default class AuthService {
     */
     static async logout(accessToken: string): Promise<void> {
         try {
-            await ApiClient.post(
+            await ApiHttpClient.post(
                 `${this.endpoint}/logout`, {},
                 { headers: { 'Authorization': `Bearer ${accessToken}` } });
 

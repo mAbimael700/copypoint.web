@@ -52,6 +52,11 @@ export const sidebarData: SidebarData = {
               icon: ClockAlert,
               title: "Pending",
               url: "/sales"
+            },
+            {
+              icon: PlusCircledIcon,
+              title: "Register",
+              url: "/sales/new"
             }
           ]
         },

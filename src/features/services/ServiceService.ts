@@ -1,5 +1,5 @@
 import { PageResponse } from "@/api/HttpResponse.type";
-import ApiClient from "@/config/ConfigAPI";
+import ApiHttpClient from "@/config/ApiHttpClient";
 import { Service, ServiceCreationDTO } from "./Service.type";
 
 class ServiceService {
@@ -19,7 +19,7 @@ class ServiceService {
     }
 
     async getAll(storeId: number | string, accessToken: string): Promise<PageResponse<Service>> {
-        const response = await ApiClient.get<PageResponse<Service>>(
+        const response = await ApiHttpClient.get<PageResponse<Service>>(
             this.getEndpoint(storeId),
             {
                 headers: {
@@ -35,7 +35,7 @@ class ServiceService {
         accessToken: string,
         data: ServiceCreationDTO
     ): Promise<Service> {
-        const response = await ApiClient.post<Service>(
+        const response = await ApiHttpClient.post<Service>(
             this.getEndpoint(storeId),
             data,
             { headers: { Authorization: `Bearer ${accessToken}` }, }

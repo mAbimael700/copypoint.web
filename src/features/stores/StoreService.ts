@@ -1,5 +1,5 @@
 import { PageResponse } from "@/api/HttpResponse.type";
-import ApiClient from "@/config/ConfigAPI";
+import ApiHttpClient from "@/config/ApiHttpClient";
 import { StoreCreationDTO, StoreResponse } from "./Store.type";
 
 class StoreService {
@@ -16,14 +16,14 @@ class StoreService {
     }
 
     async getAll(accessToken: string): Promise<PageResponse<StoreResponse>> {
-        const response = await ApiClient.get<PageResponse<StoreResponse>>(this.endpoint,
+        const response = await ApiHttpClient.get<PageResponse<StoreResponse>>(this.endpoint,
             { headers: { 'Authorization': `Bearer ${accessToken}` } }
         );
         return response.data;
     }
 
     async create(accessToken: string, data: StoreCreationDTO) {
-        const response = await ApiClient.post<StoreResponse>(this.endpoint,
+        const response = await ApiHttpClient.post<StoreResponse>(this.endpoint,
             data,
             { headers: { 'Authorization': `Bearer ${accessToken}` } }
         );

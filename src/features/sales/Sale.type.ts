@@ -1,9 +1,10 @@
+import { PaymentMethod } from "../paymentmethod/PaymentMethod.type";
 import { UserResponse } from "../user/User.type";
 
 export interface SaleResponse {
     id: number
     userVendor: UserResponse
-    paymentMethod: { id: number, description: string }
+    paymentMethod: PaymentMethod
     total: number
     currency: CurrencyType
     status: SaleStatus

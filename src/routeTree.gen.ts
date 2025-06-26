@@ -45,6 +45,7 @@ import { Route as AuthenticatedSettingsDisplayImport } from './routes/_authentic
 import { Route as AuthenticatedSettingsAppearanceImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedCopypointsCreateImport } from './routes/_authenticated/copypoints/create'
+import { Route as AuthenticatedSalesNewIndexImport } from './routes/_authenticated/sales/new/index'
 
 // Create/Update Routes
 
@@ -264,6 +265,14 @@ const AuthenticatedCopypointsCreateRoute =
     path: '/copypoints/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+
+const AuthenticatedSalesNewIndexRoute = AuthenticatedSalesNewIndexImport.update(
+  {
+    id: '/sales/new/',
+    path: '/sales/new/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -507,6 +516,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsersIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/sales/new/': {
+      id: '/_authenticated/sales/new/'
+      path: '/sales/new'
+      fullPath: '/sales/new'
+      preLoaderRoute: typeof AuthenticatedSalesNewIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
   }
 }
 
@@ -548,6 +564,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedSalesNewIndexRoute: typeof AuthenticatedSalesNewIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -563,6 +580,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedSalesNewIndexRoute: AuthenticatedSalesNewIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -645,6 +663,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/sales/new': typeof AuthenticatedSalesNewIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -678,6 +697,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/sales/new': typeof AuthenticatedSalesNewIndexRoute
 }
 
 export interface FileRoutesById {
@@ -716,6 +736,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/sales/new/': typeof AuthenticatedSalesNewIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -754,6 +775,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/tasks'
     | '/users'
+    | '/sales/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -786,6 +808,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/sales/new'
   id:
     | '__root__'
     | '/_authenticated'
@@ -822,6 +845,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
+    | '/_authenticated/sales/new/'
   fileRoutesById: FileRoutesById
 }
 
@@ -893,7 +917,8 @@ export const routeTree = rootRoute
         "/_authenticated/sales/",
         "/_authenticated/services/",
         "/_authenticated/tasks/",
-        "/_authenticated/users/"
+        "/_authenticated/users/",
+        "/_authenticated/sales/new/"
       ]
     },
     "/clerk": {
@@ -1033,6 +1058,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/users/": {
       "filePath": "_authenticated/users/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sales/new/": {
+      "filePath": "_authenticated/sales/new/index.tsx",
       "parent": "/_authenticated"
     }
   }

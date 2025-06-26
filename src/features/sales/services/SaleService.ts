@@ -1,5 +1,5 @@
 import { PageResponse } from "@/api/HttpResponse.type";
-import ApiClient from "@/config/ConfigAPI";
+import ApiHttpClient from "@/config/ApiHttpClient";
 import { SaleCreationDTO, SaleProfileCreationDTO, SaleResponse, SaleStatus } from "../Sale.type";
 
 class SaleService {
@@ -19,7 +19,7 @@ class SaleService {
     }
 
     async getSales(copypointId: number | string, accessToken: string): Promise<PageResponse<SaleResponse>> {
-        const response = await ApiClient.get<PageResponse<SaleResponse>>(
+        const response = await ApiHttpClient.get<PageResponse<SaleResponse>>(
             this.getEndpoint(copypointId),
             { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -27,7 +27,7 @@ class SaleService {
     }
     
     async getPendingSales(copypointId: number | string, accessToken: string): Promise<PageResponse<SaleResponse>> {
-        const response = await ApiClient.get<PageResponse<SaleResponse>>(
+        const response = await ApiHttpClient.get<PageResponse<SaleResponse>>(
             this.getEndpoint(copypointId) + "/pending",
             { headers: { Authorization: `Bearer ${accessToken}` } }
         );
@@ -40,7 +40,7 @@ class SaleService {
         accessToken: string,
         data: SaleCreationDTO
     ): Promise<SaleResponse> {
-        const response = await ApiClient.post<SaleResponse>(
+        const response = await ApiHttpClient.post<SaleResponse>(
             this.getEndpoint(storeId),
             data,
             { headers: { Authorization: `Bearer ${accessToken}` }, }
@@ -48,7 +48,7 @@ class SaleService {
         return response.data;
     }
     async addProfileToSale(copypointId: number | string, saleId: number | string, accessToken: string, data: SaleProfileCreationDTO): Promise<SaleResponse> {
-        const response = await ApiClient.post<SaleResponse>(
+        const response = await ApiHttpClient.post<SaleResponse>(
             this.getEndpoint(copypointId) + saleId + '/profiles',
             data,
             { headers: { Authorization: `Bearer ${accessToken}` }, }
@@ -56,7 +56,7 @@ class SaleService {
         return response.data;
     }
     async updateSaleStatus(copypointId: number | string, saleId: number | string, accessToken: string, status: SaleStatus): Promise<SaleResponse> {
-        const response = await ApiClient.patch<SaleResponse>(
+        const response = await ApiHttpClient.patch<SaleResponse>(
             this.getEndpoint(copypointId) + saleId + '/status?status=' + status,
             { headers: { Authorization: `Bearer ${accessToken}` }, }
         );

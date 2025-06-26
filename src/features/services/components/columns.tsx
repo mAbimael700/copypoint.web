@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
-import { DataTableRowActions } from '@/features/services/components/data-table-row-actions'
+import { ServiceActions } from '@/features/services/components/service-actions'
 import { Service } from '../Service.type'
 import { Badge } from '@/components/ui/badge'
 
@@ -56,6 +56,6 @@ export const columns: ColumnDef<Service>[] = [
 
   {
     id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) => <ServiceActions service={row.original} />,
   },
 ]

@@ -1,5 +1,5 @@
 import { PageResponse } from "@/api/HttpResponse.type";
-import ApiClient from "@/config/ConfigAPI";
+import ApiHttpClient from "@/config/ApiHttpClient";
 import { CopypointResponse, CopypointCreationDTO } from "./Copypoint.type";
 
 class CopypointService {
@@ -19,7 +19,7 @@ class CopypointService {
     }
 
     async getAll(storeId: number | string, accessToken: string): Promise<PageResponse<CopypointResponse>> {
-        const response = await ApiClient.get<PageResponse<CopypointResponse>>(
+        const response = await ApiHttpClient.get<PageResponse<CopypointResponse>>(
             this.getEndpoint(storeId),
             {
                 headers: {
@@ -35,7 +35,7 @@ class CopypointService {
         accessToken: string,
         data: CopypointCreationDTO
     ): Promise<CopypointResponse> {
-        const response = await ApiClient.post<CopypointResponse>(
+        const response = await ApiHttpClient.post<CopypointResponse>(
             this.getEndpoint(storeId),
             data,
             { headers: { Authorization: `Bearer ${accessToken}` }, }

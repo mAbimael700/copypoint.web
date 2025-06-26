@@ -19,11 +19,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import { Header } from '@/components/layout/header'
+//import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
+//import { ProfileDropdown } from '@/components/profile-dropdown'
+//import { Search } from '@/components/search'
+//import { ThemeSwitch } from '@/components/theme-switch'
 import { NewChat } from './components/new-chat'
 import { type ChatUser, type Convo } from './data/chat-types'
 // Fake Data
@@ -65,13 +65,13 @@ export default function Chats() {
   return (
     <>
       {/* ===== Top Heading ===== */}
-      <Header>
+      {/* <Header>
         <Search />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
-      </Header>
+      </Header> */}
 
       <Main fixed>
         <section className='flex h-full gap-6'>
@@ -94,7 +94,7 @@ export default function Chats() {
                 </Button>
               </div>
 
-              <label className='border-input focus-within:ring-ring flex h-12 w-full items-center space-x-0 rounded-md border pl-2 focus-within:ring-1 focus-within:outline-hidden'>
+              <label className='border-input focus-within:ring-ring flex h-8 w-full items-center space-x-0 rounded-md border pl-2 focus-within:ring-1 focus-within:outline-hidden'>
                 <IconSearch size={15} className='mr-2 stroke-slate-500' />
                 <span className='sr-only'>Search</span>
                 <input
@@ -159,7 +159,7 @@ export default function Chats() {
               )}
             >
               {/* Top Part */}
-              <div className='bg-secondary mb-1 flex flex-none justify-between rounded-t-md p-4 shadow-lg'>
+              <div className=' mb-1 flex flex-none justify-between rounded-t-md p-4 shadow'>
                 {/* Left */}
                 <div className='flex gap-3'>
                   <Button
@@ -227,10 +227,10 @@ export default function Chats() {
                               <div
                                 key={`${msg.sender}-${msg.timestamp}-${index}`}
                                 className={cn(
-                                  'chat-box max-w-72 px-3 py-2 break-words shadow-lg',
+                                  'chat-box max-w-72 px-3 py-2 break-words shadow-sm border-2',
                                   msg.sender === 'You'
-                                    ? 'bg-primary/85 text-primary-foreground/75 self-end rounded-[16px_16px_0_16px]'
-                                    : 'bg-secondary self-start rounded-[16px_16px_16px_0]'
+                                    ? 'bg-primary/85 text-primary-foreground/75 self-end rounded-[16px_16px_0_16px] border-primary-foreground'
+                                    : 'bg-secondary self-start rounded-[16px_16px_16px_0] border-secondary'
                                 )}
                               >
                                 {msg.message}{' '}

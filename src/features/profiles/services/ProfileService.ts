@@ -1,5 +1,5 @@
 import { PageResponse } from "@/api/HttpResponse.type";
-import ApiClient from "@/config/ConfigAPI";
+import ApiHttpClient from "@/config/ApiHttpClient";
 import { ProfileResponse, ProfileCreationDTO } from "../Profile.type";
 
 class ProfileService {
@@ -19,7 +19,7 @@ class ProfileService {
     }
 
     async getAllByServiceId(storeId: number | string, serviceId: number | string, accessToken: string): Promise<PageResponse<ProfileResponse>> {
-        const response = await ApiClient.get<PageResponse<ProfileResponse>>(
+        const response = await ApiHttpClient.get<PageResponse<ProfileResponse>>(
             this.getEndpoint(storeId) + "?serviceId=" + serviceId,
             {
                 headers: {
@@ -35,7 +35,7 @@ class ProfileService {
         accessToken: string,
         data: ProfileCreationDTO
     ): Promise<ProfileResponse> {
-        const response = await ApiClient.post<ProfileResponse>(
+        const response = await ApiHttpClient.post<ProfileResponse>(
             this.getEndpoint(storeId),
             data,
             { headers: { Authorization: `Bearer ${accessToken}` }, }

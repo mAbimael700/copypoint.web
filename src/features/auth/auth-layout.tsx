@@ -1,10 +1,12 @@
+import { cn } from "@/lib/utils"
+
 interface Props {
   children: React.ReactNode
 }
 
 export default function AuthLayout({ children }: Props) {
   return (
-    <div className='bg-primary-foreground container grid h-svh max-w-none items-center justify-center'>
+    <div className={cn('bg-primary-foreground container grid h-svh max-w-none items-center justify-center',)} >
       <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8'>
         <div className='mb-4 flex items-center justify-center'>
           <svg
@@ -19,7 +21,7 @@ export default function AuthLayout({ children }: Props) {
           >
             <path d='M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3' />
           </svg>
-          <h1 className='text-xl font-medium'>Shadcn Admin</h1>
+          <h1 className='text-xl font-medium'>Copypoint Admin</h1>
         </div>
         {children}
       </div>
