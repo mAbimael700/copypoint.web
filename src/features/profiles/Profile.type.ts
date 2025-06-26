@@ -1,3 +1,5 @@
+import { Service } from "../services/Service.type"
+
 export interface ProfileResponse {
     id: number
     name: string
@@ -6,6 +8,7 @@ export interface ProfileResponse {
     createdAt: string
     modifiedAt: string
     status: boolean
+    services: Service[]
 }
 
 export interface ProfileCreationDTO {

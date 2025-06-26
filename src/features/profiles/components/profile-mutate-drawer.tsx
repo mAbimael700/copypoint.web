@@ -13,7 +13,7 @@ import { ProfileForm } from './profile-form'
 type Props = {
     open: boolean
     onOpenChange: (open: boolean) => void
-    profile: ProfileForm
+    profile?: ProfileForm
     onSubmit: (values: ProfileForm) => void
 }
 

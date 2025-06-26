@@ -1,19 +1,20 @@
-
-//import { useStoreContext } from '@/features/stores/storage/useStoreContext'
+import { useStoreContext } from '@/features/stores/storage/useStoreContext'
 import { useProfileModule } from '../storage/ProfileStore'
+import useProfileOperations from '../hooks/useProfiles'
 
 import { ProfileForm } from './profile-form'
 import { ProfileMutateDrawer } from './profile-mutate-drawer'
-import { showSubmittedData } from '@/utils/show-submitted-data'
 import { DeleteDialog } from '@/components/delete-dialog'
+import { showSubmittedData } from '@/utils/show-submitted-data'
 
 export function ProfileDialogs() {
+  const { activeStore } = useStoreContext()
   const { open, currentService, currentProfile, closeDialog } = useProfileModule()
-  //const { activeStore } = useStoreContext()
+  const { createProfile } = useProfileOperations(activeStore?.id || 0)
 
 
-  function saveService(values: ProfileForm) {
-    console.log(values);
+  function saveProfile(values: ProfileForm) {
+    createProfile(values)
     closeDialog()
   }
 
@@ -44,8 +45,7 @@ export function ProfileDialogs() {
         key='profile-create'
         open={open === 'create'}
         onOpenChange={handleCloseDialog}
-        profile={{ name: "" }}
-        onSubmit={saveService}
+        onSubmit={saveProfile}
       />
 
 
@@ -55,7 +55,7 @@ export function ProfileDialogs() {
             key={`profile-update-${currentProfile.id}`}
             open={open === 'update'}
             onOpenChange={handleCloseDialog}
-            profile={currentProfile}
+            profile={{ ...currentProfile, services: currentProfile.services.map(s => s.id) }}
             onSubmit={updateService}
           />
 
