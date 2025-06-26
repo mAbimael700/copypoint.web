@@ -31,6 +31,7 @@ import { Route as AuthenticatedUsersIndexImport } from './routes/_authenticated/
 import { Route as AuthenticatedTasksIndexImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedServicesIndexImport } from './routes/_authenticated/services/index'
+import { Route as AuthenticatedSalesIndexImport } from './routes/_authenticated/sales/index'
 import { Route as AuthenticatedProfilesIndexImport } from './routes/_authenticated/profiles/index'
 import { Route as AuthenticatedHelpCenterIndexImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedCopypointsIndexImport } from './routes/_authenticated/copypoints/index'
@@ -169,6 +170,12 @@ const AuthenticatedServicesIndexRoute = AuthenticatedServicesIndexImport.update(
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any,
 )
+
+const AuthenticatedSalesIndexRoute = AuthenticatedSalesIndexImport.update({
+  id: '/sales/',
+  path: '/sales/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 const AuthenticatedProfilesIndexRoute = AuthenticatedProfilesIndexImport.update(
   {
@@ -465,6 +472,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfilesIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/sales/': {
+      id: '/_authenticated/sales/'
+      path: '/sales'
+      fullPath: '/sales'
+      preLoaderRoute: typeof AuthenticatedSalesIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/services/': {
       id: '/_authenticated/services/'
       path: '/services'
@@ -530,6 +544,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCopypointsIndexRoute: typeof AuthenticatedCopypointsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedProfilesIndexRoute: typeof AuthenticatedProfilesIndexRoute
+  AuthenticatedSalesIndexRoute: typeof AuthenticatedSalesIndexRoute
   AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
@@ -544,6 +559,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCopypointsIndexRoute: AuthenticatedCopypointsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedProfilesIndexRoute: AuthenticatedProfilesIndexRoute,
+  AuthenticatedSalesIndexRoute: AuthenticatedSalesIndexRoute,
   AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
@@ -624,6 +640,7 @@ export interface FileRoutesByFullPath {
   '/copypoints': typeof AuthenticatedCopypointsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/profiles': typeof AuthenticatedProfilesIndexRoute
+  '/sales': typeof AuthenticatedSalesIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -656,6 +673,7 @@ export interface FileRoutesByTo {
   '/copypoints': typeof AuthenticatedCopypointsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/profiles': typeof AuthenticatedProfilesIndexRoute
+  '/sales': typeof AuthenticatedSalesIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
@@ -693,6 +711,7 @@ export interface FileRoutesById {
   '/_authenticated/copypoints/': typeof AuthenticatedCopypointsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/profiles/': typeof AuthenticatedProfilesIndexRoute
+  '/_authenticated/sales/': typeof AuthenticatedSalesIndexRoute
   '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
@@ -730,6 +749,7 @@ export interface FileRouteTypes {
     | '/copypoints'
     | '/help-center'
     | '/profiles'
+    | '/sales'
     | '/services'
     | '/settings/'
     | '/tasks'
@@ -761,6 +781,7 @@ export interface FileRouteTypes {
     | '/copypoints'
     | '/help-center'
     | '/profiles'
+    | '/sales'
     | '/services'
     | '/settings'
     | '/tasks'
@@ -796,6 +817,7 @@ export interface FileRouteTypes {
     | '/_authenticated/copypoints/'
     | '/_authenticated/help-center/'
     | '/_authenticated/profiles/'
+    | '/_authenticated/sales/'
     | '/_authenticated/services/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
@@ -868,6 +890,7 @@ export const routeTree = rootRoute
         "/_authenticated/copypoints/",
         "/_authenticated/help-center/",
         "/_authenticated/profiles/",
+        "/_authenticated/sales/",
         "/_authenticated/services/",
         "/_authenticated/tasks/",
         "/_authenticated/users/"
@@ -990,6 +1013,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/profiles/": {
       "filePath": "_authenticated/profiles/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sales/": {
+      "filePath": "_authenticated/sales/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/services/": {
