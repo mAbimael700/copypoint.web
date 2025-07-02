@@ -4,7 +4,7 @@ import { CopypointResponse, CopypointCreationDTO } from "./Copypoint.type";
 
 class CopypointService {
     private static instance: CopypointService;
-
+    private static readonly endpoint: "/copypoints"
     private constructor() { }
 
     public static getInstance(): CopypointService {
@@ -14,13 +14,10 @@ class CopypointService {
         return CopypointService.instance;
     }
 
-    private getEndpoint(storeId: number | string): string {
-        return `/stores/${storeId}/copypoints`;
-    }
 
-    async getAll(storeId: number | string, accessToken: string): Promise<PageResponse<CopypointResponse>> {
+    async getAllByStore(storeId: number | string, accessToken: string): Promise<PageResponse<CopypointResponse>> {
         const response = await ApiHttpClient.get<PageResponse<CopypointResponse>>(
-            this.getEndpoint(storeId),
+            `/stores/${storeId}/copypoints`,
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -36,12 +33,13 @@ class CopypointService {
         data: CopypointCreationDTO
     ): Promise<CopypointResponse> {
         const response = await ApiHttpClient.post<CopypointResponse>(
-            this.getEndpoint(storeId),
+            `/stores/${storeId}/copypoints`,
             data,
             { headers: { Authorization: `Bearer ${accessToken}` }, }
         );
         return response.data;
     }
+
 }
 
 export default CopypointService.getInstance();

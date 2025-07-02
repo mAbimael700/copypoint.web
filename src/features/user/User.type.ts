@@ -6,3 +6,5 @@ export interface UserResponse {
   personalInfo?: Person
   creationDate: Date
 }
+
+export default UserResponse

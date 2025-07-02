@@ -1,4 +1,4 @@
-import { HTMLAttributes, useState } from 'react'
+import { HTMLAttributes } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
+import { useSignUp } from '../../hooks/useSignUp'
+import { useMultiStepForm } from '../context/sign-up-context'
 
 type SignUpFormProps = HTMLAttributes<HTMLFormElement>
 
@@ -29,7 +31,7 @@ const formSchema = z
       .min(1, {
         message: 'Please enter your password',
       })
-      .min(7, {
+      .min(8, {
         message: 'Password must be at least 7 characters long',
       }),
     confirmPassword: z.string(),
@@ -39,26 +41,23 @@ const formSchema = z
     path: ['confirmPassword'],
   })
 
+
 export function SignUpForm({ className, ...props }: SignUpFormProps) {
-  const [isLoading, setIsLoading] = useState(false)
+  const { authData, updateAuthData, nextStep, canGoNext } = useMultiStepForm();
+  const signupMutation = useSignUp()
+  const { isPending } = signupMutation
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
+    defaultValues: authData,
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
-
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+    updateAuthData(data);
+    if (canGoNext()) {
+      nextStep();
+    }
   }
 
   return (
@@ -75,7 +74,12 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder='name@example.com'
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    updateAuthData({ email: e.target.value });
+                  }} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,7 +92,11 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput placeholder='********' {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    updateAuthData({ password: e.target.value });
+                  }} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,14 +109,18 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput placeholder='********' {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    updateAuthData({ confirmPassword: e.target.value });
+                  }} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className='mt-2' disabled={isLoading}>
-          Create Account
+        <Button className='mt-2' disabled={!canGoNext()}>
+          Continue
         </Button>
 
         <div className='relative my-2'>
@@ -127,7 +139,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             variant='outline'
             className='w-full'
             type='button'
-            disabled={isLoading}
+            disabled={isPending}
           >
             <IconBrandGithub className='h-4 w-4' /> GitHub
           </Button>
@@ -135,7 +147,7 @@ export function SignUpForm({ className, ...props }: SignUpFormProps) {
             variant='outline'
             className='w-full'
             type='button'
-            disabled={isLoading}
+            disabled={isPending}
           >
             <IconBrandFacebook className='h-4 w-4' /> Facebook
           </Button>

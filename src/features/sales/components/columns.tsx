@@ -72,7 +72,7 @@ export const columns: ColumnDef<SaleResponse>[] = [
                             }).format(discount)}
                         </span>
                     ) : (
-                        <span className="text-gray-400">Sin descuento</span>
+                        <span className="text-gray-400">No discount</span>
                     )}
                 </div>
             );

@@ -1,4 +1,4 @@
-import { LoginCredentials } from "./LoginCredentials.type";
+import { LoginCredentials, SignUpResponse, UserCreationDto } from "./LoginCredentials.type";
 import { AuthUser } from "@/features/auth/AuthUser.type";
 import ApiHttpClient from "@/config/ApiHttpClient";
 import { SignInResponse } from "./sign-in/SignInResponse";
@@ -8,20 +8,32 @@ export default class AuthService {
 
     static async login(credentials: LoginCredentials) {
         try {
-            const response = await ApiHttpClient.post<SignInResponse>(`${this.endpoint}/login`, credentials);
+            const response = await ApiHttpClient.post<SignInResponse>(`${this.endpoint}/sign-in`, credentials);
             return response.data
         } catch (error) {
-            console.error('Error en login:', error);
-            throw new Error('Error al iniciar sesión. Verifica tus credenciales.');
+            console.error('Sign-in error:', error);
+            throw new Error('Sign-in error. Verify your credentials.');
+        }
+
+    }
+    static async signup(data: UserCreationDto) {
+        try {
+            const response = await ApiHttpClient.post<SignUpResponse>(`${this.endpoint}/sign-up`, data);
+            return response.data
+        } catch (error) {
+            console.error('Sign-un error:', error);
+            throw new Error('Sign-un error. Verify your information.');
         }
     }
+
 
     /**
    * Obtiene el perfil del usuario autenticado
    */
     static async getUserProfile(accessToken: string): Promise<AuthUser> {
         try {
-            const response = await ApiHttpClient.get<AuthUser>(`${this.endpoint}/my-profile`,
+            const response = await ApiHttpClient.get<AuthUser>(
+                `${this.endpoint}/my-profile`,
                 { headers: { 'Authorization': `Bearer ${accessToken}` } });
 
             return response.data;

@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card'
 import AuthLayout from '../auth-layout'
 import { UserAuthForm } from './components/user-auth-form'
+import { Link } from '@tanstack/react-router'
 
 export default function SignIn() {
   return (
@@ -17,7 +18,11 @@ export default function SignIn() {
           <CardTitle className='text-lg tracking-tight'>Login</CardTitle>
           <CardDescription>
             Enter your email and password below to <br />
-            log into your account
+            log into your account. Don't have account? {" "}
+
+            <Link to='/sign-up' className='text-sm text-muted-foreground underline'>
+              Sign up
+            </Link>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -41,6 +46,8 @@ export default function SignIn() {
             </a>
             .
           </p>
+
+
         </CardFooter>
       </Card>
     </AuthLayout>

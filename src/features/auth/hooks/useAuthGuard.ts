@@ -20,6 +20,6 @@ export function useAuthGuard() {
     return {
         isAuthenticated: isAuthenticated(),
         isLoading,
-        redirectToLogin: () => router.navigate({ to: '/sign-in' })
+        redirectToLogin: () => router.navigate({ to: '/sign-in', search: { redirect: "/" } })
     }
 }

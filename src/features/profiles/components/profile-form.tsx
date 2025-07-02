@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { FormProps } from "@/components/FormProps";
-import useServiceOperations from "@/features/services/hooks/useService";
+import { useServiceByStoreOperations } from "@/features/services/hooks/useService";
 import { useStoreContext } from "@/features/stores/storage/useStoreContext";
 import { Button } from "@/components/ui/button";
 import { ServiceCommand } from "@/features/services/components/service-command";
@@ -36,7 +36,7 @@ export const ProfileForm = ({
     handleSubmit
 }: FormProps<ProfileForm>) => {
     const { activeStore } = useStoreContext()
-    const { services } = useServiceOperations(activeStore?.id || 0)
+    const { services } = useServiceByStoreOperations(activeStore?.id || 0)
 
     const form = useForm<ProfileForm>({
         resolver: zodResolver(formSchema),
@@ -100,7 +100,7 @@ export const ProfileForm = ({
                             <FormControl>
                                 <Input
                                     {...field}
-                                    
+
                                     onChange={(e) => {
                                         // Convertir a número o mantener undefined si está vacío
                                         const value = e.target.value === "" ? undefined : Number(e.target.value);

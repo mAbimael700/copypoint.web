@@ -1,4 +1,4 @@
 export interface FormProps<T> {
     defaultValues?: T
-    handleSubmit: (values: T) => void
+    handleSubmit: (values: T) => void | Promise<void>
 }

@@ -4,6 +4,7 @@ import { Separator } from "../ui/separator";
 import { Header } from "./header";
 import { Main } from "./main";
 import { Search } from "../search";
+import { cn } from "@/lib/utils";
 
 
 interface FormLayoutProps {
@@ -11,12 +12,13 @@ interface FormLayoutProps {
     header: string
     description: string
     aside?: React.ReactNode
+    className?: string
 }
 
-export default function FormLayout({ children, header, description, aside }: FormLayoutProps) {
+export default function FormLayout({ children, header, description, aside, className }: FormLayoutProps) {
 
     return (
-        <>
+        < >
             {/* ===== Top Heading ===== */}
             <Header>
                 <Search />
@@ -40,7 +42,7 @@ export default function FormLayout({ children, header, description, aside }: For
                     {aside && <aside className='top-0 lg:sticky lg:w-1/5'>
 
                     </aside>}
-                    <div className='flex w-full overflow-y-hidden p-1'>
+                    <div className={cn('flex w-full overflow-y-hidden p-1', className)}>
                         {children}
                     </div>
                 </div>

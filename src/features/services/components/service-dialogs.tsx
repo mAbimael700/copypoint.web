@@ -1,80 +1,75 @@
 
 import { useStoreContext } from '@/features/stores/storage/useStoreContext'
 import { useServiceModule } from '../context/service-module-context'
-import useServices from '../hooks/useService'
+import { useServiceByStoreOperations } from '../hooks/useService'
 import { ServiceForm } from './service-form'
 import { ServiceMutateDrawer } from './service-mutate-drawer'
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { DeleteDialog } from '@/components/delete-dialog'
 
 export function ServiceDialogs() {
-  const { open, setOpen, currentService, setCurrentService } = useServiceModule()
+  const { open, currentService, closeDialog } = useServiceModule() // Usando el store de Zustand
   const { activeStore } = useStoreContext()
-  const { createService } = useServices(activeStore?.id || 0)
-
+  const { createService } = useServiceByStoreOperations(activeStore?.id || 0)
 
   function saveService(values: ServiceForm) {
     createService(values);
+    closeDialog(); // Cerrar después de crear
   }
 
   function updateService(values: ServiceForm) {
     console.log(values);
-    
+    closeDialog(); // Cerrar después de actualizar
   }
 
+  function handleDeleteConfirm() {
+    if (currentService) {
+      showSubmittedData(
+        currentService,
+        'The following service has been deleted:'
+      )
+    }
+    closeDialog(); // Cerrar después de eliminar
+  }
 
   return (
     <>
       <ServiceMutateDrawer
         key='service-create'
         open={open === 'create'}
-        onOpenChange={() => setOpen('create')}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) closeDialog()
+        }}
         service={{ name: "" }}
         onSubmit={saveService}
       />
-
 
       {currentService && (
         <>
           <ServiceMutateDrawer
             key={`service-update-${currentService.id}`}
             open={open === 'update'}
-            onOpenChange={() => {
-              setOpen('update')
-              setTimeout(() => {
-                setCurrentService(null)
-              }, 500)
+            onOpenChange={(isOpen) => {
+              if (!isOpen) closeDialog()
             }}
             service={currentService}
             onSubmit={updateService}
           />
 
-
           <DeleteDialog
-            key='task-delete'
+            key='service-delete'
             destructive
             open={open === 'delete'}
-            onOpenChange={() => {
-              setOpen('delete')
-              setTimeout(() => {
-                setCurrentService(null)
-              }, 500)
+            onOpenChange={(isOpen) => {
+              if (!isOpen) closeDialog()
             }}
-            handleConfirm={() => {
-              setOpen(null)
-              setTimeout(() => {
-                setCurrentService(null)
-              }, 500)
-              showSubmittedData(
-                currentService,
-                'The following service has been deleted:'
-              )
-            }}
+            handleConfirm={handleDeleteConfirm}
             className='max-w-md'
-            title={`Delete this service: ${currentService.name} ?`}
+            title={`Delete this service: ${currentService.name}?`}
             desc={
               <>
-                You are about to delete service: <strong>{currentService.name}</strong> <br /> {' '}
+                You are about to delete service: <strong>{currentService.name}</strong>
+                <br />
                 This action cannot be undone.
               </>
             }

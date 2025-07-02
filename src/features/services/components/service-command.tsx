@@ -16,7 +16,7 @@ import { CheckIcon, ChevronsUpDownIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from "@/components/ui/button"
 import { useStoreContext } from "@/features/stores/storage/useStoreContext"
-import useServices from "../hooks/useService"
+import { useServiceByStoreOperations } from "../hooks/useService"
 import { useProfileModule } from "@/features/profiles/storage/ProfileStore"
 import type { Service } from "../Service.type"
 
@@ -27,10 +27,13 @@ interface Props {
 
 export const ServiceCommand = ({ handleOnClick, label = "Select profile" }: Props) => {
     const { activeStore } = useStoreContext()
-    const { services } = useServices(activeStore?.id || 0)
+    const { services } = useServiceByStoreOperations(activeStore?.id || 0)
     const { currentService } = useProfileModule()
 
     const [open, setOpen] = React.useState(false)
+
+    const visibleServices = services.slice(4)
+
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -39,7 +42,7 @@ export const ServiceCommand = ({ handleOnClick, label = "Select profile" }: Prop
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-[200px] h-8 justify-between"
+                    className={cn("w-[200px] h-8 justify-between")}
                 >
                     {label}
                     <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -51,7 +54,7 @@ export const ServiceCommand = ({ handleOnClick, label = "Select profile" }: Prop
                     <CommandList>
                         <CommandEmpty>No service found.</CommandEmpty>
                         <CommandGroup>
-                            {services.map((s) => (
+                            {visibleServices.map((s) => (
                                 <CommandItem
                                     key={s.name}
                                     value={s.name}

@@ -6,7 +6,7 @@ import {
     UseMutationOptions
 } from '@tanstack/react-query';
 
-import ServiceService from '../ServiceService';
+import ServiceService from '@/features/services/services/ServiceService';
 import { useAuth } from '@/stores/authStore';
 import { PageResponse } from '@/api/HttpResponse.type';
 import { Service, ServiceCreationDTO } from '../Service.type';
@@ -34,7 +34,7 @@ export const serviceKeys = {
 /**
  * Hook para obtener todos los copypoints de una tienda
  */
-export const useServices = (
+export const useServicesByStore = (
     params: ServicesQueryParams,
     options?: Omit<UseQueryOptions<PageResponse<Service>>, 'queryKey' | 'queryFn'>
 ) => {
@@ -46,7 +46,7 @@ export const useServices = (
             if (!accessToken) {
                 throw new Error('Token de acceso no disponible');
             }
-            return await ServiceService.getAll(params.storeId, accessToken);
+            return await ServiceService.getAllByStore(params.storeId, accessToken);
         },
         enabled: isAuthenticated() && !!params.storeId && (params.enabled ?? true),
         staleTime: 5 * 60 * 1000, // 5 minutos
@@ -109,12 +109,12 @@ export const useCreateService = (
 /**
  * Hook principal que agrupa todas las funcionalidades
  */
-export const useServiceOperations = (storeId: number | string) => {
+export const useServiceByStoreOperations = (storeId: number | string) => {
     const { isAuthenticated } = useAuth();
     const queryClient = useQueryClient();
 
     // Query para obtener copypoints
-    const servicessQuery = useServices({
+    const servicessQuery = useServicesByStore({
         storeId,
         enabled: !!storeId && isAuthenticated()
     });
@@ -180,7 +180,7 @@ export const useServiceOperations = (storeId: number | string) => {
 /**
  * Hook para prefetch de copypoints (útil para optimizaciones)
  */
-export const usePrefetchServices = () => {
+export const usePrefetchServicesByStore = () => {
     const queryClient = useQueryClient();
     const { accessToken } = useAuth();
 
@@ -189,13 +189,10 @@ export const usePrefetchServices = () => {
 
         await queryClient.prefetchQuery({
             queryKey: serviceKeys.byStore(storeId),
-            queryFn: () => ServiceService.getAll(storeId, accessToken),
+            queryFn: () => ServiceService.getAllByStore(storeId, accessToken),
             staleTime: 5 * 60 * 1000,
         });
     };
 
     return { prefetchServices };
 };
-
-// Export por defecto del hook principal
-export default useServiceOperations;

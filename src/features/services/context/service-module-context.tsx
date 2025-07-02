@@ -1,39 +1,28 @@
-import React, { useState } from 'react'
-import useDialogState from '@/hooks/use-dialog-state'
+import { create } from 'zustand'
 import { Service } from '../Service.type'
 
 type ServicesDialogType = 'create' | 'update' | 'delete'
 
-interface ServiceContextType {
+interface ServiceStore {
   open: ServicesDialogType | null
-  setOpen: (str: ServicesDialogType | null) => void
   currentService: Service | null
-  setCurrentService: React.Dispatch<React.SetStateAction<Service | null>>
+  setOpen: (dialogType: ServicesDialogType | null) => void
+  setCurrentService: (service: Service | null) => void
+  // Métodos de conveniencia
+  openCreateDialog: () => void
+  openUpdateDialog: (service: Service) => void
+  openDeleteDialog: (service: Service) => void
+  closeDialog: () => void
 }
 
-const ServiceModuleContext = React.createContext<ServiceContextType | null>(null)
-
-interface Props {
-  children: React.ReactNode
-}
-
-export default function ServiceProvider({ children }: Props) {
-  const [open, setOpen] = useDialogState<ServicesDialogType>(null)
-  const [currentService, setCurrentService] = useState<Service | null>(null)
-  return (
-    <ServiceModuleContext value={{ open, setOpen, currentService, setCurrentService }}>
-      {children}
-    </ServiceModuleContext>
-  )
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useServiceModule = () => {
-  const serviceModuleContext = React.useContext(ServiceModuleContext)
-
-  if (!serviceModuleContext) {
-    throw new Error('useTasks has to be used within <TasksContext>')
-  }
-
-  return serviceModuleContext
-}
+export const useServiceModule = create<ServiceStore>((set) => ({
+  open: null,
+  currentService: null,
+  setOpen: (dialogType) => set({ open: dialogType }),
+  setCurrentService: (service) => set({ currentService: service }),
+  // Métodos de conveniencia para facilitar el uso
+  openCreateDialog: () => set({ open: 'create', currentService: null }),
+  openUpdateDialog: (service) => set({ open: 'update', currentService: service }),
+  openDeleteDialog: (service) => set({ open: 'delete', currentService: service }),
+  closeDialog: () => set({ open: null, currentService: null }),
+}))

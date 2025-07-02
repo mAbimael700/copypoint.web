@@ -22,3 +22,5 @@ export const useStores = () => {
 
     return { getAll }
 }
+
+const useStoresContext = () => { }

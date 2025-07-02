@@ -17,6 +17,15 @@ import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
 
 export default function Dashboard() {
+
+
+  return (
+    <Main>
+      <div>
+        Working on...
+      </div>
+    </Main>
+  )
   return (
     <>
       {/* ===== Top Heading ===== */}

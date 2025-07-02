@@ -9,8 +9,22 @@ import {
 } from '@/components/ui/card'
 import AuthLayout from '../auth-layout'
 import { SignUpForm } from './components/sign-up-form'
+import { useMultiStepForm } from './context/sign-up-context';
+import { PersonalInfoStep } from './components/personal-info-form';
 
 export default function SignUp() {
+  const { currentStep, totalSteps } = useMultiStepForm();
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return <SignUpForm />;
+      case 2:
+        return <PersonalInfoStep />;
+      default:
+        return <SignUpForm />;
+    }
+  };
   return (
     <AuthLayout>
       <Card className='gap-4'>
@@ -23,6 +37,7 @@ export default function SignUp() {
             Already have an account?{' '}
             <Link
               to='/sign-in'
+              search={{ redirect: "sign-up" }}
               className='hover:text-primary underline underline-offset-4'
             >
               Sign In
@@ -30,7 +45,7 @@ export default function SignUp() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SignUpForm />
+          {renderStep()}
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>

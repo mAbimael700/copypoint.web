@@ -15,6 +15,7 @@ import { FormProps } from "@/components/FormProps";
 import { CurrencyCombobox } from "@/features/currency/components/currency-combobox";
 import { PaymentMethodsCombobox } from "@/features/paymentmethod/components/payment-method-command";
 import { PaymentMethod } from "@/features/paymentmethod/PaymentMethod.type";
+import { useHookFormNavigationGuard } from "@/hooks/use-navigation-guard";
 
 const formSchema = z.object({
     currency: z.string().length(3, 'Name is required.'),
@@ -34,17 +35,31 @@ export const SaleForm = ({
     })
 
     const handleOnSelectCurrencyCode = (ISO: string) => {
-        form.setValue("currency", ISO)
+        form.setValue("currency", ISO, { shouldDirty: true })
     }
     const handleOnSelectPaymentMethod = (paymentMethod: PaymentMethod) => {
-        form.setValue("paymentMethodId", paymentMethod.id)
+        form.setValue("paymentMethodId", paymentMethod.id, { shouldDirty: true })
+    }
+
+    const { NavigationGuardDialog, markAsSaved, hasUnsavedChanges } = useHookFormNavigationGuard(form)
+
+
+    const onSubmit = async (data: SaleForm) => {
+        try {
+            await handleSubmit(data)
+            // Marcar como guardado después del éxito
+            markAsSaved(data)
+        } catch (error) {
+            console.error('Error al guardar:', error)
+            // El formulario sigue bloqueado si hay error
+        }
     }
 
     return (
         <Form {...form}>
             <form
                 id='service-form'
-                onSubmit={form.handleSubmit(handleSubmit)}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className='flex-1 space-y-5 px-4'
             >
 
@@ -81,6 +96,13 @@ export const SaleForm = ({
                     )}
                 />
 
+                {hasUnsavedChanges && (
+                    <div className="flex items-center gap-2 text-amber-600 text-sm">
+                        <span>⚠️</span>
+                        <span>Tienes cambios sin guardar</span>
+                    </div>
+                )}
+                <NavigationGuardDialog />
             </form>
         </Form>
     )

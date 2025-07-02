@@ -5,17 +5,16 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { ServiceDialogs } from './components/service-dialogs'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
-import TasksProvider from './context/service-module-context'
-import useServices from './hooks/useService'
+import { useServiceByStoreOperations } from './hooks/useService'
 import { useStoreContext } from '../stores/storage/useStoreContext'
 import { ServiceCard } from './components/service-card'
 
 export default function Services() {
   const { activeStore } = useStoreContext()
-  const { services } = useServices(activeStore?.id || 0)
+  const { services } = useServiceByStoreOperations(activeStore?.id || 0)
 
   return (
-    <TasksProvider>
+    <>
       <Header fixed>
         <Search />
         <div className='ml-auto flex items-center space-x-4'>
@@ -41,11 +40,11 @@ export default function Services() {
               <ServiceCard service={s} key={"card" + s.id} />
             )}
           </ul>
-          
+
         </div>
       </Main>
 
       <ServiceDialogs />
-    </TasksProvider>
+    </>
   )
 }
