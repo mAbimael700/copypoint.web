@@ -3,6 +3,7 @@ import { z } from "zod"
 export const formSchema = z.object({
     profiles: z.array(z.object({
         profileId: z.number().int(),
+        serviceId: z.number().int(),
         quantity: z.number().int()
     })),
 })

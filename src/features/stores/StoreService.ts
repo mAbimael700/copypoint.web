@@ -1,4 +1,4 @@
-import { PageResponse } from "@/api/HttpResponse.type";
+import { PageResponse } from "@/features/api/HttpResponse.type";
 import ApiHttpClient from "@/config/ApiHttpClient";
 import { StoreCreationDTO, StoreResponse } from "./Store.type";
 import { Service, ServiceCreationDTO } from "../services/Service.type";

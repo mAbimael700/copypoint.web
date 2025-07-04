@@ -1,10 +1,10 @@
 import { IconPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
-import { useServiceModule } from '../context/service-module-context'
+import { useServiceContext } from '../context/service-module-context'
 
 
 export function TasksPrimaryButtons() {
-  const { setOpen } = useServiceModule()
+  const { setOpen } = useServiceContext()
   return (
     <div className='flex gap-2'>
       <Button className='space-x-1' onClick={() => setOpen('create')}>

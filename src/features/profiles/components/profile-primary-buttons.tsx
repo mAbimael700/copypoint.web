@@ -1,6 +1,6 @@
 import { IconPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
-import { useProfileModule } from '../storage/ProfileStore'
+import { useProfileModule } from '@/features/profiles/context/ProfileStore'
 
 
 export function TasksPrimaryButtons() {

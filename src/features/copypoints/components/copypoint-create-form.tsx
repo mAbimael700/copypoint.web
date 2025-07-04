@@ -1,4 +1,4 @@
-import { useStoreContext } from "@/features/stores/storage/useStoreContext";
+import { useStoreContext } from "@/features/stores/context/useStoreContext.ts";
 import { CopypointCreationDTO } from "../Copypoint.type";
 import useCopypoint from "../hooks/useCopypoint";
 import { CopypointForm, CopypointFormValues } from "./copypoint-form";
@@ -17,7 +17,6 @@ export default function CopypointCreateForm() {
   function onSubmit(values: CopypointFormValues): void {
     createCopypoint(values);
     navigate({ to: "/copypoints" })
-
   }
 
   return (

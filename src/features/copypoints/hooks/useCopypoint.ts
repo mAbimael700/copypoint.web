@@ -6,9 +6,9 @@ import {
     UseMutationOptions
 } from '@tanstack/react-query';
 
-import CopypointService from '../CopypointService';
+import CopypointService from '../service/CopypointService.ts';
 import { useAuth } from '@/stores/authStore';
-import { PageResponse } from '@/api/HttpResponse.type';
+import { PageResponse } from '@/features/api/HttpResponse.type';
 import { CopypointResponse, CopypointCreationDTO } from '../Copypoint.type';
 import { toast } from 'sonner';
 
@@ -41,12 +41,13 @@ export const useCopypoints = (
     const { accessToken, isAuthenticated } = useAuth();
 
     return useQuery({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
         queryKey: copypointKeys.byStore(params.storeId),
         queryFn: async (): Promise<PageResponse<CopypointResponse>> => {
             if (!accessToken) {
                 throw new Error('Token de acceso no disponible');
             }
-            return await CopypointService.getAll(params.storeId, accessToken);
+            return await CopypointService.getAllByStore(params.storeId, accessToken);
         },
         enabled: isAuthenticated() && !!params.storeId && (params.enabled ?? true),
         staleTime: 5 * 60 * 1000, // 5 minutos
@@ -98,8 +99,7 @@ export const useCreateCopypoint = (
 
             toast.success('Copypoint creado exitosamente');
         },
-        onError: (error) => {
-            console.error('Error creando copypoint:', error);
+        onError: () => {
             toast.error('Error al crear el copypoint');
         },
         ...options,
@@ -188,8 +188,9 @@ export const usePrefetchCopypoints = () => {
         if (!accessToken) return;
 
         await queryClient.prefetchQuery({
+          // eslint-disable-next-line @tanstack/query/exhaustive-deps
             queryKey: copypointKeys.byStore(storeId),
-            queryFn: () => CopypointService.getAll(storeId, accessToken),
+            queryFn: () => CopypointService.getAllByStore(storeId, accessToken),
             staleTime: 5 * 60 * 1000,
         });
     };

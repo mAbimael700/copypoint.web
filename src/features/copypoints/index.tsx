@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { format } from 'date-fns'
 import {
   IconAdjustmentsHorizontal,
   IconSortAscendingLetters,
   IconSortDescendingLetters,
 } from '@tabler/icons-react'
+import { Newspaper } from 'lucide-react'
+import { Badge } from '@/components/ui/badge.tsx'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -19,10 +22,9 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-
+import { CopypointResponse } from '@/features/copypoints/Copypoint.type.ts'
+import { useStoreContext } from '../stores/context/useStoreContext.ts'
 import useCopypoint from './hooks/useCopypoint'
-import { useStoreContext } from '../stores/storage/useStoreContext'
-import { Newspaper } from 'lucide-react'
 
 const appText = new Map<string, string>([
   ['all', 'All Apps'],
@@ -31,25 +33,24 @@ const appText = new Map<string, string>([
 ])
 
 export default function Copypoints() {
-
   const { activeStore } = useStoreContext()
   const { copypoints } = useCopypoint(activeStore?.id || 0)
 
   const [sort, setSort] = useState('ascending')
-  const [appType, setAppType] = useState('all')
+  const [copypointStatus, setcopypointStatus] =
+    useState<CopypointResponse['status']>('ACTIVE')
   const [searchTerm, setSearchTerm] = useState('')
-
 
   // Early return si no hay store seleccionado
   if (!activeStore) {
     return (
-      <div className="copypoints-container">
-        <div className="empty-state">
+      <div className='copypoints-container'>
+        <div className='empty-state'>
           <h2>Selecciona una tienda</h2>
           <p>Para ver los copypoints, primero selecciona una tienda activa.</p>
         </div>
       </div>
-    );
+    )
   }
 
   const filteredCopypoints = copypoints
@@ -58,14 +59,10 @@ export default function Copypoints() {
         ? a.name.localeCompare(b.name)
         : b.name.localeCompare(a.name)
     )
-    /* .filter((app) =>
-      appType === 'connected'
-        ? app.connected
-        : appType === 'notConnected'
-          ? !app.connected
-          : true
-    ) */
-    .filter((app) => app.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter((cp) => copypointStatus === cp.status)
+    .filter((copypoint) =>
+      copypoint.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
 
   return (
     <>
@@ -81,9 +78,7 @@ export default function Copypoints() {
       {/* ===== Content ===== */}
       <Main fixed>
         <div>
-          <h1 className='text-2xl font-bold tracking-tight'>
-            Copypoints
-          </h1>
+          <h1 className='text-2xl font-bold tracking-tight'>Copypoints</h1>
           <p className='text-muted-foreground'>
             Here&apos;s a list of your store's copypoints!
           </p>
@@ -96,14 +91,17 @@ export default function Copypoints() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <Select value={appType} onValueChange={setAppType}>
+            <Select
+              value={copypointStatus}
+              onValueChange={(v) => setcopypointStatus(v as CopypointResponse['status'])}
+            >
               <SelectTrigger className='w-36'>
-                <SelectValue>{appText.get(appType)}</SelectValue>
+                <SelectValue>{appText.get(copypointStatus)}</SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value='all'>All Apps</SelectItem>
-                <SelectItem value='connected'>Connected</SelectItem>
-                <SelectItem value='notConnected'>Not Connected</SelectItem>
+                <SelectItem value='ACTIVE'>Active</SelectItem>
+                <SelectItem value='INACTIVE'>Inactive</SelectItem>
+                <SelectItem value='SUSPENDED'>Suspended</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -133,27 +131,23 @@ export default function Copypoints() {
         <Separator className='shadow-sm' />
         <ul className='faded-bottom no-scrollbar grid gap-4 overflow-auto pt-4 pb-16 md:grid-cols-2 lg:grid-cols-3'>
           {filteredCopypoints.map((c) => (
-            <li
-              key={c.name}
-              className='rounded-lg border p-4 hover:shadow-md'
-            >
+            <li key={c.name} className='rounded-lg border p-4 hover:shadow-md'>
               <div className='mb-8 flex items-center justify-between'>
                 <div
                   className={`bg-muted flex size-10 items-center justify-center rounded-lg p-2`}
                 >
                   <Newspaper />
                 </div>
-                <Button
-                  variant='outline'
-                  size='sm'
-
-                >
+                <Button variant='outline' size='sm'>
                   Manage
                 </Button>
               </div>
               <div>
                 <h2 className='mb-1 font-semibold'>{c.name}</h2>
-                <p className='line-clamp-2 text-gray-500'>{c.creationDate}</p>
+                <p className='line-clamp-2 text-gray-500'>
+                  {format(new Date(c.creationDate), 'PPpp')}
+                </p>
+                <Badge className={'capitalize'}>{c.status.toLowerCase()}</Badge>
               </div>
             </li>
           ))}

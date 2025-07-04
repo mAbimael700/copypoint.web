@@ -1,10 +1,10 @@
-import { PageResponse } from "@/api/HttpResponse.type";
-import ApiHttpClient from "@/config/ApiHttpClient";
-import { CopypointResponse, CopypointCreationDTO } from "./Copypoint.type";
+import { PageResponse } from "@/features/api/HttpResponse.type.ts";
+import ApiHttpClient from "@/config/ApiHttpClient.ts";
+import { CopypointResponse, CopypointCreationDTO } from "../Copypoint.type.ts";
 
 class CopypointService {
     private static instance: CopypointService;
-    private static readonly endpoint: "/copypoints"
+    //private static readonly endpoint: "/copypoints"
     private constructor() { }
 
     public static getInstance(): CopypointService {

@@ -7,8 +7,8 @@ import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 
 //import useCopypoint from './hooks/useCopypoint'
-import { useStoreContext } from '../stores/storage/useStoreContext'
-import { DataTableSalesPending } from './components/data-table'
+import { useStoreContext } from '../stores/context/useStoreContext.ts'
+import { DataTableSalesPending } from './components/datatable/data-table.tsx'
 
 
 

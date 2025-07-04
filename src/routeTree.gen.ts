@@ -45,6 +45,8 @@ import { Route as AuthenticatedSettingsDisplayImport } from './routes/_authentic
 import { Route as AuthenticatedSettingsAppearanceImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedCopypointsCreateImport } from './routes/_authenticated/copypoints/create'
+import { Route as AuthenticatedStoresNewIndexImport } from './routes/_authenticated/stores/new/index'
+import { Route as AuthenticatedSalesProfilesIndexImport } from './routes/_authenticated/sales/profiles/index'
 import { Route as AuthenticatedSalesNewIndexImport } from './routes/_authenticated/sales/new/index'
 
 // Create/Update Routes
@@ -263,6 +265,20 @@ const AuthenticatedCopypointsCreateRoute =
   AuthenticatedCopypointsCreateImport.update({
     id: '/copypoints/create',
     path: '/copypoints/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedStoresNewIndexRoute =
+  AuthenticatedStoresNewIndexImport.update({
+    id: '/stores/new/',
+    path: '/stores/new/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedSalesProfilesIndexRoute =
+  AuthenticatedSalesProfilesIndexImport.update({
+    id: '/sales/profiles/',
+    path: '/sales/profiles/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -523,6 +539,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSalesNewIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/sales/profiles/': {
+      id: '/_authenticated/sales/profiles/'
+      path: '/sales/profiles'
+      fullPath: '/sales/profiles'
+      preLoaderRoute: typeof AuthenticatedSalesProfilesIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/stores/new/': {
+      id: '/_authenticated/stores/new/'
+      path: '/stores/new'
+      fullPath: '/stores/new'
+      preLoaderRoute: typeof AuthenticatedStoresNewIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
   }
 }
 
@@ -565,6 +595,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedSalesNewIndexRoute: typeof AuthenticatedSalesNewIndexRoute
+  AuthenticatedSalesProfilesIndexRoute: typeof AuthenticatedSalesProfilesIndexRoute
+  AuthenticatedStoresNewIndexRoute: typeof AuthenticatedStoresNewIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -581,6 +613,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedSalesNewIndexRoute: AuthenticatedSalesNewIndexRoute,
+  AuthenticatedSalesProfilesIndexRoute: AuthenticatedSalesProfilesIndexRoute,
+  AuthenticatedStoresNewIndexRoute: AuthenticatedStoresNewIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -664,6 +698,8 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/sales/new': typeof AuthenticatedSalesNewIndexRoute
+  '/sales/profiles': typeof AuthenticatedSalesProfilesIndexRoute
+  '/stores/new': typeof AuthenticatedStoresNewIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -698,6 +734,8 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/sales/new': typeof AuthenticatedSalesNewIndexRoute
+  '/sales/profiles': typeof AuthenticatedSalesProfilesIndexRoute
+  '/stores/new': typeof AuthenticatedStoresNewIndexRoute
 }
 
 export interface FileRoutesById {
@@ -737,6 +775,8 @@ export interface FileRoutesById {
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/sales/new/': typeof AuthenticatedSalesNewIndexRoute
+  '/_authenticated/sales/profiles/': typeof AuthenticatedSalesProfilesIndexRoute
+  '/_authenticated/stores/new/': typeof AuthenticatedStoresNewIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -776,6 +816,8 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/sales/new'
+    | '/sales/profiles'
+    | '/stores/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -809,6 +851,8 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/sales/new'
+    | '/sales/profiles'
+    | '/stores/new'
   id:
     | '__root__'
     | '/_authenticated'
@@ -846,6 +890,8 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
     | '/_authenticated/sales/new/'
+    | '/_authenticated/sales/profiles/'
+    | '/_authenticated/stores/new/'
   fileRoutesById: FileRoutesById
 }
 
@@ -918,7 +964,9 @@ export const routeTree = rootRoute
         "/_authenticated/services/",
         "/_authenticated/tasks/",
         "/_authenticated/users/",
-        "/_authenticated/sales/new/"
+        "/_authenticated/sales/new/",
+        "/_authenticated/sales/profiles/",
+        "/_authenticated/stores/new/"
       ]
     },
     "/clerk": {
@@ -1062,6 +1110,14 @@ export const routeTree = rootRoute
     },
     "/_authenticated/sales/new/": {
       "filePath": "_authenticated/sales/new/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sales/profiles/": {
+      "filePath": "_authenticated/sales/profiles/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/stores/new/": {
+      "filePath": "_authenticated/stores/new/index.tsx",
       "parent": "/_authenticated"
     }
   }

@@ -1,11 +1,11 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { Checkbox } from '@/components/ui/checkbox'
-import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
-import { DataTableRowActions } from '@/features/profiles/components/data-table-row-actions'
-import { ProfileResponse } from '../Profile.type'
-import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox.tsx'
+import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header.tsx'
+import { DataTableRowActions } from '@/features/profiles/components/datatable/data-table-row-actions.tsx'
+import { ProfileResponse } from '../../Profile.type.ts'
+import { Badge } from '@/components/ui/badge.tsx'
 import { format } from 'date-fns'
-import { formatCurrency } from '@/lib/utils.currency'
+import { formatCurrency } from '@/lib/utils.currency.ts'
 
 export const columns: ColumnDef<ProfileResponse>[] = [
   {

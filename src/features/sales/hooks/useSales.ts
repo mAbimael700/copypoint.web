@@ -8,8 +8,8 @@ import {
 
 import SaleService from '../services/SaleService';
 import { useAuth } from '@/stores/authStore';
-import { useCopypointModule } from '@/features/copypoints/storage/useCopypointStorage'; // Importar el hook de Zustand
-import { PageResponse } from '@/api/HttpResponse.type';
+import { useCopypointContext } from '@/features/copypoints/storage/useCopypointStorage'; // Importar el hook de Zustand
+import { PageResponse } from '@/features/api/HttpResponse.type';
 import { SaleResponse, SaleCreationDTO, SaleProfileCreationDTO, SaleStatus } from '../Sale.type';
 import { toast } from 'sonner';
 
@@ -55,12 +55,13 @@ export const useSales = (
     options?: Omit<UseQueryOptions<PageResponse<SaleResponse>>, 'queryKey' | 'queryFn'>
 ) => {
     const { accessToken, isAuthenticated } = useAuth();
-    const { currentCopypoint } = useCopypointModule();
+    const { currentCopypoint } = useCopypointContext();
 
     // Usar el copypoint del store si no se proporciona uno específico
     const copypointId = params?.copypointId || currentCopypoint?.id;
 
     return useQuery({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
         queryKey: saleKeys.byCopypoint(copypointId!),
         queryFn: async (): Promise<PageResponse<SaleResponse>> => {
             if (!accessToken) {
@@ -90,11 +91,12 @@ export const usePendingSales = (
     options?: Omit<UseQueryOptions<PageResponse<SaleResponse>>, 'queryKey' | 'queryFn'>
 ) => {
     const { accessToken, isAuthenticated } = useAuth();
-    const { currentCopypoint } = useCopypointModule();
+    const { currentCopypoint } = useCopypointContext();
 
     const copypointId = params?.copypointId || currentCopypoint?.id;
 
     return useQuery({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
         queryKey: saleKeys.pending(copypointId!),
         queryFn: async (): Promise<PageResponse<SaleResponse>> => {
             if (!accessToken) {
@@ -165,8 +167,7 @@ export const useCreateSale = (
             toast.success('Venta creada exitosamente');
         },
         onError: (error) => {
-            console.error('Error creando venta:', error);
-            toast.error('Error al crear la venta');
+            toast.error(`Error al crear la venta: ${error.message}`);
         },
         ...options,
     });
@@ -215,9 +216,8 @@ export const useAddProfileToSale = (
 
             toast.success('Perfil agregado a la venta exitosamente');
         },
-        onError: (error) => {
-            console.error('Error agregando perfil a la venta:', error);
-            toast.error('Error al agregar perfil a la venta');
+        onError: (_) => {
+            toast.error(`Error al agregar perfil a la venta`);
         },
         ...options,
     });
@@ -271,8 +271,7 @@ export const useUpdateSaleStatus = (
 
             toast.success('Estado de venta actualizado exitosamente');
         },
-        onError: (error) => {
-            console.error('Error actualizando estado de venta:', error);
+        onError: (_) => {
             toast.error('Error al actualizar estado de venta');
         },
         ...options,
@@ -284,7 +283,7 @@ export const useUpdateSaleStatus = (
  */
 export const useSalesOperations = (copypointId?: number | string) => {
     const { isAuthenticated } = useAuth();
-    const { currentCopypoint } = useCopypointModule();
+    const { currentCopypoint } = useCopypointContext();
     const queryClient = useQueryClient();
 
     // Usar el copypoint del store si no se proporciona uno específico
@@ -414,11 +413,13 @@ export const usePrefetchSales = () => {
 
         await Promise.all([
             queryClient.prefetchQuery({
+              // eslint-disable-next-line @tanstack/query/exhaustive-deps
                 queryKey: saleKeys.byCopypoint(copypointId),
                 queryFn: () => SaleService.getSales(copypointId, accessToken),
                 staleTime: 5 * 60 * 1000,
             }),
             queryClient.prefetchQuery({
+              // eslint-disable-next-line @tanstack/query/exhaustive-deps
                 queryKey: saleKeys.pending(copypointId),
                 queryFn: () => SaleService.getPendingSales(copypointId, accessToken),
                 staleTime: 2 * 60 * 1000,

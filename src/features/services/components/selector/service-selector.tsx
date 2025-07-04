@@ -1,18 +1,18 @@
-import {useServiceByStoreOperations} from '@/features/services/hooks/useService'
-import type { Service } from '@/features/services/Service.type'
-import { useStoreContext } from '@/features/stores/storage/useStoreContext'
-import { useProfileModule } from '../../profiles/storage/ProfileStore'
+import {useServiceByStoreOperations} from '@/features/services/hooks/useService.ts'
+import type { Service } from '@/features/services/Service.type.ts'
+import { useStoreContext } from '@/features/stores/context/useStoreContext.ts'
 
-import { Button } from '@/components/ui/button'
-import { ServiceCommand } from './service-command'
+import { Button } from '@/components/ui/button.tsx'
+import { ServiceCommand } from './service-command.tsx'
 import { useEffect } from 'react'
+import { useServiceContext } from '@/features/services/context/service-module-context.tsx'
 
 
 
 export const ServiceSelector = () => {
     const { activeStore } = useStoreContext()
     const { services } = useServiceByStoreOperations(activeStore?.id || 0)
-    const { currentService, setCurrentService } = useProfileModule()
+    const { currentService, setCurrentService } = useServiceContext()
 
 
     function handleOnClickBtn(service: Service, e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {

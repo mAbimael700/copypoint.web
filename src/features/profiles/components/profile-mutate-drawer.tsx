@@ -8,7 +8,7 @@ import {
     SheetHeader,
     SheetTitle,
 } from '@/components/ui/sheet'
-import { ProfileForm } from './profile-form'
+import { ProfileForm } from './form/profile-form.tsx'
 
 type Props = {
     open: boolean

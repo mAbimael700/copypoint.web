@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { ChevronsUpDown, Plus, Store } from 'lucide-react'
 import {
   DropdownMenu,
@@ -14,9 +16,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { useStores } from '../hooks/useStores'
-import { useStoreContext } from '../storage/useStoreContext'
-import { useEffect } from 'react'
+import { useStoreContext } from '@/features/stores/context/useStoreContext.ts'
+import { useStores } from '@/features/stores/hooks/useStores'
 
 export function StoreSwitcher() {
   const { isMobile } = useSidebar()
@@ -24,6 +25,7 @@ export function StoreSwitcher() {
   const { getAll } = useStores()
   const { data, isSuccess } = getAll()
   const { activeStore, setActiveStore } = useStoreContext()
+  const navigate = useNavigate()
 
   // Solo ejecutar cuando los datos cambien y no haya store activo
   useEffect(() => {
@@ -53,7 +55,9 @@ export function StoreSwitcher() {
                 <span className='truncate font-semibold'>
                   {activeStore?.name}
                 </span>
-                <span className='truncate text-xs'>{activeStore?.createdAt}</span>
+                <span className='truncate text-xs'>
+                  {activeStore?.createdAt}
+                </span>
               </div>
               <ChevronsUpDown className='ml-auto' />
             </SidebarMenuButton>
@@ -81,7 +85,12 @@ export function StoreSwitcher() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='gap-2 p-2'>
+            <DropdownMenuItem
+              className='gap-2 p-2'
+              onClick={() => {
+                navigate({ to: '/stores/new' })
+              }}
+            >
               <div className='bg-background flex size-6 items-center justify-center rounded-md border'>
                 <Plus className='size-4' />
               </div>

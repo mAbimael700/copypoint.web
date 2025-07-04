@@ -28,7 +28,6 @@ export const useCopypointStore = create<CopypointStore>((set) => ({
     setOpen: (dialogType) => set({ open: dialogType }),
     setCurrentCopypoint: (profile) => set({ currentCopypoint: profile }),
 
-
     // Acciones compuestas para mayor comodidad
     openDialog: (dialogType, copypoint) => set({
         open: dialogType,
@@ -45,7 +44,7 @@ export const useCopypointStore = create<CopypointStore>((set) => ({
 }))
 
 // Hook personalizado que mantiene la misma API que tu context original
-export const useCopypointModule = () => {
+export const useCopypointContext = () => {
     const store = useCopypointStore()
 
     return {

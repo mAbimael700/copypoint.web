@@ -1,6 +1,6 @@
 // src/features/store/useStoreContext.ts
 import { create } from 'zustand'
-import { StoreResponse } from '../Store.type'
+import { StoreResponse } from '../Store.type.ts'
 
 interface StoreState {
   activeStore: StoreResponse | null

@@ -1,18 +1,17 @@
-import { UserResponse } from "../user/User.type"
+import { UserResponse } from '../user/User.type'
 
 export type CopypointCreationDTO = {
-    name: string
+  name: string
 }
 
-export type CopypointEditDTO = {
-
-}
+export type CopypointEditDTO = {}
 
 export interface CopypointResponse {
-    id: number
-    name: string
-    responsible: UserResponse
-    createdBy: UserResponse
-    creationDate: string
-    lastModified: string
+  id: number
+  name: string
+  responsible: UserResponse
+  createdBy: UserResponse
+  creationDate: string
+  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
+  lastModified: string
 }

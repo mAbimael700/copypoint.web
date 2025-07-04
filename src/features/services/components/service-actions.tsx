@@ -10,7 +10,7 @@ import {
 
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useServiceModule } from '../context/service-module-context'
+import { useServiceContext } from '../context/service-module-context'
 import { Service } from '../Service.type'
 
 
@@ -21,7 +21,7 @@ interface DataTableRowActionsProps {
 export function ServiceActions({
   service,
 }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentService } = useServiceModule()
+  const { setOpen, setCurrentService } = useServiceContext()
 
   return (
     <DropdownMenu modal={false}>

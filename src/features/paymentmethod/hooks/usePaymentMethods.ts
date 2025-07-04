@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { PageResponse } from '@/api/HttpResponse.type';
+import { PageResponse } from '@/features/api/HttpResponse.type';
 import { PaymentMethod } from '../PaymentMethod.type';
 import PaymentMethodService from '../services/PaymentMethodService';
 

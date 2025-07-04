@@ -3,14 +3,14 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { columns } from './components/columns'
+import { columns } from './components/datatable/columns.tsx'
 import { DataTable } from '../../components/data-table/data-table'
 import { ProfileDialogs } from './components/profile-dialogs'
 import { TasksPrimaryButtons } from './components/profile-primary-buttons'
 import useProfiles from './hooks/useProfiles'
-import { useStoreContext } from '../stores/storage/useStoreContext'
+import { useStoreContext } from '../stores/context/useStoreContext.ts'
 
-import { ProfileHeader } from './components/data-table-header'
+import { ProfileHeader } from './components/datatable/data-table-header.tsx'
 
 export default function Profiles() {
   const { activeStore } = useStoreContext()

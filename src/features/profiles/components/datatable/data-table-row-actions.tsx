@@ -1,7 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
 import { IconTrash } from '@tabler/icons-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button.tsx'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,19 +10,19 @@ import {
   DropdownMenuShortcut,
 
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-
-import { SaleResponse } from '../Sale.type'
+} from '@/components/ui/dropdown-menu.tsx'
+import { useProfileModule } from '@/features/profiles/context/ProfileStore.ts'
+import { ProfileResponse } from '../../Profile.type.ts'
 
 
 interface DataTableRowActionsProps {
-  row: Row<SaleResponse>
+  row: Row<ProfileResponse>
 }
 
 export function DataTableRowActions({
   row,
 }: DataTableRowActionsProps) {
-
+  const { setOpen, setCurrentProfile } = useProfileModule()
 
   return (
     <DropdownMenu modal={false}>
@@ -36,11 +36,21 @@ export function DataTableRowActions({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[160px]'>
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            setCurrentProfile(row.original)
+            setOpen('update')
+          }}
+        >
           Edit
         </DropdownMenuItem>
 
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            setCurrentProfile(row.original)
+            setOpen('delete')
+          }}
+        >
           Delete
           <DropdownMenuShortcut>
             <IconTrash size={16} />

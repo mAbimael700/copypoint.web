@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query'
 import StoreService from '@/features/stores/StoreService'
 import { StoreResponse } from '@/features/stores/Store.type'
-import { PageResponse } from '@/api/HttpResponse.type'
+import { PageResponse } from '@/features/api/HttpResponse.type'
 import { useAuth } from '@/stores/authStore'
 
 // Puedes definir una key reutilizable para el cache

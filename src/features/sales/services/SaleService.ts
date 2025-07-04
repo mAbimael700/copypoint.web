@@ -1,4 +1,4 @@
-import { PageResponse } from "@/api/HttpResponse.type";
+import { PageResponse } from "@/features/api/HttpResponse.type";
 import ApiHttpClient from "@/config/ApiHttpClient";
 import { SaleCreationDTO, SaleProfileCreationDTO, SaleResponse, SaleStatus } from "../Sale.type";
 

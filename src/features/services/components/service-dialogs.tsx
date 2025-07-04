@@ -1,6 +1,6 @@
 
-import { useStoreContext } from '@/features/stores/storage/useStoreContext'
-import { useServiceModule } from '../context/service-module-context'
+import { useStoreContext } from '@/features/stores/context/useStoreContext.ts'
+import { useServiceContext } from '../context/service-module-context'
 import { useServiceByStoreOperations } from '../hooks/useService'
 import { ServiceForm } from './service-form'
 import { ServiceMutateDrawer } from './service-mutate-drawer'
@@ -8,7 +8,7 @@ import { showSubmittedData } from '@/utils/show-submitted-data'
 import { DeleteDialog } from '@/components/delete-dialog'
 
 export function ServiceDialogs() {
-  const { open, currentService, closeDialog } = useServiceModule() // Usando el store de Zustand
+  const { open, currentService, closeDialog } = useServiceContext() // Usando el store de Zustand
   const { activeStore } = useStoreContext()
   const { createService } = useServiceByStoreOperations(activeStore?.id || 0)
 
@@ -40,7 +40,7 @@ export function ServiceDialogs() {
         onOpenChange={(isOpen) => {
           if (!isOpen) closeDialog()
         }}
-        service={{ name: "" }}
+        service={{ name: ""}}
         onSubmit={saveService}
       />
 

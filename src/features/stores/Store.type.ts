@@ -1,4 +1,4 @@
-import {UserResponse} from "../user/User.type"
+import { UserResponse } from "../user/User.type"
 
 
 export interface Store {
@@ -9,8 +9,10 @@ export interface Store {
 
 export interface StoreCreationDTO {
     name: string
+    currency: string
 }
 
 export type StoreResponse = Store & {
     owner: UserResponse;
+    currency: string;
 };

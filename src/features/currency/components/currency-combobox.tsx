@@ -16,7 +16,6 @@ export function CurrencyCombobox({ label, value, handleOnSelect }: Props) {
     return (
         <Popover>
             <PopoverTrigger asChild>
-
                 <Button
                     variant="outline"
                     role="combobox"

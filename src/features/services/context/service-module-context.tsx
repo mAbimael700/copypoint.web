@@ -15,7 +15,7 @@ interface ServiceStore {
   closeDialog: () => void
 }
 
-export const useServiceModule = create<ServiceStore>((set) => ({
+export const useServiceContext = create<ServiceStore>((set) => ({
   open: null,
   currentService: null,
   setOpen: (dialogType) => set({ open: dialogType }),

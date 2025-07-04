@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { SaleResponse, SaleStatus } from "../Sale.type";
-import { Badge } from "@/components/ui/badge";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { SaleResponse, SaleStatus } from "../../Sale.type.ts";
+import { Badge } from "@/components/ui/badge.tsx";
+import { DataTableRowActions } from "./data-table-row-actions.tsx";
 
 export const columns: ColumnDef<SaleResponse>[] = [
     {

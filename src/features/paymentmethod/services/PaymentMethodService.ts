@@ -1,6 +1,6 @@
 
 
-import { PageResponse } from "@/api/HttpResponse.type";
+import { PageResponse } from "@/features/api/HttpResponse.type";
 import ApiClient from "@/config/ApiHttpClient";
 import { PaymentMethod } from "../PaymentMethod.type";
 

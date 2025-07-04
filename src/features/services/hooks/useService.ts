@@ -8,7 +8,7 @@ import {
 
 import ServiceService from '@/features/services/services/ServiceService';
 import { useAuth } from '@/stores/authStore';
-import { PageResponse } from '@/api/HttpResponse.type';
+import { PageResponse } from '@/features/api/HttpResponse.type';
 import { Service, ServiceCreationDTO } from '../Service.type';
 import { toast } from 'sonner';
 
@@ -16,6 +16,11 @@ import { toast } from 'sonner';
 interface ServicesQueryParams {
     storeId: number | string;
     enabled?: boolean;
+}
+
+interface ServicesByCopypointQueryParams {
+  copypointId: number | string;
+  enabled?: boolean;
 }
 
 interface CreateServiceParams {
@@ -27,12 +32,13 @@ interface CreateServiceParams {
 export const serviceKeys = {
     all: ['services'] as const,
     byStore: (storeId: number | string) => [...serviceKeys.all, 'store', storeId] as const,
+    byCopypoint: (copypointId: number | string) => [...serviceKeys.all, 'copypoint', copypointId] as const,
     detail: (storeId: number | string, id: number | string) =>
         [...serviceKeys.byStore(storeId), 'detail', id] as const,
 };
 
 /**
- * Hook para obtener todos los copypoints de una tienda
+ * Hook para obtener todos los copypoints de una tienda por storeId
  */
 export const useServicesByStore = (
     params: ServicesQueryParams,
@@ -41,6 +47,7 @@ export const useServicesByStore = (
     const { accessToken, isAuthenticated } = useAuth();
 
     return useQuery({
+      // eslint-disable-next-line @tanstack/query/exhaustive-deps
         queryKey: serviceKeys.byStore(params.storeId),
         queryFn: async (): Promise<PageResponse<Service>> => {
             if (!accessToken) {
@@ -60,6 +67,39 @@ export const useServicesByStore = (
         ...options,
     });
 };
+
+
+/**
+ * Hook para obtener todos los copypoints de una tienda por copypoint
+ */
+export const useServicesByCopypoint = (
+  params: ServicesByCopypointQueryParams,
+  options?: Omit<UseQueryOptions<PageResponse<Service>>, 'queryKey' | 'queryFn'>
+) => {
+  const { accessToken, isAuthenticated } = useAuth();
+
+  return useQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: serviceKeys.byCopypoint(params.copypointId),
+    queryFn: async (): Promise<PageResponse<Service>> => {
+      if (!accessToken) {
+        throw new Error('Token de acceso no disponible');
+      }
+      return await ServiceService.getAllByCopypoint(params.copypointId, accessToken);
+    },
+    enabled: isAuthenticated() && !!params.copypointId && (params.enabled ?? true),
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    retry: (failureCount, error: any) => {
+      // No reintentar si es error de autorización
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        return false;
+      }
+      return failureCount < 3;
+    },
+    ...options,
+  });
+};
+
 
 /**
  * Hook para crear un nuevo copypoint
@@ -99,8 +139,7 @@ export const useCreateService = (
             toast.success('Service created succesfully');
         },
         onError: (error) => {
-            console.error('Error creating service:', error);
-            toast.error('Error creating service');
+            toast.error(`Error creating service: ${error.message}`);
         },
         ...options,
     });
@@ -188,6 +227,7 @@ export const usePrefetchServicesByStore = () => {
         if (!accessToken) return;
 
         await queryClient.prefetchQuery({
+          // eslint-disable-next-line @tanstack/query/exhaustive-deps
             queryKey: serviceKeys.byStore(storeId),
             queryFn: () => ServiceService.getAllByStore(storeId, accessToken),
             staleTime: 5 * 60 * 1000,

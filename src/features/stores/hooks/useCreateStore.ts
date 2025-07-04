@@ -3,7 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import StoreService from '@/features/stores/StoreService'
 import { StoreCreationDTO, StoreResponse } from '../Store.type'
 import { useAuth } from '@/stores/authStore'
-import { useStoreContext } from '../storage/useStoreContext'
+import { useStoreContext } from '../context/useStoreContext.ts'
+import { toast } from 'sonner'
 
 export const useCreateStore = () => {
     const { accessToken } = useAuth()
@@ -26,6 +27,9 @@ export const useCreateStore = () => {
 
             // Establece la nueva tienda como activa
             setActiveStore(createdStore)
+        },
+        onError(error, _e, _) {
+            toast(`Error creating store: ${error.message}`)
         },
     })
 }

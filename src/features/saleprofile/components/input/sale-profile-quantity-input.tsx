@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button.tsx"
 import {
     Drawer,
     DrawerClose,
@@ -8,16 +8,16 @@ import {
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
-} from "@/components/ui/drawer"
+} from "@/components/ui/drawer.tsx"
 import {
     FormControl,
     FormField,
     FormItem,
     FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form.tsx"
 import { Minus, PencilLine, Plus } from "lucide-react"
 import { Control, FieldPath } from "react-hook-form"
-import { SaleProfilesFormValues } from "./sale-profile-form"
+import { SaleProfilesFormValues } from "../form/sale-profile-form.tsx"
 
 interface SaleProfileQuantityDrawerProps {
     profileId: number
@@ -67,7 +67,7 @@ export function SaleProfileQuantityDrawer({
                     <FormField
                         control={control}
                         name={fieldName}
-                        render={({ }) => (
+                        render={() => (
                             <FormItem className="p-4 pb-0">
                                 <div className="flex items-center justify-center space-x-2">
                                     <Button

@@ -6,7 +6,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import { ServiceDialogs } from './components/service-dialogs'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import { useServiceByStoreOperations } from './hooks/useService'
-import { useStoreContext } from '../stores/storage/useStoreContext'
+import { useStoreContext } from '../stores/context/useStoreContext.ts'
 import { ServiceCard } from './components/service-card'
 
 export default function Services() {
