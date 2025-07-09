@@ -1,15 +1,15 @@
+
+
 import { Separator } from '@/components/ui/separator'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { DataTableSalesPending } from './components/datatable/data-table-sale-pending.tsx'
+import { DataTablePayments } from './components/datatable/data-table-payments'
 
 
-
-export default function Sales() {
-
+const Payments = () => {
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -25,20 +25,21 @@ export default function Sales() {
       <Main fixed>
         <div>
           <h1 className='text-2xl font-bold tracking-tight'>
-            Sales
+            Payments
           </h1>
           <p className='text-muted-foreground'>
-            Here&apos;s a list of pending copypoints sales!
+            Here&apos;s a list of copypoint sale payments!
           </p>
         </div>
 
         <Separator className='shadow-sm' />
 
-
         <div className='py-4'>
-          <DataTableSalesPending />
+          <DataTablePayments />
         </div>
       </Main>
     </>
   )
 }
+
+export default Payments

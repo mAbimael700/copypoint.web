@@ -33,6 +33,7 @@ import { Route as AuthenticatedSettingsIndexImport } from './routes/_authenticat
 import { Route as AuthenticatedServicesIndexImport } from './routes/_authenticated/services/index'
 import { Route as AuthenticatedSalesIndexImport } from './routes/_authenticated/sales/index'
 import { Route as AuthenticatedProfilesIndexImport } from './routes/_authenticated/profiles/index'
+import { Route as AuthenticatedPaymentsIndexImport } from './routes/_authenticated/payments/index'
 import { Route as AuthenticatedHelpCenterIndexImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedCopypointsIndexImport } from './routes/_authenticated/copypoints/index'
 import { Route as AuthenticatedChatsIndexImport } from './routes/_authenticated/chats/index'
@@ -185,6 +186,14 @@ const AuthenticatedProfilesIndexRoute = AuthenticatedProfilesIndexImport.update(
   {
     id: '/profiles/',
     path: '/profiles/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any,
+)
+
+const AuthenticatedPaymentsIndexRoute = AuthenticatedPaymentsIndexImport.update(
+  {
+    id: '/payments/',
+    path: '/payments/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any,
 )
@@ -499,6 +508,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/payments/': {
+      id: '/_authenticated/payments/'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof AuthenticatedPaymentsIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/profiles/': {
       id: '/_authenticated/profiles/'
       path: '/profiles'
@@ -605,6 +621,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedCopypointsIndexRoute: typeof AuthenticatedCopypointsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedPaymentsIndexRoute: typeof AuthenticatedPaymentsIndexRoute
   AuthenticatedProfilesIndexRoute: typeof AuthenticatedProfilesIndexRoute
   AuthenticatedSalesIndexRoute: typeof AuthenticatedSalesIndexRoute
   AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
@@ -624,6 +641,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedCopypointsIndexRoute: AuthenticatedCopypointsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedPaymentsIndexRoute: AuthenticatedPaymentsIndexRoute,
   AuthenticatedProfilesIndexRoute: AuthenticatedProfilesIndexRoute,
   AuthenticatedSalesIndexRoute: AuthenticatedSalesIndexRoute,
   AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
@@ -709,6 +727,7 @@ export interface FileRoutesByFullPath {
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/copypoints': typeof AuthenticatedCopypointsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/payments': typeof AuthenticatedPaymentsIndexRoute
   '/profiles': typeof AuthenticatedProfilesIndexRoute
   '/sales': typeof AuthenticatedSalesIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
@@ -746,6 +765,7 @@ export interface FileRoutesByTo {
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/copypoints': typeof AuthenticatedCopypointsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/payments': typeof AuthenticatedPaymentsIndexRoute
   '/profiles': typeof AuthenticatedProfilesIndexRoute
   '/sales': typeof AuthenticatedSalesIndexRoute
   '/services': typeof AuthenticatedServicesIndexRoute
@@ -788,6 +808,7 @@ export interface FileRoutesById {
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/copypoints/': typeof AuthenticatedCopypointsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/payments/': typeof AuthenticatedPaymentsIndexRoute
   '/_authenticated/profiles/': typeof AuthenticatedProfilesIndexRoute
   '/_authenticated/sales/': typeof AuthenticatedSalesIndexRoute
   '/_authenticated/services/': typeof AuthenticatedServicesIndexRoute
@@ -830,6 +851,7 @@ export interface FileRouteTypes {
     | '/chats'
     | '/copypoints'
     | '/help-center'
+    | '/payments'
     | '/profiles'
     | '/sales'
     | '/services'
@@ -866,6 +888,7 @@ export interface FileRouteTypes {
     | '/chats'
     | '/copypoints'
     | '/help-center'
+    | '/payments'
     | '/profiles'
     | '/sales'
     | '/services'
@@ -906,6 +929,7 @@ export interface FileRouteTypes {
     | '/_authenticated/chats/'
     | '/_authenticated/copypoints/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/payments/'
     | '/_authenticated/profiles/'
     | '/_authenticated/sales/'
     | '/_authenticated/services/'
@@ -983,6 +1007,7 @@ export const routeTree = rootRoute
         "/_authenticated/chats/",
         "/_authenticated/copypoints/",
         "/_authenticated/help-center/",
+        "/_authenticated/payments/",
         "/_authenticated/profiles/",
         "/_authenticated/sales/",
         "/_authenticated/services/",
@@ -1107,6 +1132,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/help-center/": {
       "filePath": "_authenticated/help-center/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/payments/": {
+      "filePath": "_authenticated/payments/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/profiles/": {
