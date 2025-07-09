@@ -8,7 +8,7 @@ import { ThemeSwitch } from '@/components/theme-switch'
 
 //import useCopypoint from './hooks/useCopypoint'
 import { useStoreContext } from '../stores/context/useStoreContext.ts'
-import { DataTableSalesPending } from './components/datatable/data-table.tsx'
+import { DataTableSalesPending } from './components/datatable/data-table-sale-pending.tsx'
 
 
 
@@ -47,7 +47,7 @@ export default function Sales() {
             Sales
           </h1>
           <p className='text-muted-foreground'>
-            Here&apos;s a list of pending store's copypoints sales!
+            Here&apos;s a list of pending copypoints sales!
           </p>
         </div>
 

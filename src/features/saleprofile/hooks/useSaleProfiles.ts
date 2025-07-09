@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { useAuth } from '@/stores/authStore.ts'
 import { PageResponse } from '@/features/api/HttpResponse.type.ts'
-import { useCopypointContext } from '@/features/copypoints/storage/useCopypointStorage.ts'
+import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext.ts'
 import { SaleProfileResponse } from '@/features/saleprofile/SaleProfile.type.ts'
 import SaleProfileService from '@/features/saleprofile/service/sale-profile-service.ts'
 import { useSaleContext } from '@/features/sales/hooks/useSaleContext.ts'

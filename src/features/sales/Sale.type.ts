@@ -23,6 +23,9 @@ export interface SaleProfileCreationDTO {
   serviceId: number
   quantity: number
 }
+export interface SaleProfileUpdateDTO {
+  quantity: number
+}
 
 export enum SaleStatus {
   PENDING, // Venta pendiente de procesamiento

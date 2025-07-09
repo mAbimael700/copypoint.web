@@ -8,7 +8,7 @@ import {
 
 import SaleService from '../services/SaleService';
 import { useAuth } from '@/stores/authStore';
-import { useCopypointContext } from '@/features/copypoints/storage/useCopypointStorage'; // Importar el hook de Zustand
+import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext.ts'; // Importar el hook de Zustand
 import { PageResponse } from '@/features/api/HttpResponse.type';
 import { SaleResponse, SaleCreationDTO, SaleProfileCreationDTO, SaleStatus } from '../Sale.type';
 import { toast } from 'sonner';
@@ -357,7 +357,7 @@ export const useSalesOperations = (copypointId?: number | string) => {
     return {
         // Datos
         sales: salesQuery.data?.content || [],
-        pendingSales: pendingSalesQuery.data?.content || [],
+        sales: pendingSalesQuery.data?.content || [],
         totalSales: salesQuery.data?.totalElements || 0,
         totalPendingSales: pendingSalesQuery.data?.totalElements || 0,
         totalPages: salesQuery.data?.totalPages || 0,

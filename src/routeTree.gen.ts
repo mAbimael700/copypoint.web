@@ -48,6 +48,7 @@ import { Route as AuthenticatedCopypointsCreateImport } from './routes/_authenti
 import { Route as AuthenticatedStoresNewIndexImport } from './routes/_authenticated/stores/new/index'
 import { Route as AuthenticatedSalesProfilesIndexImport } from './routes/_authenticated/sales/profiles/index'
 import { Route as AuthenticatedSalesNewIndexImport } from './routes/_authenticated/sales/new/index'
+import { Route as AuthenticatedSalesAllIndexImport } from './routes/_authenticated/sales/all/index'
 
 // Create/Update Routes
 
@@ -286,6 +287,14 @@ const AuthenticatedSalesNewIndexRoute = AuthenticatedSalesNewIndexImport.update(
   {
     id: '/sales/new/',
     path: '/sales/new/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any,
+)
+
+const AuthenticatedSalesAllIndexRoute = AuthenticatedSalesAllIndexImport.update(
+  {
+    id: '/sales/all/',
+    path: '/sales/all/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any,
 )
@@ -532,6 +541,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsersIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/sales/all/': {
+      id: '/_authenticated/sales/all/'
+      path: '/sales/all'
+      fullPath: '/sales/all'
+      preLoaderRoute: typeof AuthenticatedSalesAllIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/sales/new/': {
       id: '/_authenticated/sales/new/'
       path: '/sales/new'
@@ -594,6 +610,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedSalesAllIndexRoute: typeof AuthenticatedSalesAllIndexRoute
   AuthenticatedSalesNewIndexRoute: typeof AuthenticatedSalesNewIndexRoute
   AuthenticatedSalesProfilesIndexRoute: typeof AuthenticatedSalesProfilesIndexRoute
   AuthenticatedStoresNewIndexRoute: typeof AuthenticatedStoresNewIndexRoute
@@ -612,6 +629,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedSalesAllIndexRoute: AuthenticatedSalesAllIndexRoute,
   AuthenticatedSalesNewIndexRoute: AuthenticatedSalesNewIndexRoute,
   AuthenticatedSalesProfilesIndexRoute: AuthenticatedSalesProfilesIndexRoute,
   AuthenticatedStoresNewIndexRoute: AuthenticatedStoresNewIndexRoute,
@@ -697,6 +715,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/sales/all': typeof AuthenticatedSalesAllIndexRoute
   '/sales/new': typeof AuthenticatedSalesNewIndexRoute
   '/sales/profiles': typeof AuthenticatedSalesProfilesIndexRoute
   '/stores/new': typeof AuthenticatedStoresNewIndexRoute
@@ -733,6 +752,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/sales/all': typeof AuthenticatedSalesAllIndexRoute
   '/sales/new': typeof AuthenticatedSalesNewIndexRoute
   '/sales/profiles': typeof AuthenticatedSalesProfilesIndexRoute
   '/stores/new': typeof AuthenticatedStoresNewIndexRoute
@@ -774,6 +794,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/sales/all/': typeof AuthenticatedSalesAllIndexRoute
   '/_authenticated/sales/new/': typeof AuthenticatedSalesNewIndexRoute
   '/_authenticated/sales/profiles/': typeof AuthenticatedSalesProfilesIndexRoute
   '/_authenticated/stores/new/': typeof AuthenticatedStoresNewIndexRoute
@@ -815,6 +836,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/tasks'
     | '/users'
+    | '/sales/all'
     | '/sales/new'
     | '/sales/profiles'
     | '/stores/new'
@@ -850,6 +872,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/sales/all'
     | '/sales/new'
     | '/sales/profiles'
     | '/stores/new'
@@ -889,6 +912,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
+    | '/_authenticated/sales/all/'
     | '/_authenticated/sales/new/'
     | '/_authenticated/sales/profiles/'
     | '/_authenticated/stores/new/'
@@ -964,6 +988,7 @@ export const routeTree = rootRoute
         "/_authenticated/services/",
         "/_authenticated/tasks/",
         "/_authenticated/users/",
+        "/_authenticated/sales/all/",
         "/_authenticated/sales/new/",
         "/_authenticated/sales/profiles/",
         "/_authenticated/stores/new/"
@@ -1106,6 +1131,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/users/": {
       "filePath": "_authenticated/users/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sales/all/": {
+      "filePath": "_authenticated/sales/all/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/sales/new/": {

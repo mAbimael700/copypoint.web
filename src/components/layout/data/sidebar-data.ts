@@ -21,7 +21,7 @@ import {
 } from '@tabler/icons-react'
 import { type SidebarData } from '../types'
 import { PlusCircledIcon, TableIcon } from '@radix-ui/react-icons'
-import { BadgeDollarSign, ClockAlert, ListChecks } from 'lucide-react'
+import { BadgeDollarSign, ClockAlert, ListChecks, TableProperties } from 'lucide-react'
 
 export const sidebarData: SidebarData = {
 
@@ -48,6 +48,11 @@ export const sidebarData: SidebarData = {
           title: "Sales",
           icon: BadgeDollarSign,
           items: [
+            {
+              title: "List",
+              url: "/sales/all",
+              icon: TableProperties,
+            },
             {
               icon: ClockAlert,
               title: "Pending",

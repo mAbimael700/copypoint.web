@@ -2,7 +2,7 @@ import ApiHttpClient from '@/config/ApiHttpClient'
 import { PageResponse } from '@/features/api/HttpResponse.type'
 import { ProfileResponse } from '@/features/profiles/Profile.type'
 import { SaleProfileResponse } from '@/features/saleprofile/SaleProfile.type.ts'
-import { SaleProfileCreationDTO } from '@/features/sales/Sale.type.ts'
+import { SaleProfileCreationDTO, SaleProfileUpdateDTO } from '@/features/sales/Sale.type.ts'
 
 class SaleProfileService {
   private static instance: SaleProfileService
@@ -43,6 +43,22 @@ class SaleProfileService {
   ): Promise<ProfileResponse> {
     const response = await ApiHttpClient.post<ProfileResponse>(
       this.getEndpoint(copypointId, saleId) + '/profiles',
+      data,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    )
+    return response.data
+  }
+
+  async update(
+    copypointId: number | string,
+    saleId: number | string,
+    profileId: number | string,
+    serviceId: number | string,
+    accessToken: string,
+    data: SaleProfileUpdateDTO
+  ): Promise<ProfileResponse> {
+    const response = await ApiHttpClient.patch<ProfileResponse>(
+      this.getEndpoint(copypointId, saleId) + '/profiles' + `?profileId=${profileId}&serviceId=${serviceId}`,
       data,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     )

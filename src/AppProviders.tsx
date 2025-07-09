@@ -125,7 +125,7 @@ function AppWithProviders() {
             isLoading: auth.isLoading,
         }
 
-        console.log('Updating router context:', authState)
+        //console.log('Updating router context:', authState)
 
         router.update({
             context: {

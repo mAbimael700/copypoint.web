@@ -18,7 +18,7 @@ import {
 import { useStoreContext } from '@/features/stores/context/useStoreContext.ts'
 import type { CopypointResponse } from '../Copypoint.type'
 import useCopypoint from '../hooks/useCopypoint'
-import { useCopypointContext } from '../storage/useCopypointStorage'
+import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext.ts'
 
 interface Props {
   label?: string

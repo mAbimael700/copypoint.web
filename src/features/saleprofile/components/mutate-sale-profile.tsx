@@ -1,12 +1,16 @@
-import React from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import FormLayout from '@/components/layout/form-layout.tsx';
-import { SaleProfileForm, SaleProfilesFormValues } from '@/features/saleprofile/components/form/sale-profile-form.tsx';
-import { useSaleContext } from '@/features/sales/hooks/useSaleContext.ts';
-
+import React from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import FormLayout from '@/components/layout/form-layout.tsx'
+import {
+  SaleProfileForm,
+  SaleProfilesFormValues,
+} from '@/features/saleprofile/components/form/sale-profile-form.tsx'
+import useSaleProfiles from '@/features/saleprofile/hooks/useSaleProfiles.ts'
+import { useSaleContext } from '@/features/sales/hooks/useSaleContext.ts'
 
 const MutateSaleProfile = () => {
   const { currentSale } = useSaleContext()
+  const { saleProfiles } = useSaleProfiles()
   const navigate = useNavigate()
 
   function onHandleSaleProfileSubmit(_: SaleProfilesFormValues): void {
@@ -24,8 +28,22 @@ const MutateSaleProfile = () => {
   }, [currentSale])
 
   return (
-    <FormLayout header={'Add profiles to sale #' + currentSale?.id} description={'Add profiles to sale'} className={"w-full"}>
-      <SaleProfileForm handleSubmit={onHandleSaleProfileSubmit} />
+    <FormLayout
+      header={'Add profiles to sale #' + currentSale?.id}
+      description={'Add profiles to sale'}
+      className={'w-full'}
+    >
+      <SaleProfileForm
+        defaultValues={{
+          profiles: saleProfiles.map((sp) => ({
+            serviceId: sp.service.id,
+            profileId: sp.profileId,
+            quantity: sp.quantity,
+          })),
+        }}
+
+        handleSubmit={onHandleSaleProfileSubmit}
+      />
     </FormLayout>
   )
 }

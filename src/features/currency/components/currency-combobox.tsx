@@ -3,7 +3,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { Check, ChevronsUpDown } from "lucide-react"
-import { useExchangeRateCodes } from "../hooks/useExchangeRate"
+import { useExchangeRateData } from '../hooks/useExchangeRate'
 
 interface Props {
     label?: string
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function CurrencyCombobox({ label, value, handleOnSelect }: Props) {
-    const { data } = useExchangeRateCodes()
+    const { currencies } = useExchangeRateData()
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -38,17 +38,17 @@ export function CurrencyCombobox({ label, value, handleOnSelect }: Props) {
                     <CommandList>
                         <CommandEmpty>No currency found.</CommandEmpty>
                         <CommandGroup>
-                            {data?.supported_codes.map(([ISO, description]) => (
+                            {currencies?.map((c) => (
                                 <CommandItem
-                                    value={ISO}
-                                    key={ISO}
-                                    onSelect={() => { handleOnSelect(ISO, description) }}
+                                    value={c.code}
+                                    key={c.code}
+                                    onSelect={() => { handleOnSelect(c.code, c.name) }}
                                 >
-                                    {ISO + " -"} {description}
+                                    {c.code + " -"} {c.name}
                                     <Check
                                         className={cn(
                                             "ml-auto",
-                                            label === ISO
+                                            label === c.code
                                                 ? "opacity-100"
                                                 : "opacity-0"
                                         )} />

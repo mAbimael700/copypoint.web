@@ -1,24 +1,18 @@
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { toast } from 'sonner'
-import { useHookFormNavigationGuard } from '@/hooks/use-navigation-guard.tsx'
-import { Button } from '@/components/ui/button.tsx'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form.tsx'
-import { FormProps } from '@/components/FormProps.ts'
-import { CopypointResponse } from '@/features/copypoints/Copypoint.type.ts'
-import { CopypointCommand } from '@/features/copypoints/components/copypoint-command.tsx'
-import { CurrencyCombobox } from '@/features/currency/components/currency-combobox.tsx'
-import { PaymentMethod } from '@/features/paymentmethod/PaymentMethod.type.ts'
-import { PaymentMethodsCombobox } from '@/features/paymentmethod/components/payment-method-command.tsx'
-import { useCopypointContext } from '@/features/copypoints/storage/useCopypointStorage.ts'
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
+import { useHookFormNavigationGuard } from '@/hooks/use-navigation-guard.tsx';
+import { Button } from '@/components/ui/button.tsx';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
+import { FormProps } from '@/components/FormProps.ts';
+import { CopypointResponse } from '@/features/copypoints/Copypoint.type.ts';
+import { CopypointCommand } from '@/features/copypoints/components/copypoint-command.tsx';
+import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext.ts';
+import { CurrencyCombobox } from '@/features/currency/components/currency-combobox.tsx';
+import { PaymentMethod } from '@/features/paymentmethod/PaymentMethod.type.ts';
+import { PaymentMethodsCombobox } from '@/features/paymentmethod/components/payment-method-command.tsx';
+
 
 const formSchema = z.object({
   currency: z.string().length(3, 'Name is required.'),
@@ -106,6 +100,7 @@ export const SaleForm = ({
             </FormItem>
           )}
         />
+
 
         {hasUnsavedChanges && (
           <div className='flex items-center gap-2 text-sm text-amber-600'>

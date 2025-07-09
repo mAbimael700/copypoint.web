@@ -84,7 +84,7 @@ export const useCreateCopypoint = (
                 queryKey: copypointKeys.byStore(variables.storeId)
             });
 
-            // Opcional: Actualizar cache optimísticamente
+            // Opcional: Actualizar cache optimistamente
             queryClient.setQueryData<PageResponse<CopypointResponse>>(
                 copypointKeys.byStore(variables.storeId),
                 (oldData) => {

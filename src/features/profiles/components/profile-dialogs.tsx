@@ -1,7 +1,7 @@
 import { showSubmittedData } from '@/utils/show-submitted-data';
 import { DeleteDialog } from '@/components/delete-dialog';
 import { useStoreContext } from '@/features/stores/context/useStoreContext.ts';
-import useProfileOperations from '../hooks/useProfiles';
+import useProfileByStoreOperations from '../hooks/useProfiles';
 import { useProfileModule } from '@/features/profiles/context/ProfileStore';
 import { ProfileForm } from './form/profile-form.tsx';
 import { ProfileMutateDrawer } from './profile-mutate-drawer';
@@ -10,7 +10,7 @@ import { ProfileMutateDrawer } from './profile-mutate-drawer';
 export function ProfileDialogs() {
   const { activeStore } = useStoreContext()
   const { open, currentService, currentProfile, closeDialog } = useProfileModule()
-  const { createProfile } = useProfileOperations(activeStore?.id || 0)
+  const { createProfile } = useProfileByStoreOperations(activeStore?.id || 0)
 
 
   async function saveProfile(values: ProfileForm) {
