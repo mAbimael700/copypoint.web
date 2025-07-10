@@ -3,7 +3,7 @@ import {
   PaymentRequest,
   PaymentResponse,
   PaymentStatusResponse,
-} from '@/features/mercadopago-payment/service/MercadoPagoPaymentResponse.type.ts'
+} from '@/features/mercadopago-payment/types/MercadoPagoPaymentResponse.type.ts'
 
 
 class MercadoPagoPaymentService {

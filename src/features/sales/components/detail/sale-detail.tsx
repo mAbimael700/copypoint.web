@@ -39,7 +39,8 @@ const SaleDetail = () => {
   const navigate = useNavigate()
 
   if (!currentSale) {
-    return navigate({ to: '/sales' })
+    navigate({ to: '/sales' })
+    return null
   }
 
   const subtotalBeforeDiscount = saleProfiles.reduce(

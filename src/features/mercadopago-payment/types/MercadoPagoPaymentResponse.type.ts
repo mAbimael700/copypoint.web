@@ -11,6 +11,8 @@ export type PaymentRequest = {
   saleId: number
   description: string
   payer: PayerInfo
+  amount: number
+  currency: string
 }
 
 export type PaymentStatusResponse = {

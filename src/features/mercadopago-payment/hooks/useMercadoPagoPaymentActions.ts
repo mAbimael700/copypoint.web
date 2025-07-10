@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { useAuth } from '@/stores/authStore.ts'
 import { useSaleContext } from '@/features/sales/hooks/useSaleContext.ts'
 import { useCreatePayment, usePaymentStatus, usePaymentStatusPolling } from '@/features/mercadopago-payment/hooks/useMercadoPagoPayment.ts'
-import { PaymentRequest, PayerInfo } from '@/features/mercadopago-payment/service/MercadoPagoPaymentResponse.type.ts'
+import { PaymentRequest, PayerInfo } from '@/features/mercadopago-payment/types/MercadoPagoPaymentResponse.type.ts'
 import { toast } from 'sonner'
 
 interface PaymentActionsOptions {
