@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button.tsx'
+import { MpHandshakePlumaHorizontalIcon } from '@/features/mercadopago-payment/components/icons/icons.tsx'
 
 const PaymentForm = () => {
   return (
     <div>
-      <Button>Add mercado pago</Button>
+
     </div>
   )
 }
