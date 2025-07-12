@@ -9,10 +9,13 @@ const SaleProfileSimpleList = ({ saleProfiles }: Props) => {
   return (
     <ul>
       {saleProfiles.map((profile) => (
-        <SaleProfileItemDetail
-          key={profile.saleId + profile.profileId}
-          saleProfile={profile}
-        />
+
+        <li key={profile.saleId + profile.profileId}>
+          <SaleProfileItemDetail
+            saleProfile={profile}
+          />
+        </li>
+
       ))}
     </ul>
   )
