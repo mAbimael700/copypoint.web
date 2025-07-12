@@ -8,7 +8,7 @@ interface Props {
   className?: string
 }
 
-const SaleProfileResume = ({ saleProfile, className }: Props) => {
+const SaleProfileItemDetail = ({ saleProfile, className }: Props) => {
   return (
     <div
       className={cn('flex h-10 items-center justify-between gap-2', className)}
@@ -32,4 +32,4 @@ const SaleProfileResume = ({ saleProfile, className }: Props) => {
   )
 }
 
-export default SaleProfileResume
+export default SaleProfileItemDetail
