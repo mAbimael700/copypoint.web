@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import PaymentForm from '@/features/payments/components/payment-form'
+import PaymentMutate from '@/features/payments/components/payment-mutate'
 
 export const Route = createFileRoute(
   '/_authenticated/sales/detail/add-payment/',
 )({
-  component: PaymentForm,
+  component: PaymentMutate,
 })
