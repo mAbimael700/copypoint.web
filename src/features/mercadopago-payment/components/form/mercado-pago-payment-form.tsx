@@ -72,6 +72,7 @@ const MercadoPagoPaymentForm: React.FC<MercadoPagoPaymentFormProps> = ({
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      currency: activeStore?.currency || '',
       amount: 1,
       payerSchema: {
         email: user?.email || '',
@@ -138,7 +139,12 @@ const MercadoPagoPaymentForm: React.FC<MercadoPagoPaymentFormProps> = ({
         amount: values.amount,
       } satisfies PaymentRequest
 
-      await createPayment(paymentRequest.payer, paymentRequest.description)
+      await createPayment(
+        paymentRequest.amount,
+        paymentRequest.currency,
+        paymentRequest.payer,
+        paymentRequest.description
+      )
     } catch (error) {
       toast.error('Error en el formulario: ' + error)
       // El error ya se maneja en el hook usePaymentActions

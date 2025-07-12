@@ -7,28 +7,44 @@ import { useNavigate } from '@tanstack/react-router'
 
 interface Props {
   className?: string
+  disabled?: boolean
 }
 
-const MercadoPagoAddPaymentBtn = ({ className }: Props) => {
-
+const MercadoPagoAddPaymentBtn = ({ className, disabled = false }: Props) => {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate({ to: '/payments/mercado-pago/add-payment' })
+    if (!disabled) {
+      navigate({ to: '/payments/mercado-pago/add-payment' })
+    }
   }
 
   return (
-    <div
-      className={cn(
-        'group bg-primary text-secondary border-primary flex h-20 cursor-pointer items-center justify-center rounded-2xl shadow transition-colors hover:bg-[#ffe700]',
-        className,
-      )}
+    <button
+      disabled={disabled}
       onClick={handleClick}
+      className={cn(
+        'group text-sm p-4 flex h-20 min-h-2/4 items-center justify-center rounded-2xl shadow transition-colors',
+        disabled
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-primary text-secondary border-primary cursor-pointer hover:bg-[#ffe700]',
+        className
+      )}
     >
       Add payment
-      <MpHandshakePlumaHorizontalIcon className="text-secondary h-36 w-36 group-hover:hidden" />
-      <MpHandshakeColorHorizontalIcon className="text-secondary hidden h-36 w-36 group-hover:block" />
-    </div>
+      <MpHandshakePlumaHorizontalIcon
+        className={cn(
+          'h-36 w-36',
+          disabled ? 'opacity-50' : 'text-secondary group-hover:hidden'
+        )}
+      />
+      <MpHandshakeColorHorizontalIcon
+        className={cn(
+          'hidden h-36 w-36',
+          disabled ? 'opacity-50' : 'text-secondary group-hover:block'
+        )}
+      />
+    </button>
   )
 }
 
