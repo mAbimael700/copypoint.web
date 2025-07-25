@@ -49,7 +49,10 @@ import { Route as AuthenticatedCopypointsCreateImport } from './routes/_authenti
 import { Route as AuthenticatedStoresNewIndexImport } from './routes/_authenticated/stores/new/index'
 import { Route as AuthenticatedSalesProfilesIndexImport } from './routes/_authenticated/sales/profiles/index'
 import { Route as AuthenticatedSalesNewIndexImport } from './routes/_authenticated/sales/new/index'
+import { Route as AuthenticatedSalesDetailIndexImport } from './routes/_authenticated/sales/detail/index'
 import { Route as AuthenticatedSalesAllIndexImport } from './routes/_authenticated/sales/all/index'
+import { Route as AuthenticatedSalesDetailAddPaymentIndexImport } from './routes/_authenticated/sales/detail/add-payment/index'
+import { Route as AuthenticatedPaymentsMercadoPagoAddPaymentIndexImport } from './routes/_authenticated/payments/mercado-pago/add-payment/index'
 
 // Create/Update Routes
 
@@ -300,6 +303,13 @@ const AuthenticatedSalesNewIndexRoute = AuthenticatedSalesNewIndexImport.update(
   } as any,
 )
 
+const AuthenticatedSalesDetailIndexRoute =
+  AuthenticatedSalesDetailIndexImport.update({
+    id: '/sales/detail/',
+    path: '/sales/detail/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
 const AuthenticatedSalesAllIndexRoute = AuthenticatedSalesAllIndexImport.update(
   {
     id: '/sales/all/',
@@ -307,6 +317,20 @@ const AuthenticatedSalesAllIndexRoute = AuthenticatedSalesAllIndexImport.update(
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any,
 )
+
+const AuthenticatedSalesDetailAddPaymentIndexRoute =
+  AuthenticatedSalesDetailAddPaymentIndexImport.update({
+    id: '/sales/detail/add-payment/',
+    path: '/sales/detail/add-payment/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute =
+  AuthenticatedPaymentsMercadoPagoAddPaymentIndexImport.update({
+    id: '/payments/mercado-pago/add-payment/',
+    path: '/payments/mercado-pago/add-payment/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -564,6 +588,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSalesAllIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/sales/detail/': {
+      id: '/_authenticated/sales/detail/'
+      path: '/sales/detail'
+      fullPath: '/sales/detail'
+      preLoaderRoute: typeof AuthenticatedSalesDetailIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/sales/new/': {
       id: '/_authenticated/sales/new/'
       path: '/sales/new'
@@ -583,6 +614,20 @@ declare module '@tanstack/react-router' {
       path: '/stores/new'
       fullPath: '/stores/new'
       preLoaderRoute: typeof AuthenticatedStoresNewIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/payments/mercado-pago/add-payment/': {
+      id: '/_authenticated/payments/mercado-pago/add-payment/'
+      path: '/payments/mercado-pago/add-payment'
+      fullPath: '/payments/mercado-pago/add-payment'
+      preLoaderRoute: typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/sales/detail/add-payment/': {
+      id: '/_authenticated/sales/detail/add-payment/'
+      path: '/sales/detail/add-payment'
+      fullPath: '/sales/detail/add-payment'
+      preLoaderRoute: typeof AuthenticatedSalesDetailAddPaymentIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
   }
@@ -628,9 +673,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedSalesAllIndexRoute: typeof AuthenticatedSalesAllIndexRoute
+  AuthenticatedSalesDetailIndexRoute: typeof AuthenticatedSalesDetailIndexRoute
   AuthenticatedSalesNewIndexRoute: typeof AuthenticatedSalesNewIndexRoute
   AuthenticatedSalesProfilesIndexRoute: typeof AuthenticatedSalesProfilesIndexRoute
   AuthenticatedStoresNewIndexRoute: typeof AuthenticatedStoresNewIndexRoute
+  AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute: typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute
+  AuthenticatedSalesDetailAddPaymentIndexRoute: typeof AuthenticatedSalesDetailAddPaymentIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -648,9 +696,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedSalesAllIndexRoute: AuthenticatedSalesAllIndexRoute,
+  AuthenticatedSalesDetailIndexRoute: AuthenticatedSalesDetailIndexRoute,
   AuthenticatedSalesNewIndexRoute: AuthenticatedSalesNewIndexRoute,
   AuthenticatedSalesProfilesIndexRoute: AuthenticatedSalesProfilesIndexRoute,
   AuthenticatedStoresNewIndexRoute: AuthenticatedStoresNewIndexRoute,
+  AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute:
+    AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute,
+  AuthenticatedSalesDetailAddPaymentIndexRoute:
+    AuthenticatedSalesDetailAddPaymentIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -735,9 +788,12 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/sales/all': typeof AuthenticatedSalesAllIndexRoute
+  '/sales/detail': typeof AuthenticatedSalesDetailIndexRoute
   '/sales/new': typeof AuthenticatedSalesNewIndexRoute
   '/sales/profiles': typeof AuthenticatedSalesProfilesIndexRoute
   '/stores/new': typeof AuthenticatedStoresNewIndexRoute
+  '/payments/mercado-pago/add-payment': typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute
+  '/sales/detail/add-payment': typeof AuthenticatedSalesDetailAddPaymentIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -773,9 +829,12 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/sales/all': typeof AuthenticatedSalesAllIndexRoute
+  '/sales/detail': typeof AuthenticatedSalesDetailIndexRoute
   '/sales/new': typeof AuthenticatedSalesNewIndexRoute
   '/sales/profiles': typeof AuthenticatedSalesProfilesIndexRoute
   '/stores/new': typeof AuthenticatedStoresNewIndexRoute
+  '/payments/mercado-pago/add-payment': typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute
+  '/sales/detail/add-payment': typeof AuthenticatedSalesDetailAddPaymentIndexRoute
 }
 
 export interface FileRoutesById {
@@ -816,9 +875,12 @@ export interface FileRoutesById {
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/sales/all/': typeof AuthenticatedSalesAllIndexRoute
+  '/_authenticated/sales/detail/': typeof AuthenticatedSalesDetailIndexRoute
   '/_authenticated/sales/new/': typeof AuthenticatedSalesNewIndexRoute
   '/_authenticated/sales/profiles/': typeof AuthenticatedSalesProfilesIndexRoute
   '/_authenticated/stores/new/': typeof AuthenticatedStoresNewIndexRoute
+  '/_authenticated/payments/mercado-pago/add-payment/': typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute
+  '/_authenticated/sales/detail/add-payment/': typeof AuthenticatedSalesDetailAddPaymentIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -859,9 +921,12 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/sales/all'
+    | '/sales/detail'
     | '/sales/new'
     | '/sales/profiles'
     | '/stores/new'
+    | '/payments/mercado-pago/add-payment'
+    | '/sales/detail/add-payment'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -896,9 +961,12 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/sales/all'
+    | '/sales/detail'
     | '/sales/new'
     | '/sales/profiles'
     | '/stores/new'
+    | '/payments/mercado-pago/add-payment'
+    | '/sales/detail/add-payment'
   id:
     | '__root__'
     | '/_authenticated'
@@ -937,9 +1005,12 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
     | '/_authenticated/sales/all/'
+    | '/_authenticated/sales/detail/'
     | '/_authenticated/sales/new/'
     | '/_authenticated/sales/profiles/'
     | '/_authenticated/stores/new/'
+    | '/_authenticated/payments/mercado-pago/add-payment/'
+    | '/_authenticated/sales/detail/add-payment/'
   fileRoutesById: FileRoutesById
 }
 
@@ -1014,9 +1085,12 @@ export const routeTree = rootRoute
         "/_authenticated/tasks/",
         "/_authenticated/users/",
         "/_authenticated/sales/all/",
+        "/_authenticated/sales/detail/",
         "/_authenticated/sales/new/",
         "/_authenticated/sales/profiles/",
-        "/_authenticated/stores/new/"
+        "/_authenticated/stores/new/",
+        "/_authenticated/payments/mercado-pago/add-payment/",
+        "/_authenticated/sales/detail/add-payment/"
       ]
     },
     "/clerk": {
@@ -1166,6 +1240,10 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/sales/all/index.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/sales/detail/": {
+      "filePath": "_authenticated/sales/detail/index.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/sales/new/": {
       "filePath": "_authenticated/sales/new/index.tsx",
       "parent": "/_authenticated"
@@ -1176,6 +1254,14 @@ export const routeTree = rootRoute
     },
     "/_authenticated/stores/new/": {
       "filePath": "_authenticated/stores/new/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/payments/mercado-pago/add-payment/": {
+      "filePath": "_authenticated/payments/mercado-pago/add-payment/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sales/detail/add-payment/": {
+      "filePath": "_authenticated/sales/detail/add-payment/index.tsx",
       "parent": "/_authenticated"
     }
   }

@@ -1,12 +1,17 @@
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { useNavigate } from '@tanstack/react-router';
-import { Row } from '@tanstack/react-table';
-import { IconTrash } from '@tabler/icons-react';
-import { Button } from '@/components/ui/button.tsx';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu.tsx';
-import { useSaleContext } from '@/features/sales/hooks/useSaleContext.ts';
-import { SaleResponse } from '../../Sale.type.ts';
-
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { useNavigate } from '@tanstack/react-router'
+import { Row } from '@tanstack/react-table'
+import { IconTrash } from '@tabler/icons-react'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu.tsx'
+import { useSaleContext } from '@/features/sales/hooks/useSaleContext.ts'
+import { SaleResponse } from '../../Sale.type.ts'
 
 interface DataTableRowActionsProps {
   row: Row<SaleResponse>
@@ -21,6 +26,11 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     await navigate({ to: '/sales/profiles' })
   }
 
+  const handleDetailSale = async () => {
+    setCurrentSale(row.original)
+    await navigate({ to: '/sales/detail' })
+  }
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -33,8 +43,13 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[160px]'>
-        <DropdownMenuItem onClick={handleEditSale}>Edit</DropdownMenuItem>
-
+        <DropdownMenuItem onClick={handleDetailSale}>Details</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={handleEditSale}
+          disabled={row.original.status.toString() != "PENDING"}
+        >
+          Edit
+        </DropdownMenuItem>
         <DropdownMenuItem>
           Delete
           <DropdownMenuShortcut>

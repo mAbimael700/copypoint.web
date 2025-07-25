@@ -3,13 +3,13 @@ import {
   PaymentRequest,
   PaymentResponse,
   PaymentStatusResponse,
-} from '@/features/mercadopago-payment/service/PaymentResponse.type.ts'
-
+} from '@/features/mercadopago-payment/types/MercadoPagoPaymentResponse.type.ts'
 
 class MercadoPagoPaymentService {
   private static instance: MercadoPagoPaymentService
 
-  private static readonly endpoint: "/api/payments/mercadopago"
+  private readonly endpoint = '/payments/mercadopago'
+
   private constructor() {}
 
   public static getInstance(): MercadoPagoPaymentService {
@@ -24,19 +24,16 @@ class MercadoPagoPaymentService {
     data: PaymentRequest
   ): Promise<PaymentResponse> {
     const response = await ApiHttpClient.post<PaymentResponse>(
-      MercadoPagoPaymentService.endpoint,
+      this.endpoint,
       data,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     )
     return response.data
   }
 
-  async getPaymentStatus(
-    accessToken: string,
-    paymentId: string
-  ){
+  async getPaymentStatus(accessToken: string, paymentId: string) {
     const response = await ApiHttpClient.get<PaymentStatusResponse>(
-      `${MercadoPagoPaymentService.endpoint}/${paymentId}/status`,
+      `${this.endpoint}/${paymentId}/status`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     )
     return response.data
