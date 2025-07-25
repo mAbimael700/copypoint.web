@@ -13,7 +13,7 @@ import { useMultiStepForm } from './context/sign-up-context';
 import { PersonalInfoStep } from './components/personal-info-form';
 
 export default function SignUp() {
-  const { currentStep, totalSteps } = useMultiStepForm();
+  const { currentStep } = useMultiStepForm();
 
   const renderStep = () => {
     switch (currentStep) {

@@ -11,6 +11,7 @@ const STORES_QUERY_KEY = ['stores']
 export const useStores = () => {
     const { accessToken } = useAuth()
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
     const getAll = () => useQuery<PageResponse<StoreResponse>>({
         queryKey: STORES_QUERY_KEY,
         queryFn: () => StoreService.getAll(accessToken),
@@ -23,4 +24,3 @@ export const useStores = () => {
     return { getAll }
 }
 
-const useStoresContext = () => { }

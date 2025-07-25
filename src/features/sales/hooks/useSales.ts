@@ -357,7 +357,7 @@ export const useSalesOperations = (copypointId?: number | string) => {
     return {
         // Datos
         sales: salesQuery.data?.content || [],
-        sales: pendingSalesQuery.data?.content || [],
+        pendingSales: pendingSalesQuery.data?.content || [],
         totalSales: salesQuery.data?.totalElements || 0,
         totalPendingSales: pendingSalesQuery.data?.totalElements || 0,
         totalPages: salesQuery.data?.totalPages || 0,

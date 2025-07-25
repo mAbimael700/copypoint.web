@@ -30,6 +30,7 @@ export default function Otp() {
           <p className='text-muted-foreground px-8 text-center text-sm'>
             Haven't received it?{' '}
             <Link
+              search={{ redirect: '/' }}
               to='/sign-in'
               className='hover:text-primary underline underline-offset-4'
             >
