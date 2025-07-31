@@ -4,7 +4,7 @@ import {
   //IconBug,
   IconChecklist,
   //IconError404,
-  IconHelp,
+  IconHelp, IconLayoutDashboard,
   //  IconLayoutDashboard,
   //IconLock,
   //IconLockAccess,
@@ -21,7 +21,7 @@ import {
 } from '@tabler/icons-react'
 import { type SidebarData } from '../types'
 import { PlusCircledIcon, TableIcon } from '@radix-ui/react-icons'
-import { BadgeDollarSign, ClockAlert, ListChecks, TableProperties } from 'lucide-react'
+import { BadgeDollarSign, ClockAlert, ListChecks, TableProperties, Wallet } from 'lucide-react'
 
 export const sidebarData: SidebarData = {
 
@@ -29,11 +29,11 @@ export const sidebarData: SidebarData = {
     {
       title: 'General',
       items: [
-        /*  {
+         {
            title: 'Dashboard',
            url: '/',
            icon: IconLayoutDashboard,
-         }, */
+         },
         {
           title: 'Services',
           url: '/services',
@@ -43,6 +43,11 @@ export const sidebarData: SidebarData = {
           title: 'Profiles',
           url: '/profiles',
           icon: ListChecks,
+        },
+        {
+          title: 'Payments',
+          url: '/payments',
+          icon: Wallet,
         },
         {
           title: "Sales",

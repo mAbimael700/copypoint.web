@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
+import { useNavigate } from '@tanstack/react-router'
 import {
   IconAdjustmentsHorizontal,
   IconSortAscendingLetters,
@@ -23,6 +24,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { CopypointResponse } from '@/features/copypoints/Copypoint.type.ts'
+import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext.ts'
 import { useStoreContext } from '../stores/context/useStoreContext.ts'
 import useCopypoint from './hooks/useCopypoint'
 
@@ -35,6 +37,8 @@ const appText = new Map<string, string>([
 export default function Copypoints() {
   const { activeStore } = useStoreContext()
   const { copypoints } = useCopypoint(activeStore?.id || 0)
+  const { setCurrentCopypoint } = useCopypointContext()
+  const navigate = useNavigate()
 
   const [sort, setSort] = useState('ascending')
   const [copypointStatus, setcopypointStatus] =
@@ -63,6 +67,14 @@ export default function Copypoints() {
     .filter((copypoint) =>
       copypoint.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
+
+  function handleManageCopypointBtn(copypoint: CopypointResponse) {
+    setCurrentCopypoint(copypoint)
+    navigate({
+      to: '/copypoints/$copypointId',
+      params: { copypointId: copypoint.id },
+    })
+  }
 
   return (
     <>
@@ -93,7 +105,9 @@ export default function Copypoints() {
             />
             <Select
               value={copypointStatus}
-              onValueChange={(v) => setcopypointStatus(v as CopypointResponse['status'])}
+              onValueChange={(v) =>
+                setcopypointStatus(v as CopypointResponse['status'])
+              }
             >
               <SelectTrigger className='w-36'>
                 <SelectValue>{appText.get(copypointStatus)}</SelectValue>
@@ -138,7 +152,11 @@ export default function Copypoints() {
                 >
                   <Newspaper />
                 </div>
-                <Button variant='outline' size='sm'>
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={() => handleManageCopypointBtn(c)}
+                >
                   Manage
                 </Button>
               </div>

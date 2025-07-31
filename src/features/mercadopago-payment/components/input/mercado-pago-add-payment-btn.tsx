@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import {
   MpHandshakeColorHorizontalIcon,
   MpHandshakePlumaHorizontalIcon,
-} from '@/features/mercadopago-payment/components/icons/icons.tsx'
+} from '@/assets/mercado-pago/icons/icons.tsx'
 import { useNavigate } from '@tanstack/react-router'
 
 interface Props {

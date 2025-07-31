@@ -6,15 +6,15 @@ import { CopypointCommand } from '@/features/copypoints/components/copypoint-com
 import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext'
 import useCopypoints from '@/features/copypoints/hooks/useCopypoint'
 import { useStoreContext } from '@/features/stores/context/useStoreContext'
-//import usePayments from '../../hooks/usePayments'
 import { PaymentResponse } from '../../types/Payment.type'
 import { columns } from './columns'
+import usePayments from '@/features/payments/hooks/usePayments.ts'
 
 export const DataTablePayments = () => {
   const { activeStore } = useStoreContext()
   const { copypoints } = useCopypoints(activeStore?.id || 0)
   const { setCurrentCopypoint, currentCopypoint } = useCopypointContext()
-  //const { payments } = usePayments()
+  const { payments } = usePayments()
 
   function handleOnClick(copypoint: CopypointResponse): void {
     setCurrentCopypoint(copypoint)
@@ -43,7 +43,7 @@ export const DataTablePayments = () => {
 
   return (
     <div>
-      <DataTable columns={columns} data={[]} header={headerContent} />
+      <DataTable columns={columns} data={payments} header={headerContent} />
     </div>
   )
 }

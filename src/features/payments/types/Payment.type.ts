@@ -14,9 +14,10 @@ export interface PaymentResponse {
 }
 
 export enum PaymentStatus {
-  PENDING,
-  COMPLETED,
-  FAILED,
-  REFUNDED,
-  PROCESSING
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED',
+  PROCESSING = 'PROCESSING'
 }
+

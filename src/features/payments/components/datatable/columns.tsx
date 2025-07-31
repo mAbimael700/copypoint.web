@@ -19,13 +19,13 @@ const getBadgeVariant = (status: PaymentStatus) : 'outline' | 'destructive' | 's
 
 const getStatusText = (status: PaymentStatus) => {
   const statusTexts = {
-    [PaymentStatus.PENDING]: 'Pendiente',
-    [PaymentStatus.COMPLETED]: 'Completado',
-    [PaymentStatus.FAILED]: 'Fallido',
+    [PaymentStatus.PENDING]: 'Pending',
+    [PaymentStatus.COMPLETED]: 'Completed',
+    [PaymentStatus.FAILED]: 'Failed',
     [PaymentStatus.REFUNDED]: 'Reembolsado',
-    [PaymentStatus.PROCESSING]: 'Procesando',
+    [PaymentStatus.PROCESSING]: 'Processing',
   }
-  return statusTexts[status] || 'Desconocido'
+  return statusTexts[status] || 'Unknown'
 }
 
 export const columns: ColumnDef<PaymentResponse>[] = [
@@ -63,7 +63,7 @@ export const columns: ColumnDef<PaymentResponse>[] = [
   {
     accessorKey: 'paymentMethod',
     header: 'Payment method',
-    cell: ({ row }) => row.original.paymentMethod.description,
+    cell: ({ row }) => row.original.paymentMethod,
   },
   {
     accessorKey: 'status',

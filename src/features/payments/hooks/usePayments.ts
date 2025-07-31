@@ -29,7 +29,7 @@ const usePayments = (
       if (!accessToken) {
         throw new Error('Token de acceso no disponible')
       }
-      return await PaymentService.getPayments(copypointId!, accessToken)
+      return await PaymentService.getPaymentsByCopypoint(copypointId!, accessToken)
     },
     enabled: isAuthenticated() &&
       !!copypointId &&
@@ -48,8 +48,14 @@ const usePayments = (
   const payments = query.data?.content || []
 
   return {
-    ...query,
-    payments
+    data: query.data,
+    payments,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    isFetching: query.isFetching,
+    isSuccess: query.isSuccess,
+    refetch: query.refetch,
   }
 }
 

@@ -31,6 +31,11 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     await navigate({ to: '/sales/detail' })
   }
 
+  const handleSalePayment = async () => {
+    setCurrentSale(row.original)
+    await navigate({ to: '/sales/payments' })
+  }
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -44,6 +49,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem onClick={handleDetailSale}>Details</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSalePayment}>Payments</DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleEditSale}
           disabled={row.original.status.toString() != "PENDING"}

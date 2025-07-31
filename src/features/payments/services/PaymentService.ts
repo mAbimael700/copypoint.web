@@ -5,12 +5,12 @@ import { PaymentResponse } from '../types/Payment.type'
 class PaymentServiceClass {
   private readonly endpoint = '/payments'
 
-  async getPayments(
+  async getPaymentsByCopypoint(
     copypointId: number | string,
     accessToken: string
   ): Promise<PageResponse<PaymentResponse>> {
     const response = await ApiHttpClient.get<PageResponse<PaymentResponse>>(
-      this.endpoint + `?copypointId=${copypointId}`,
+      this.endpoint + `/copypoint/${copypointId}`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     )
     return response.data

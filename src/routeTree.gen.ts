@@ -46,13 +46,20 @@ import { Route as AuthenticatedSettingsDisplayImport } from './routes/_authentic
 import { Route as AuthenticatedSettingsAppearanceImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedCopypointsCreateImport } from './routes/_authenticated/copypoints/create'
+import { Route as AuthenticatedCopypointsCopypointIdImport } from './routes/_authenticated/copypoints/$copypointId'
 import { Route as AuthenticatedStoresNewIndexImport } from './routes/_authenticated/stores/new/index'
 import { Route as AuthenticatedSalesProfilesIndexImport } from './routes/_authenticated/sales/profiles/index'
+import { Route as AuthenticatedSalesPaymentsIndexImport } from './routes/_authenticated/sales/payments/index'
 import { Route as AuthenticatedSalesNewIndexImport } from './routes/_authenticated/sales/new/index'
 import { Route as AuthenticatedSalesDetailIndexImport } from './routes/_authenticated/sales/detail/index'
 import { Route as AuthenticatedSalesAllIndexImport } from './routes/_authenticated/sales/all/index'
+import { Route as AuthenticatedCopypointsPhonesIndexImport } from './routes/_authenticated/copypoints/phones/index'
+import { Route as AuthenticatedCopypointsIntegrationsIndexImport } from './routes/_authenticated/copypoints/integrations/index'
+import { Route as AuthenticatedCopypointsPhonesCreateImport } from './routes/_authenticated/copypoints/phones/create'
 import { Route as AuthenticatedSalesDetailAddPaymentIndexImport } from './routes/_authenticated/sales/detail/add-payment/index'
 import { Route as AuthenticatedPaymentsMercadoPagoAddPaymentIndexImport } from './routes/_authenticated/payments/mercado-pago/add-payment/index'
+import { Route as AuthenticatedCopypointsIntegrationsAddIndexImport } from './routes/_authenticated/copypoints/integrations/add/index'
+import { Route as AuthenticatedCopypointsIntegrationsAddMercadopagoConfigImport } from './routes/_authenticated/copypoints/integrations/add/mercadopago-config'
 
 // Create/Update Routes
 
@@ -281,6 +288,13 @@ const AuthenticatedCopypointsCreateRoute =
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
+const AuthenticatedCopypointsCopypointIdRoute =
+  AuthenticatedCopypointsCopypointIdImport.update({
+    id: '/copypoints/$copypointId',
+    path: '/copypoints/$copypointId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
 const AuthenticatedStoresNewIndexRoute =
   AuthenticatedStoresNewIndexImport.update({
     id: '/stores/new/',
@@ -292,6 +306,13 @@ const AuthenticatedSalesProfilesIndexRoute =
   AuthenticatedSalesProfilesIndexImport.update({
     id: '/sales/profiles/',
     path: '/sales/profiles/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedSalesPaymentsIndexRoute =
+  AuthenticatedSalesPaymentsIndexImport.update({
+    id: '/sales/payments/',
+    path: '/sales/payments/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -318,6 +339,27 @@ const AuthenticatedSalesAllIndexRoute = AuthenticatedSalesAllIndexImport.update(
   } as any,
 )
 
+const AuthenticatedCopypointsPhonesIndexRoute =
+  AuthenticatedCopypointsPhonesIndexImport.update({
+    id: '/copypoints/phones/',
+    path: '/copypoints/phones/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedCopypointsIntegrationsIndexRoute =
+  AuthenticatedCopypointsIntegrationsIndexImport.update({
+    id: '/copypoints/integrations/',
+    path: '/copypoints/integrations/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedCopypointsPhonesCreateRoute =
+  AuthenticatedCopypointsPhonesCreateImport.update({
+    id: '/copypoints/phones/create',
+    path: '/copypoints/phones/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
 const AuthenticatedSalesDetailAddPaymentIndexRoute =
   AuthenticatedSalesDetailAddPaymentIndexImport.update({
     id: '/sales/detail/add-payment/',
@@ -329,6 +371,20 @@ const AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute =
   AuthenticatedPaymentsMercadoPagoAddPaymentIndexImport.update({
     id: '/payments/mercado-pago/add-payment/',
     path: '/payments/mercado-pago/add-payment/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedCopypointsIntegrationsAddIndexRoute =
+  AuthenticatedCopypointsIntegrationsAddIndexImport.update({
+    id: '/copypoints/integrations/add/',
+    path: '/copypoints/integrations/add/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedCopypointsIntegrationsAddMercadopagoConfigRoute =
+  AuthenticatedCopypointsIntegrationsAddMercadopagoConfigImport.update({
+    id: '/copypoints/integrations/add/mercadopago-config',
+    path: '/copypoints/integrations/add/mercadopago-config',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -446,6 +502,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/copypoints/$copypointId': {
+      id: '/_authenticated/copypoints/$copypointId'
+      path: '/copypoints/$copypointId'
+      fullPath: '/copypoints/$copypointId'
+      preLoaderRoute: typeof AuthenticatedCopypointsCopypointIdImport
       parentRoute: typeof AuthenticatedRouteImport
     }
     '/_authenticated/copypoints/create': {
@@ -581,6 +644,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsersIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/copypoints/phones/create': {
+      id: '/_authenticated/copypoints/phones/create'
+      path: '/copypoints/phones/create'
+      fullPath: '/copypoints/phones/create'
+      preLoaderRoute: typeof AuthenticatedCopypointsPhonesCreateImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/copypoints/integrations/': {
+      id: '/_authenticated/copypoints/integrations/'
+      path: '/copypoints/integrations'
+      fullPath: '/copypoints/integrations'
+      preLoaderRoute: typeof AuthenticatedCopypointsIntegrationsIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/copypoints/phones/': {
+      id: '/_authenticated/copypoints/phones/'
+      path: '/copypoints/phones'
+      fullPath: '/copypoints/phones'
+      preLoaderRoute: typeof AuthenticatedCopypointsPhonesIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/sales/all/': {
       id: '/_authenticated/sales/all/'
       path: '/sales/all'
@@ -602,6 +686,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSalesNewIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/sales/payments/': {
+      id: '/_authenticated/sales/payments/'
+      path: '/sales/payments'
+      fullPath: '/sales/payments'
+      preLoaderRoute: typeof AuthenticatedSalesPaymentsIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/sales/profiles/': {
       id: '/_authenticated/sales/profiles/'
       path: '/sales/profiles'
@@ -614,6 +705,20 @@ declare module '@tanstack/react-router' {
       path: '/stores/new'
       fullPath: '/stores/new'
       preLoaderRoute: typeof AuthenticatedStoresNewIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/copypoints/integrations/add/mercadopago-config': {
+      id: '/_authenticated/copypoints/integrations/add/mercadopago-config'
+      path: '/copypoints/integrations/add/mercadopago-config'
+      fullPath: '/copypoints/integrations/add/mercadopago-config'
+      preLoaderRoute: typeof AuthenticatedCopypointsIntegrationsAddMercadopagoConfigImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
+    '/_authenticated/copypoints/integrations/add/': {
+      id: '/_authenticated/copypoints/integrations/add/'
+      path: '/copypoints/integrations/add'
+      fullPath: '/copypoints/integrations/add'
+      preLoaderRoute: typeof AuthenticatedCopypointsIntegrationsAddIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
     '/_authenticated/payments/mercado-pago/add-payment/': {
@@ -661,6 +766,7 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCopypointsCopypointIdRoute: typeof AuthenticatedCopypointsCopypointIdRoute
   AuthenticatedCopypointsCreateRoute: typeof AuthenticatedCopypointsCreateRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
@@ -672,11 +778,17 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedServicesIndexRoute: typeof AuthenticatedServicesIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedCopypointsPhonesCreateRoute: typeof AuthenticatedCopypointsPhonesCreateRoute
+  AuthenticatedCopypointsIntegrationsIndexRoute: typeof AuthenticatedCopypointsIntegrationsIndexRoute
+  AuthenticatedCopypointsPhonesIndexRoute: typeof AuthenticatedCopypointsPhonesIndexRoute
   AuthenticatedSalesAllIndexRoute: typeof AuthenticatedSalesAllIndexRoute
   AuthenticatedSalesDetailIndexRoute: typeof AuthenticatedSalesDetailIndexRoute
   AuthenticatedSalesNewIndexRoute: typeof AuthenticatedSalesNewIndexRoute
+  AuthenticatedSalesPaymentsIndexRoute: typeof AuthenticatedSalesPaymentsIndexRoute
   AuthenticatedSalesProfilesIndexRoute: typeof AuthenticatedSalesProfilesIndexRoute
   AuthenticatedStoresNewIndexRoute: typeof AuthenticatedStoresNewIndexRoute
+  AuthenticatedCopypointsIntegrationsAddMercadopagoConfigRoute: typeof AuthenticatedCopypointsIntegrationsAddMercadopagoConfigRoute
+  AuthenticatedCopypointsIntegrationsAddIndexRoute: typeof AuthenticatedCopypointsIntegrationsAddIndexRoute
   AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute: typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute
   AuthenticatedSalesDetailAddPaymentIndexRoute: typeof AuthenticatedSalesDetailAddPaymentIndexRoute
 }
@@ -684,6 +796,8 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedCopypointsCopypointIdRoute:
+    AuthenticatedCopypointsCopypointIdRoute,
   AuthenticatedCopypointsCreateRoute: AuthenticatedCopypointsCreateRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
@@ -695,11 +809,22 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedServicesIndexRoute: AuthenticatedServicesIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedCopypointsPhonesCreateRoute:
+    AuthenticatedCopypointsPhonesCreateRoute,
+  AuthenticatedCopypointsIntegrationsIndexRoute:
+    AuthenticatedCopypointsIntegrationsIndexRoute,
+  AuthenticatedCopypointsPhonesIndexRoute:
+    AuthenticatedCopypointsPhonesIndexRoute,
   AuthenticatedSalesAllIndexRoute: AuthenticatedSalesAllIndexRoute,
   AuthenticatedSalesDetailIndexRoute: AuthenticatedSalesDetailIndexRoute,
   AuthenticatedSalesNewIndexRoute: AuthenticatedSalesNewIndexRoute,
+  AuthenticatedSalesPaymentsIndexRoute: AuthenticatedSalesPaymentsIndexRoute,
   AuthenticatedSalesProfilesIndexRoute: AuthenticatedSalesProfilesIndexRoute,
   AuthenticatedStoresNewIndexRoute: AuthenticatedStoresNewIndexRoute,
+  AuthenticatedCopypointsIntegrationsAddMercadopagoConfigRoute:
+    AuthenticatedCopypointsIntegrationsAddMercadopagoConfigRoute,
+  AuthenticatedCopypointsIntegrationsAddIndexRoute:
+    AuthenticatedCopypointsIntegrationsAddIndexRoute,
   AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute:
     AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute,
   AuthenticatedSalesDetailAddPaymentIndexRoute:
@@ -768,6 +893,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
+  '/copypoints/$copypointId': typeof AuthenticatedCopypointsCopypointIdRoute
   '/copypoints/create': typeof AuthenticatedCopypointsCreateRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -787,11 +913,17 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/copypoints/phones/create': typeof AuthenticatedCopypointsPhonesCreateRoute
+  '/copypoints/integrations': typeof AuthenticatedCopypointsIntegrationsIndexRoute
+  '/copypoints/phones': typeof AuthenticatedCopypointsPhonesIndexRoute
   '/sales/all': typeof AuthenticatedSalesAllIndexRoute
   '/sales/detail': typeof AuthenticatedSalesDetailIndexRoute
   '/sales/new': typeof AuthenticatedSalesNewIndexRoute
+  '/sales/payments': typeof AuthenticatedSalesPaymentsIndexRoute
   '/sales/profiles': typeof AuthenticatedSalesProfilesIndexRoute
   '/stores/new': typeof AuthenticatedStoresNewIndexRoute
+  '/copypoints/integrations/add/mercadopago-config': typeof AuthenticatedCopypointsIntegrationsAddMercadopagoConfigRoute
+  '/copypoints/integrations/add': typeof AuthenticatedCopypointsIntegrationsAddIndexRoute
   '/payments/mercado-pago/add-payment': typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute
   '/sales/detail/add-payment': typeof AuthenticatedSalesDetailAddPaymentIndexRoute
 }
@@ -809,6 +941,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
+  '/copypoints/$copypointId': typeof AuthenticatedCopypointsCopypointIdRoute
   '/copypoints/create': typeof AuthenticatedCopypointsCreateRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -828,11 +961,17 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/copypoints/phones/create': typeof AuthenticatedCopypointsPhonesCreateRoute
+  '/copypoints/integrations': typeof AuthenticatedCopypointsIntegrationsIndexRoute
+  '/copypoints/phones': typeof AuthenticatedCopypointsPhonesIndexRoute
   '/sales/all': typeof AuthenticatedSalesAllIndexRoute
   '/sales/detail': typeof AuthenticatedSalesDetailIndexRoute
   '/sales/new': typeof AuthenticatedSalesNewIndexRoute
+  '/sales/payments': typeof AuthenticatedSalesPaymentsIndexRoute
   '/sales/profiles': typeof AuthenticatedSalesProfilesIndexRoute
   '/stores/new': typeof AuthenticatedStoresNewIndexRoute
+  '/copypoints/integrations/add/mercadopago-config': typeof AuthenticatedCopypointsIntegrationsAddMercadopagoConfigRoute
+  '/copypoints/integrations/add': typeof AuthenticatedCopypointsIntegrationsAddIndexRoute
   '/payments/mercado-pago/add-payment': typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute
   '/sales/detail/add-payment': typeof AuthenticatedSalesDetailAddPaymentIndexRoute
 }
@@ -855,6 +994,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/copypoints/$copypointId': typeof AuthenticatedCopypointsCopypointIdRoute
   '/_authenticated/copypoints/create': typeof AuthenticatedCopypointsCreateRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -874,11 +1014,17 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/copypoints/phones/create': typeof AuthenticatedCopypointsPhonesCreateRoute
+  '/_authenticated/copypoints/integrations/': typeof AuthenticatedCopypointsIntegrationsIndexRoute
+  '/_authenticated/copypoints/phones/': typeof AuthenticatedCopypointsPhonesIndexRoute
   '/_authenticated/sales/all/': typeof AuthenticatedSalesAllIndexRoute
   '/_authenticated/sales/detail/': typeof AuthenticatedSalesDetailIndexRoute
   '/_authenticated/sales/new/': typeof AuthenticatedSalesNewIndexRoute
+  '/_authenticated/sales/payments/': typeof AuthenticatedSalesPaymentsIndexRoute
   '/_authenticated/sales/profiles/': typeof AuthenticatedSalesProfilesIndexRoute
   '/_authenticated/stores/new/': typeof AuthenticatedStoresNewIndexRoute
+  '/_authenticated/copypoints/integrations/add/mercadopago-config': typeof AuthenticatedCopypointsIntegrationsAddMercadopagoConfigRoute
+  '/_authenticated/copypoints/integrations/add/': typeof AuthenticatedCopypointsIntegrationsAddIndexRoute
   '/_authenticated/payments/mercado-pago/add-payment/': typeof AuthenticatedPaymentsMercadoPagoAddPaymentIndexRoute
   '/_authenticated/sales/detail/add-payment/': typeof AuthenticatedSalesDetailAddPaymentIndexRoute
 }
@@ -901,6 +1047,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/copypoints/$copypointId'
     | '/copypoints/create'
     | '/settings/account'
     | '/settings/appearance'
@@ -920,11 +1067,17 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/tasks'
     | '/users'
+    | '/copypoints/phones/create'
+    | '/copypoints/integrations'
+    | '/copypoints/phones'
     | '/sales/all'
     | '/sales/detail'
     | '/sales/new'
+    | '/sales/payments'
     | '/sales/profiles'
     | '/stores/new'
+    | '/copypoints/integrations/add/mercadopago-config'
+    | '/copypoints/integrations/add'
     | '/payments/mercado-pago/add-payment'
     | '/sales/detail/add-payment'
   fileRoutesByTo: FileRoutesByTo
@@ -941,6 +1094,7 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
+    | '/copypoints/$copypointId'
     | '/copypoints/create'
     | '/settings/account'
     | '/settings/appearance'
@@ -960,11 +1114,17 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/copypoints/phones/create'
+    | '/copypoints/integrations'
+    | '/copypoints/phones'
     | '/sales/all'
     | '/sales/detail'
     | '/sales/new'
+    | '/sales/payments'
     | '/sales/profiles'
     | '/stores/new'
+    | '/copypoints/integrations/add/mercadopago-config'
+    | '/copypoints/integrations/add'
     | '/payments/mercado-pago/add-payment'
     | '/sales/detail/add-payment'
   id:
@@ -985,6 +1145,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/'
+    | '/_authenticated/copypoints/$copypointId'
     | '/_authenticated/copypoints/create'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -1004,11 +1165,17 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
+    | '/_authenticated/copypoints/phones/create'
+    | '/_authenticated/copypoints/integrations/'
+    | '/_authenticated/copypoints/phones/'
     | '/_authenticated/sales/all/'
     | '/_authenticated/sales/detail/'
     | '/_authenticated/sales/new/'
+    | '/_authenticated/sales/payments/'
     | '/_authenticated/sales/profiles/'
     | '/_authenticated/stores/new/'
+    | '/_authenticated/copypoints/integrations/add/mercadopago-config'
+    | '/_authenticated/copypoints/integrations/add/'
     | '/_authenticated/payments/mercado-pago/add-payment/'
     | '/_authenticated/sales/detail/add-payment/'
   fileRoutesById: FileRoutesById
@@ -1073,6 +1240,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/settings",
         "/_authenticated/",
+        "/_authenticated/copypoints/$copypointId",
         "/_authenticated/copypoints/create",
         "/_authenticated/apps/",
         "/_authenticated/chats/",
@@ -1084,11 +1252,17 @@ export const routeTree = rootRoute
         "/_authenticated/services/",
         "/_authenticated/tasks/",
         "/_authenticated/users/",
+        "/_authenticated/copypoints/phones/create",
+        "/_authenticated/copypoints/integrations/",
+        "/_authenticated/copypoints/phones/",
         "/_authenticated/sales/all/",
         "/_authenticated/sales/detail/",
         "/_authenticated/sales/new/",
+        "/_authenticated/sales/payments/",
         "/_authenticated/sales/profiles/",
         "/_authenticated/stores/new/",
+        "/_authenticated/copypoints/integrations/add/mercadopago-config",
+        "/_authenticated/copypoints/integrations/add/",
         "/_authenticated/payments/mercado-pago/add-payment/",
         "/_authenticated/sales/detail/add-payment/"
       ]
@@ -1158,6 +1332,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/copypoints/$copypointId": {
+      "filePath": "_authenticated/copypoints/$copypointId.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/copypoints/create": {
@@ -1236,6 +1414,18 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/users/index.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/copypoints/phones/create": {
+      "filePath": "_authenticated/copypoints/phones/create.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/copypoints/integrations/": {
+      "filePath": "_authenticated/copypoints/integrations/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/copypoints/phones/": {
+      "filePath": "_authenticated/copypoints/phones/index.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/sales/all/": {
       "filePath": "_authenticated/sales/all/index.tsx",
       "parent": "/_authenticated"
@@ -1248,12 +1438,24 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/sales/new/index.tsx",
       "parent": "/_authenticated"
     },
+    "/_authenticated/sales/payments/": {
+      "filePath": "_authenticated/sales/payments/index.tsx",
+      "parent": "/_authenticated"
+    },
     "/_authenticated/sales/profiles/": {
       "filePath": "_authenticated/sales/profiles/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/stores/new/": {
       "filePath": "_authenticated/stores/new/index.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/copypoints/integrations/add/mercadopago-config": {
+      "filePath": "_authenticated/copypoints/integrations/add/mercadopago-config.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/copypoints/integrations/add/": {
+      "filePath": "_authenticated/copypoints/integrations/add/index.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/payments/mercado-pago/add-payment/": {
