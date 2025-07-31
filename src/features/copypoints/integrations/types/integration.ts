@@ -4,7 +4,7 @@ export interface Integration {
   description: string
   category: string
   status: "active" | "inactive" | "pending" | "error"
-  isConfigured: boolean
+
   lastSync: Date
     provider?: any // Store the original API response data
   icon?: string
