@@ -29,7 +29,7 @@ import { useAuth } from '@/stores/authStore'
 export function NavUser() {
   const { isMobile } = useSidebar()
 
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
 
   return (
     <SidebarMenu>
@@ -98,7 +98,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={logout} className='text-red-500'>
               <LogOut />
               Log out
             </DropdownMenuItem>

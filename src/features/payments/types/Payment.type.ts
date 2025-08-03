@@ -1,16 +1,16 @@
-import { PaymentMethod } from '@/features/paymentmethod/PaymentMethod.type'
+
 import { SaleResponse } from '@/features/sales/Sale.type'
 
 export interface PaymentResponse {
   id: number
   sale: SaleResponse
-  paymentMethod: PaymentMethod
+  paymentMethod: string
   amount: number
   currency: string
   status: PaymentStatus
   transactionId: string
   createdAt: string
-  updatedAt: string
+  modifiedAt: string
 }
 
 export enum PaymentStatus {

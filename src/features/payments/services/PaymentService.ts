@@ -15,6 +15,17 @@ class PaymentServiceClass {
     )
     return response.data
   }
+
+  async getPaymentsBySale(
+    saleId: number | string,
+    accessToken: string
+  ){
+    const response = await ApiHttpClient.get<PageResponse<PaymentResponse>>(
+      this.endpoint + `/sale/${saleId}`,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    )
+    return response.data
+  }
 }
 
 export const PaymentService = new PaymentServiceClass()

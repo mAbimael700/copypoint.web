@@ -28,7 +28,7 @@ export default function FormLayout({ children, header, description, aside, class
                 </div>
             </Header>
 
-            <Main fixed>
+            <Main>
                 <div className='space-y-0.5'>
                     <h1 className='text-xl font-bold tracking-tight md:text-2xl'>
                         {header}

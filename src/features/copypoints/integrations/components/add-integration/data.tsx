@@ -6,7 +6,7 @@ import { LinkProps } from '@tanstack/react-router'
 export const integrations: Integration[] = [
   {
     name: 'Mercado Pago Checkout',
-    logo: <MpHandshakePlumaVerticalIcon />,
+    logo: <MpHandshakePlumaVerticalIcon className={'fill-primary'} />,
     isActive: false,
     type: 'payment',
     to: '/copypoints/integrations/add/mercadopago-config',

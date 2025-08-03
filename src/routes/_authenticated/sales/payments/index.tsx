@@ -1,9 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import PaymentsBySale from '@/features/payments/payments-by-sale.tsx'
 
 export const Route = createFileRoute('/_authenticated/sales/payments/')({
-  component: RouteComponent,
+  component: PaymentsBySale,
 })
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/sales/payments/"!</div>
-}

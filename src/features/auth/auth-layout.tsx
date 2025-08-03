@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import background from '@/assets/auth/background.jpg'
 
 interface Props {
   children: React.ReactNode
@@ -6,8 +7,19 @@ interface Props {
 
 export default function AuthLayout({ children }: Props) {
   return (
-    <div className={cn('bg-primary-foreground container grid h-svh max-w-none items-center justify-center',)} >
-      <div className='mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8'>
+    <div
+      className={cn('bg-primary-foreground container grid h-svh max-w-none items-center justify-center',)}
+      style={{ backgroundImage: `url(${background})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundBlendMode: "multiply"
+
+      }}
+    >
+      <div
+        className={cn('mx-auto flex w-full flex-col justify-center space-y-2 py-8 sm:w-[480px] sm:p-8')}
+      >
         <div className='mb-4 flex items-center justify-center'>
           <svg
             xmlns='http://www.w3.org/2000/svg'

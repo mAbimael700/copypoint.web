@@ -4,6 +4,7 @@ import { PaymentResponse, PaymentStatus } from '../../types/Payment.type'
 import { format } from 'date-fns'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatCurrency } from '@/lib/utils.currency.ts'
+import PaymentActions from '@/features/payments/components/datatable/actions.tsx'
 
 
 const getBadgeVariant = (status: PaymentStatus) : 'outline' | 'destructive' | 'secondary' | 'default'   => {
@@ -22,7 +23,7 @@ const getStatusText = (status: PaymentStatus) => {
     [PaymentStatus.PENDING]: 'Pending',
     [PaymentStatus.COMPLETED]: 'Completed',
     [PaymentStatus.FAILED]: 'Failed',
-    [PaymentStatus.REFUNDED]: 'Reembolsado',
+    [PaymentStatus.REFUNDED]: 'Refunded',
     [PaymentStatus.PROCESSING]: 'Processing',
   }
   return statusTexts[status] || 'Unknown'
@@ -91,4 +92,10 @@ export const columns: ColumnDef<PaymentResponse>[] = [
     header: 'Date',
     cell: ({ row }) => format(new Date(row.original.createdAt), 'dd/MM/yyyy HH:mm'),
   },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      return <PaymentActions payment={row.original}/>
+    }
+  }
 ]
