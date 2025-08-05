@@ -1,4 +1,3 @@
-
 import { SaleResponse } from '@/features/sales/Sale.type'
 
 export interface PaymentResponse {
@@ -18,6 +17,8 @@ export enum PaymentStatus {
   COMPLETED = 'COMPLETED',
   FAILED = 'FAILED',
   REFUNDED = 'REFUNDED',
-  PROCESSING = 'PROCESSING'
-}
+  PROCESSING = 'PROCESSING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 
+}

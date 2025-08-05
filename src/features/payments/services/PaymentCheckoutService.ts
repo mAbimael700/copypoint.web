@@ -1,8 +1,7 @@
 import ApiHttpClient from '@/config/ApiHttpClient.ts'
-import { PageResponse } from '@/features/api/HttpResponse.type.ts'
-import { PaymentResponse } from '../types/Payment.type'
+import { PaymentCheckoutData } from '@/features/checkout/types/PaymentCheckoutData.type.ts'
 
-class PaymentCheckoutServiceClass {
+class PaymentCheckoutService {
   private readonly endpoint = '/payments'
 
 
@@ -10,7 +9,7 @@ class PaymentCheckoutServiceClass {
     paymentId: number | string,
     accessToken: string
   ){
-    const response = await ApiHttpClient.get<PageResponse<PaymentResponse>>(
+    const response = await ApiHttpClient.get<PaymentCheckoutData>(
       this.endpoint + `/${paymentId}/checkout-data`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     )
@@ -18,4 +17,4 @@ class PaymentCheckoutServiceClass {
   }
 }
 
-export const PaymentService = new PaymentCheckoutServiceClass()
+export const paymentCheckoutService = new PaymentCheckoutService()

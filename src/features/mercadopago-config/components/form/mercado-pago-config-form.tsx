@@ -18,6 +18,7 @@ import { Separator } from '@/components/ui/separator.tsx'
 import { Switch } from '@/components/ui/switch.tsx'
 import { FormProps } from '@/components/FormProps.ts'
 import { PasswordInput } from '@/components/password-input.tsx'
+import { LinkProps, useRouter } from '@tanstack/react-router'
 
 const formSchema = z.object({
   accessToken: z
@@ -56,11 +57,14 @@ const MercadoPagoConfigForm = ({
   },
   handleSubmit,
   isSubmitting = false,
-}: FormProps<MercadoPagoConfigFormValues> & { isSubmitting?: boolean }) => {
+  redirect = '/copypoints/integrations',
+}: FormProps<MercadoPagoConfigFormValues> & { isSubmitting?: boolean, redirect? : LinkProps['to'] }) => {
   const form = useForm<MercadoPagoConfigFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   })
+
+  const router = useRouter();
 
   const { NavigationGuardDialog, markAsSaved, hasUnsavedChanges } =
     useHookFormNavigationGuard(form)
@@ -70,6 +74,7 @@ const MercadoPagoConfigForm = ({
       await handleSubmit(data)
       // Marcar como guardado después del éxito
       markAsSaved(data)
+      router.navigate({ to: redirect })
     } catch (_) {
       toast.error('Error registering sale, please try again later.')
       // El formulario sigue bloqueado si hay error

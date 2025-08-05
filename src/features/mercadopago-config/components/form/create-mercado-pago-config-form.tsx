@@ -4,12 +4,11 @@ import MercadoPagoConfigForm, {
 } from '@/features/mercadopago-config/components/form/mercado-pago-config-form.tsx'
 import { useCreateMercadoPagoConfig } from '@/features/mercadopago-config/hooks/useMercadoPagoConfig'
 import { toast } from 'sonner'
-import { useRouter } from '@tanstack/react-router'
 import { MercadoPagoConfigCreationRequest } from '@/features/mercadopago-config/types/MercadoPagoConfig.type'
 
 const CreateMercadoPagoConfigForm = () => {
   const createMutation = useCreateMercadoPagoConfig()
-  const router = useRouter()
+
 
   const onSubmit = async (values: MercadoPagoConfigFormValues) => {
     try {
@@ -32,7 +31,6 @@ const CreateMercadoPagoConfigForm = () => {
       toast.success('MercadoPago configuration created successfully')
 
       // Redirigir a la lista de configuraciones o a donde sea apropiado
-      router.navigate({ to: '/copypoints/integrations' })
     } catch (error) {
       toast.error('Failed to create MercadoPago configuration')
       throw error // Re-lanzar el error para que el formulario pueda manejarlo

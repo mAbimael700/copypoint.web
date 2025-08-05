@@ -14,6 +14,8 @@ const getBadgeVariant = (status: PaymentStatus) : 'outline' | 'destructive' | 's
     [PaymentStatus.FAILED]: 'destructive',
     [PaymentStatus.REFUNDED]: 'destructive',
     [PaymentStatus.PROCESSING]: 'secondary',
+    [PaymentStatus.APPROVED]: 'success',
+    [PaymentStatus.REJECTED]: 'destructive',
   }
   return variants[status] as 'outline' | 'destructive' | 'secondary' | 'default' || 'default'
 }
@@ -25,6 +27,8 @@ const getStatusText = (status: PaymentStatus) => {
     [PaymentStatus.FAILED]: 'Failed',
     [PaymentStatus.REFUNDED]: 'Refunded',
     [PaymentStatus.PROCESSING]: 'Processing',
+    [PaymentStatus.APPROVED]: 'Approved',
+    [PaymentStatus.REJECTED]: 'Rejected',
   }
   return statusTexts[status] || 'Unknown'
 }
