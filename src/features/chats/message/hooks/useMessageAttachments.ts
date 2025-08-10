@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { Attachment } from '@/features/chats/types/Attachment.type'
-import { useAttachment } from '@/features/chats/hooks/useAttachment'
 
 /**
  * Hook para gestionar los attachments de un mensaje
