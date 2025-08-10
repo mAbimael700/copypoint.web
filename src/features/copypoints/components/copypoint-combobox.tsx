@@ -25,7 +25,7 @@ interface Props {
   handleOnClick: (s: CopypointResponse) => void
 }
 
-export const CopypointCommand = ({
+export const CopypointCombobox = ({
   handleOnClick,
   label = 'Select copypoint',
 }: Props) => {

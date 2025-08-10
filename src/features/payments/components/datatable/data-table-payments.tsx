@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/data-table/data-table'
 import { CopypointResponse } from '@/features/copypoints/Copypoint.type'
-import { CopypointCommand } from '@/features/copypoints/components/copypoint-command'
+import { CopypointCombobox } from '@/features/copypoints/components/copypoint-combobox.tsx'
 import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext'
 import useCopypoints from '@/features/copypoints/hooks/useCopypoint'
 import { useStoreContext } from '@/features/stores/context/useStoreContext'
@@ -24,7 +24,7 @@ export const DataTablePayments = () => {
     if (copypoints.length === 1) return
 
     return (
-      <CopypointCommand
+      <CopypointCombobox
         handleOnClick={handleOnClick}
         label={
           currentCopypoint

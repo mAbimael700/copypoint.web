@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button.tsx';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form.tsx';
 import { FormProps } from '@/components/FormProps.ts';
 import { CopypointResponse } from '@/features/copypoints/Copypoint.type.ts';
-import { CopypointCommand } from '@/features/copypoints/components/copypoint-command.tsx';
+import { CopypointCombobox } from '@/features/copypoints/components/copypoint-combobox.tsx';
 import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext.ts';
 import { CurrencyCombobox } from '@/features/currency/components/currency-combobox.tsx';
 import { PaymentMethod } from '@/features/paymentmethod/PaymentMethod.type.ts';
@@ -65,7 +65,7 @@ export const SaleForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className='flex-1 space-y-5 px-4'
       >
-        <CopypointCommand handleOnClick={handleOnSelectCopypoint} />
+        <CopypointCombobox handleOnClick={handleOnSelectCopypoint} />
 
         <FormField
           control={form.control}
