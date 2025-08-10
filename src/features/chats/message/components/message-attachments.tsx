@@ -17,7 +17,7 @@ const MessageAttachments: React.FC<MessageAttachmentsProps> = ({
   attachments,
   className,
   direction = 'INBOUND',
-  maxVisible = 3,
+  maxVisible = 2, // Reducimos a 2 para disminuir la carga
 }) => {
   const [isOpen, setIsOpen] = React.useState(false)
 
@@ -30,23 +30,31 @@ const MessageAttachments: React.FC<MessageAttachmentsProps> = ({
   const hasMoreAttachments = attachments.length > maxVisible
   const visibleAttachments = isOpen ? attachments : attachments.slice(0, maxVisible)
 
+  // Función para evitar renderizar todos los attachments a la vez
+  const renderAttachments = () => {
+    // Solo renderizar los visibles para evitar carga excesiva
+    return visibleAttachments.map((attachment) => (
+      <AttachmentPreview 
+        key={attachment.id} 
+        attachmentId={attachment.id} 
+        className={cn(
+          'max-w-sm',
+          direction === 'OUTBOUND' ? 'ml-auto' : 'mr-auto'
+        )}
+      />
+    ))
+  }
+
   return (
     <div className={cn(
       'space-y-2 mt-2',
       direction === 'OUTBOUND' && 'items-end',
       className
     )}>
-      {visibleAttachments.map((attachment) => (
-        <AttachmentPreview 
-          key={attachment.id} 
-          attachmentId={attachment.id} 
-          className={cn(
-            'max-w-sm',
-            direction === 'OUTBOUND' ? 'ml-auto' : 'mr-auto'
-          )}
-        />
-      ))}
+      {/* Renderizamos los attachments */}
+      {renderAttachments()}
 
+      {/* Botón para mostrar más */}
       {hasMoreAttachments && (
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>

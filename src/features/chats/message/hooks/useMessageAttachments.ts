@@ -8,7 +8,16 @@ import { useAttachment } from '@/features/chats/hooks/useAttachment'
 export function useMessageAttachments(attachments: Attachment[] = []) {
   const [expandedAttachmentId, setExpandedAttachmentId] = useState<number | null>(null)
 
-  // Agrupar attachments por tipo
+  // Pre-procesar los attachments para obtener sus tipos
+  const attachmentsWithInfo = attachments.map(attachment => {
+    // Aquí no usamos hooks, solo pasamos el ID
+    return {
+      ...attachment,
+      id: attachment.id,
+    }
+  })
+
+  // Agrupar attachments por tipo - sin usar hooks dentro de useMemo
   const groupedAttachments = useMemo(() => {
     const grouped = {
       images: [] as Attachment[],
@@ -18,51 +27,48 @@ export function useMessageAttachments(attachments: Attachment[] = []) {
       others: [] as Attachment[],
     }
 
-    attachments.forEach(attachment => {
-      const { attachmentInfo, fileType } = useAttachment(attachment.id)
+    // Clasificamos basado en mimeType o fileType si está disponible en el objeto attachment
+    attachmentsWithInfo.forEach(attachment => {
+      const mimeType = attachment.mimeType || '';
+      const fileType = attachment.fileType || '';
 
-      if (!attachmentInfo) {
-        grouped.others.push(attachment)
-        return
-      }
-
-      switch (fileType) {
-        case 'image':
-          grouped.images.push(attachment)
-          break
-        case 'video':
-          grouped.videos.push(attachment)
-          break
-        case 'audio':
-          grouped.audio.push(attachment)
-          break
-        case 'document':
-          grouped.documents.push(attachment)
-          break
-        default:
-          grouped.others.push(attachment)
+      // Clasificación simple basada en información disponible
+      if (mimeType.startsWith('image/') || fileType.includes('image')) {
+        grouped.images.push(attachment);
+      } else if (mimeType.startsWith('video/') || fileType.includes('video')) {
+        grouped.videos.push(attachment);
+      } else if (mimeType.startsWith('audio/') || fileType.includes('audio')) {
+        grouped.audio.push(attachment);
+      } else if (
+        mimeType.includes('pdf') ||
+        mimeType.includes('word') ||
+        mimeType.includes('excel') ||
+        mimeType.includes('powerpoint') ||
+        mimeType.includes('text/') ||
+        fileType.includes('document')
+      ) {
+        grouped.documents.push(attachment);
+      } else {
+        grouped.others.push(attachment);
       }
     })
 
     return grouped
-  }, [attachments])
+  }, [attachmentsWithInfo])
 
-  // Verificar si todos los attachments están disponibles
+  // No verificamos la disponibilidad aquí, lo dejamos para los componentes individuales
   const allAvailable = useMemo(() => {
     if (attachments.length === 0) return true
 
-    return attachments.every(attachment => {
-      const { isAvailable } = useAttachment(attachment.id)
-      return isAvailable
-    })
+    // La verificación real se hace en los componentes individuales
+    // Aquí solo asumimos que están disponibles si tienen la propiedad isAvailable
+    return attachments.every(attachment => attachment.isAvailable !== false)
   }, [attachments])
 
-  // Descargar todos los attachments
-  const downloadAll = async () => {
-    for (const attachment of attachments) {
-      const { downloadAndSave, attachmentInfo } = useAttachment(attachment.id)
-      await downloadAndSave(attachmentInfo?.originalName)
-    }
+  // Descargar todos los attachments - esta función debe ser usada solo desde componentes
+  // que ya tienen acceso a la función downloadAndSave para cada attachment
+  const downloadAll = () => {
+    return attachments.map(attachment => attachment.id)
   }
 
   return {

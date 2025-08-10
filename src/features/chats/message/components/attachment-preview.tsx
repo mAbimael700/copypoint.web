@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import {
-  DownloadIcon,
-  FileAudioIcon,
-  FileIcon,
-  FileTextIcon,
-  ImageIcon,
-  VideoIcon,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useAttachment } from '@/features/chats/hooks/useAttachment'
+import React, { useState } from 'react';
+import { DownloadIcon, FileAudioIcon, FileIcon, FileTextIcon, ImageIcon, VideoIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useAttachment } from '@/features/chats/hooks/useAttachment';
+import { useAuth } from '@/stores/authStore.ts'
+import AttachmentService from '@/features/chats/message/services/AttachmentService.ts'
+
 
 interface AttachmentPreviewProps {
   attachmentId: number | string
@@ -27,50 +23,74 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   showControls = true,
   onDownloadClick,
 }) => {
+  // Estado local para prevenir múltiples descargas
+  const [isLoading, setIsLoading] = useState(false)
+  const [loadError, setLoadError] = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const {
-    fileName,
-    fileSize,
 
-    fileType,
+  const { accessToken } = useAuth()
+  // Usamos solo la información básica, no las funciones que causan re-renderizados
+  const {
+    attachmentInfo,
     isAvailable,
     isLoadingInfo,
     isCheckingAvailability,
-    isDownloading,
-    isError,
-    downloadAndSave,
-    getPreviewUrl,
-    resetDownload,
+    fileType
   } = useAttachment(attachmentId)
 
-  // Cargar la previsualización cuando esté disponible y sea una imagen, video o audio
-  useEffect(() => {
-    if (
-      isAvailable &&
-      ['image', 'video', 'audio'].includes(fileType) &&
-      !previewUrl &&
-      !isError
-    ) {
-      const loadPreview = async () => {
-        const url = await getPreviewUrl()
-        setPreviewUrl(url)
-      }
-      loadPreview()
+  const fileName = attachmentInfo?.originalName || 'Archivo'
+  const fileSize = attachmentInfo?.fileSizeBytes ? formatFileSize(attachmentInfo.fileSizeBytes) : ''
+
+  // Manejar la descarga manualmente para evitar re-renderizados
+  const handleDownload = async () => {
+    if (isLoading || !isAvailable) return
+
+    try {
+      setIsLoading(true)
+      if (onDownloadClick) onDownloadClick()
+
+      // Descarga manual usando el servicio directamente
+
+
+      await AttachmentService.downloadAndCreateBlobUrl(attachmentId, accessToken, fileName)
+    } catch (error) {
+      console.error('Error al descargar:', error)
+      setLoadError(true)
+    } finally {
+      setIsLoading(false)
     }
-    // Limpiar la previsualización cuando cambie el attachmentId
-    return () => {
-      setPreviewUrl(null)
-      resetDownload()
+  }
+
+  // Cargar vista previa manualmente al hacer clic en vez de automáticamente
+  const handleLoadPreview = async () => {
+    if (previewUrl || isLoading || !isAvailable) return
+
+    try {
+      setIsLoading(true)
+
+      // Descarga manual para la vista previa
+
+      const blob = await AttachmentService.downloadAttachment(attachmentId, accessToken)
+      const url = URL.createObjectURL(blob)
+      setPreviewUrl(url)
+    } catch (error) {
+      console.error('Error al cargar vista previa:', error)
+      setLoadError(true)
+    } finally {
+      setIsLoading(false)
     }
-  }, [
-    attachmentId,
-    isAvailable,
-    fileType,
-    isError,
-    previewUrl,
-    getPreviewUrl,
-    resetDownload,
-  ])
+  }
+
+  // Función auxiliar para formatear tamaños de archivos
+  function formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes'
+
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
 
   // Determinar el icono según el tipo de archivo
   const getFileIcon = () => {
@@ -86,14 +106,6 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
       default:
         return <FileIcon className='h-6 w-6' />
     }
-  }
-
-  // Manejar la descarga
-  const handleDownload = () => {
-    if (onDownloadClick) {
-      onDownloadClick()
-    }
-    downloadAndSave(fileName)
   }
 
   // Si está cargando
@@ -113,7 +125,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   }
 
   // Si hay un error
-  if (isError) {
+  if (loadError) {
     return (
       <div
         className={cn(
@@ -143,7 +155,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
     )
   }
 
-  // Renderizado para imágenes
+  // Si es imagen y tiene previewUrl
   if (fileType === 'image' && previewUrl) {
     return (
       <div
@@ -166,6 +178,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
               variant='ghost'
               className='text-white'
               onClick={handleDownload}
+              disabled={isLoading}
             >
               <DownloadIcon className='mr-1 h-4 w-4' />
               Descargar
@@ -176,39 +189,28 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
     )
   }
 
-  // Renderizado para videos
-  if (fileType === 'video' && previewUrl) {
+  // Si es imagen pero no tiene previewUrl aún
+  if (fileType === 'image' && !previewUrl) {
     return (
       <div
         className={cn(
-          'group relative overflow-hidden rounded border',
+          'group relative overflow-hidden rounded border cursor-pointer p-3',
           className
         )}
+        onClick={handleLoadPreview}
       >
-        <video
-          src={previewUrl}
-          controls
-          className='w-full'
-          style={{ maxHeight: maxPreviewHeight }}
-        />
-      </div>
-    )
-  }
-
-  // Renderizado para audio
-  if (fileType === 'audio' && previewUrl) {
-    return (
-      <div className={cn('rounded border p-2', className)}>
-        <div className='mb-2 flex items-center gap-2'>
-          <FileAudioIcon className='h-5 w-5 text-blue-500' />
+        <div className='flex items-center gap-2'>
+          <ImageIcon className='h-5 w-5 text-blue-500' />
           <p className='truncate text-sm font-medium'>{fileName}</p>
         </div>
-        <audio src={previewUrl} controls className='w-full' />
+        <p className='mt-1 text-xs text-muted-foreground'>
+          {isLoading ? 'Cargando vista previa...' : 'Clic para previsualizar'}
+        </p>
       </div>
     )
   }
 
-  // Renderizado para otros tipos de archivos
+  // Para el resto de tipos de archivos
   return (
     <div
       className={cn(
@@ -227,13 +229,14 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
           variant='ghost'
           className='ml-2 flex-shrink-0'
           onClick={handleDownload}
-          disabled={isDownloading}
+          disabled={isLoading}
         >
           <DownloadIcon className='h-4 w-4' />
         </Button>
       )}
     </div>
   )
+
 }
 
 export default AttachmentPreview
