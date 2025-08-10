@@ -5,4 +5,5 @@ export const paymentKeys = {
   details: () => [...paymentKeys.all, 'detail'] as const,
   detail: (id: number) => [...paymentKeys.details(), id] as const,
   byCopypoint: (copypointId: number) => [...paymentKeys.lists(), { copypointId }] as const,
+  bySale: (saleId: number) => [...paymentKeys.lists(), { saleId }] as const,
 }

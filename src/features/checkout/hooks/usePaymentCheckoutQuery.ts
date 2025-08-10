@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { paymentCheckoutService } from '@/features/payments/services/PaymentCheckoutService';
-import { useAuth } from '@clerk/clerk-react';
+import { useAuth } from '@/stores/authStore.ts'
 
 export const usePaymentCheckoutQuery = (paymentId: number | string) => {
-  const { getToken } = useAuth();
+  const { accessToken } = useAuth();
 
   return useQuery({
-    queryKey: ['paymentCheckout', paymentId],
+    queryKey: ['paymentCheckout', paymentId, accessToken],
     queryFn: async () => {
-      const token = await getToken();
+      const token = accessToken;
       if (!token) throw new Error('Authentication token not available');
 
       return paymentCheckoutService.getPaymentCheckoutByPayment(

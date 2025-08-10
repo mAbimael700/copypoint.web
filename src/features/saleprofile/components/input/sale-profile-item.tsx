@@ -10,6 +10,7 @@ interface Props {
   saleProfile: SaleProfileResponse
   currentQuantity: number
   fieldIndex: number
+  isModified?: boolean
   handleQuantityChange: (
     profileId: number,
     serviceId: number,
@@ -32,13 +33,19 @@ export const SaleProfileItem = ({
   handleQuantityChange,
   handleValueChange,
   currentQuantity,
+  isModified = false,
   form,
 }: Props) => {
   return (
-    <li className='flex items-center justify-between py-2 h-15'>
+    <li className={`flex items-center justify-between py-2 h-15 ${isModified ? 'bg-amber-50/50 rounded px-2 border-l-2 border-amber-400' : ''}`}>
       <div className='space-y-1'>
-        <div>
+        <div className="flex items-center gap-1">
           {saleProfile.name} - <span>{saleProfile.description}</span>
+          {isModified && (
+            <span className="text-xs text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full">
+              Modificado
+            </span>
+          )}
         </div>
         <div className='text-muted-foreground text-sm'>
           {formatCurrency(saleProfile.unitPrice)}

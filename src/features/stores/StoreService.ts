@@ -1,7 +1,6 @@
 import { PageResponse } from "@/features/api/HttpResponse.type";
 import ApiHttpClient from "@/config/ApiHttpClient";
 import { StoreCreationDTO, StoreResponse } from "./Store.type";
-import { Service, ServiceCreationDTO } from "../services/Service.type";
 
 class StoreService {
     private static instance: StoreService;
@@ -31,31 +30,6 @@ class StoreService {
         return response.data;
     }
 
-
-    async getServicesAll(storeId: number | string, accessToken: string): Promise<PageResponse<Service>> {
-        const response = await ApiHttpClient.get<PageResponse<Service>>(
-            `${this.endpoint}/${storeId}/services`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
-        return response.data;
-    }
-
-    async createServices(
-        storeId: number | string,
-        accessToken: string,
-        data: ServiceCreationDTO
-    ): Promise<Service> {
-        const response = await ApiHttpClient.post<Service>(
-            `${this.endpoint}/${storeId}/services`,
-            data,
-            { headers: { Authorization: `Bearer ${accessToken}` }, }
-        );
-        return response.data;
-    }
 }
 
 export default StoreService.getInstance();

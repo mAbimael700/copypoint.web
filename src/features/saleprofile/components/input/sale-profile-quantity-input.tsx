@@ -57,22 +57,28 @@ export function SaleProfileQuantityDrawer({
     onValueChange(fieldName, profileId, serviceId, numValue)
   }
 
+  // Usar el valor del formulario para mantener la vista previa actualizada
+  const formValue = fieldIndex !== -1 ? currentQuantity : 1
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
         <div className='flex cursor-pointer items-center gap-2'>
           <PencilLine strokeWidth={1.25} height={20} />
           <div className='bg-primary text-primary-foreground border-background flex h-7 w-7 items-center justify-center rounded-full p-1.5 text-xs shadow-sm'>
-            {currentQuantity}
+            {formValue}
           </div>
         </div>
       </DrawerTrigger>
       <DrawerContent>
         <div className='mx-auto w-full max-w-sm'>
           <DrawerHeader>
-            <DrawerTitle>Quantity</DrawerTitle>
+            <DrawerTitle>Editar Cantidad</DrawerTitle>
             <DrawerDescription>
-              Set quantity for {profileName}
+              Ajusta la cantidad para: {profileName}
+              <p className="text-xs text-muted-foreground mt-1">
+                Los cambios se aplicarán al formulario y se guardarán cuando envíes el formulario
+              </p>
             </DrawerDescription>
           </DrawerHeader>
 
@@ -88,7 +94,7 @@ export function SaleProfileQuantityDrawer({
                     size='icon'
                     className='h-8 w-8 shrink-0 rounded-full'
                     onClick={() => onQuantityChange(profileId, serviceId, -1)}
-                    disabled={currentQuantity <= 1}
+                    disabled={formValue <= 1}
                   >
                     <Minus />
                     <span className='sr-only'>Decrease</span>
@@ -98,7 +104,7 @@ export function SaleProfileQuantityDrawer({
                       type='number'
                       id='quantity-currency'
                       className='w-full [appearance:textfield] border-none bg-transparent text-center text-7xl leading-none font-bold tracking-tighter focus:ring-0 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
-                      value={currentQuantity}
+                      value={formValue}
                       onChange={(e) => handleInputChange(e.target.value)}
                       onBlur={(e) => handleInputChange(e.target.value)}
                     />
@@ -123,7 +129,7 @@ export function SaleProfileQuantityDrawer({
           />
           <DrawerFooter>
             <DrawerClose>
-              <Button className='w-full'>Done</Button>
+              <Button className='w-full'>Aplicar al Formulario</Button>
             </DrawerClose>
           </DrawerFooter>
         </div>

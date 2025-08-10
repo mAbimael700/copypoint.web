@@ -1,12 +1,9 @@
-
 import { DataTable } from '@/components/data-table/data-table'
+import { usePaymentBySale } from '@/features/payments/hooks/usePayments.ts'
 import { columns } from './columns'
-import usePayments from '@/features/payments/hooks/usePayments.ts'
 
 export const DataTablePaymentsBySale = () => {
-  const { payments } = usePayments()
+  const { payments } = usePaymentBySale()
 
-  return (
-      <DataTable columns={columns} data={payments}/>
-  )
+  return <DataTable columns={columns} data={payments} />
 }

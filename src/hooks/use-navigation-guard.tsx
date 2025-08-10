@@ -57,6 +57,16 @@ export function useNavigationGuard(
         // Interceptar router.navigate
         const interceptedNavigate = (options: any) => {
             if (isBlocked) {
+                // Verificar si es una navegación real (a una ruta diferente)
+                const isNavToSamePath = 
+                    typeof options === 'object' && 
+                    options.to && 
+                    options.to.href === routerState.location.href;
+
+                if (isNavToSamePath) {
+                    return originalNavigate.call(router, options);
+                }
+
                 return new Promise<void>((resolve, reject) => {
                     setPendingNavigation(() => () => {
                         setIsBlocked(false) // Temporalmente desbloquear
@@ -237,21 +247,27 @@ export function useHookFormNavigationGuard<T extends FieldValues = FieldValues>(
     options: FormNavigationGuardOptions = {}
 ) {
     const defaultOptions: FormNavigationGuardOptions = {
-        title: "Discart changes?",
-        description: "You have made form changes. Are you sure want to leave without save?",
-        confirmText: "Discart",
-        cancelText: "Continue",
+        title: "¿Descartar cambios?",
+        description: "Has realizado cambios en el formulario. ¿Estás seguro de que quieres salir sin guardar?",
+        confirmText: "Descartar cambios",
+        cancelText: "Continuar editando",
         ...options
     }
 
+    // Usar un estado para rastrear si hay cambios sin guardar, combinando
+    // tanto el estado isDirty del formulario como las actualizaciones manuales
+    const [manuallyChanged, setManuallyChanged] = useState(false);
+    const isDirty = form.formState.isDirty || manuallyChanged;
+
     const { NavigationGuardDialog, setBlocked, isBlocked } = useNavigationGuard(
-        form.formState.isDirty,
+        isDirty,
         defaultOptions
     )
 
     // Función para desbloquear después de guardar exitosamente
     const markAsSaved = (newData?: T) => {
         setBlocked(false)
+        setManuallyChanged(false)
         if (newData) {
             form.reset(newData)
         } else {
@@ -260,11 +276,18 @@ export function useHookFormNavigationGuard<T extends FieldValues = FieldValues>(
         }
     }
 
+    // Función para marcar manualmente como modificado
+    const markAsChanged = () => {
+        setManuallyChanged(true)
+        setBlocked(true)
+    }
+
     return {
         NavigationGuardDialog,
         setBlocked,
         isBlocked,
         markAsSaved,
-        hasUnsavedChanges: form.formState.isDirty
+        markAsChanged,
+        hasUnsavedChanges: isDirty
     }
 }

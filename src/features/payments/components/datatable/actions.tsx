@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { Link2Icon, QrCodeIcon } from 'lucide-react'
+import { QrCodeIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import {
   DropdownMenu,
@@ -47,11 +47,9 @@ const PaymentActions = ({ payment }: Props) => {
             payment.status !== PaymentStatus.FAILED && (
               <>
                 <DropdownMenuItem onClick={handleOpen}>
-                  Share checkout <Link2Icon />{' '}
+                  Share checkout <QrCodeIcon />{' '}
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Share QR <QrCodeIcon />{' '}
-                </DropdownMenuItem>
+
                 <DropdownMenuSeparator />
               </>
             )}

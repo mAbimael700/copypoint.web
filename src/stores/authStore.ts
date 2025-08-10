@@ -3,6 +3,7 @@ import { AuthUser } from '@/features/auth/AuthUser.type'
 
 import Cookies from 'js-cookie'
 import { create } from 'zustand'
+import { toast } from 'sonner'
 
 const ACCESS_TOKEN = 'thisisjustarandomstring'
 
@@ -76,6 +77,7 @@ export const useAuthStore = create<AuthState>()(
             }
 
             return false
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (error) {
             return false
           } finally {
@@ -91,6 +93,7 @@ export const useAuthStore = create<AuthState>()(
             const response = await AuthService.getUserProfile(accessToken)
             get().auth.setUser(response)
             return true
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
           } catch (error) {
             return false
           }
@@ -105,7 +108,9 @@ export const useAuthStore = create<AuthState>()(
             try {
               await AuthService.logout(accessToken)
             } catch (error) {
-              console.error('Error en logout:', error)
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
+              toast.error('Error en logout: ' + error.message)
             }
           }
 
