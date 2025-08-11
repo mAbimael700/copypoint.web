@@ -2,22 +2,23 @@ import React from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import FormLayout from '@/components/layout/form-layout.tsx'
-import {
-  SaleProfileForm,
-  SaleProfilesFormValues,
-} from '@/features/saleprofile/components/form/sale-profile-form.tsx'
-import useSaleProfiles from '@/features/saleprofile/hooks/useSaleProfiles.ts'
+import { SaleProfileForm } from '@/features/saleprofile/components/form/sale-profile-form.tsx'
 import useCreateSaleProfileOperations from '@/features/saleprofile/hooks/useCreateSaleProfile.ts'
+import useSaleProfiles from '@/features/saleprofile/hooks/useSaleProfiles.ts'
 import { useSaleContext } from '@/features/sales/hooks/useSaleContext.ts'
+import { SaleProfilesFormValues } from '@/features/saleprofile/components/form/sale-form-schema.ts'
 
 const MutateSaleProfile = () => {
   const { currentSale } = useSaleContext()
   const { saleProfiles } = useSaleProfiles()
-  const { createSaleProfile, updateSaleProfile, isCreating, refetchSales } = useCreateSaleProfileOperations()
+  const { createSaleProfile, updateSaleProfile, isCreating, refetchSales } =
+    useCreateSaleProfileOperations()
   const navigate = useNavigate()
 
   // Lógica de procesamiento de perfiles extraída del formulario
-  async function handleSaleProfileSubmit(values: SaleProfilesFormValues): Promise<void> {
+  async function handleSaleProfileSubmit(
+    values: SaleProfilesFormValues
+  ): Promise<void> {
     try {
       // Obtener los perfiles actuales en la API
       const currentApiProfiles = saleProfiles || []
@@ -81,7 +82,6 @@ const MutateSaleProfile = () => {
 
       // Opcional: navegar de vuelta o hacer alguna acción post-submit
       // await navigate({ to: '/sales' })
-
     } catch (error: any) {
       console.error('Error al procesar perfiles:', error)
       toast.error(`Error al procesar perfiles: ${error.message}`)
@@ -107,11 +107,12 @@ const MutateSaleProfile = () => {
     >
       <SaleProfileForm
         defaultValues={{
-          profiles: saleProfiles?.map((sp) => ({
-            serviceId: sp.service.id,
-            profileId: sp.profileId,
-            quantity: sp.quantity,
-          })) || [],
+          profiles:
+            saleProfiles?.map((sp) => ({
+              serviceId: sp.service.id,
+              profileId: sp.profileId,
+              quantity: sp.quantity,
+            })) || [],
         }}
         handleSubmit={handleSaleProfileSubmit}
         isSubmitting={isCreating}

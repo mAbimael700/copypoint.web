@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const formSchema = z.object({
+export const saleProfileFormSchema = z.object({
     profiles: z.array(z.object({
         profileId: z.number().int(),
         serviceId: z.number().int(),
@@ -8,4 +8,4 @@ export const formSchema = z.object({
     })),
 })
 
-export type SaleProfilesFormValues = z.infer<typeof formSchema>
+export type SaleProfilesFormValues = z.infer<typeof saleProfileFormSchema>

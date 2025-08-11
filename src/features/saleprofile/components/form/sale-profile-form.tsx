@@ -1,6 +1,5 @@
 'use client'
 
-import { z } from 'zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
@@ -16,6 +15,10 @@ import { SaleProfileItem } from '@/features/saleprofile/components/input/sale-pr
 import useSaleProfiles from '@/features/saleprofile/hooks/useSaleProfiles.ts'
 import { ServiceSelector } from '@/features/services/components/selector/service-selector.tsx'
 import { useServiceContext } from '@/features/services/context/service-module-context.tsx'
+import {
+  saleProfileFormSchema,
+  SaleProfilesFormValues,
+} from '@/features/saleprofile/components/form/sale-form-schema.ts'
 
 type saleProfileInput =
   | 'profiles'
@@ -23,17 +26,7 @@ type saleProfileInput =
   | `profiles.${number}.profileId`
   | `profiles.${number}.quantity`
 
-const formSchema = z.object({
-  profiles: z.array(
-    z.object({
-      profileId: z.number().int(),
-      serviceId: z.number().int(),
-      quantity: z.number().int(),
-    })
-  ),
-})
 
-export type SaleProfilesFormValues = z.infer<typeof formSchema>
 
 export interface SaleProfileFormProps extends FormProps<SaleProfilesFormValues> {
   isSubmitting?: boolean
@@ -51,7 +44,7 @@ export function SaleProfileForm({
 
   // 1. Define your form.
   const form = useForm<SaleProfilesFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(saleProfileFormSchema),
     defaultValues,
   })
 
