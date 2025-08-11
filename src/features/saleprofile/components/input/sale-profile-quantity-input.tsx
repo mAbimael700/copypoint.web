@@ -18,7 +18,7 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form.tsx'
-import { SaleProfilesFormValues } from '../form/sale-profile-form.tsx'
+import { SaleProfilesFormValues } from '@/features/saleprofile/components/form/sale-form-schema.ts'
 
 interface SaleProfileQuantityDrawerProps {
   profileId: number
