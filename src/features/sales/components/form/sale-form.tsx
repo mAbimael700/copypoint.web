@@ -65,7 +65,7 @@ export const SaleForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className='flex-1 space-y-5 px-4'
       >
-        <CopypointCombobox handleOnClick={handleOnSelectCopypoint} />
+        <CopypointCombobox onCopypointSelect={handleOnSelectCopypoint} />
 
         <FormField
           control={form.control}

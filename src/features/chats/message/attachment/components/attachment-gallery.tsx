@@ -1,6 +1,6 @@
 import React from 'react'
 import { DownloadIcon, XIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils.ts'
 
 // Función auxiliar para formatear tamaños de archivos
 function formatFileSize(bytes?: number): string {
@@ -13,11 +13,11 @@ function formatFileSize(bytes?: number): string {
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import AttachmentPreview from './attachment-preview'
-import { Attachment } from '@/features/chats/types/Attachment.type'
-import { useAttachment } from '@/features/chats/hooks/useAttachment'
+import { Button } from '@/components/ui/button.tsx'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
+import AttachmentPreview from './attachment-preview.tsx'
+import { Attachment } from '@/features/chats/types/Attachment.type.ts'
+import { useAttachment } from '@/features/chats/hooks/useAttachment.ts'
 import { useAuth } from '@/stores/authStore.ts'
 import AttachmentService from '@/features/chats/message/services/AttachmentService.ts'
 

@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { DownloadIcon, FileAudioIcon, FileIcon, FileTextIcon, ImageIcon, VideoIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useAttachment } from '@/features/chats/hooks/useAttachment';
+import React, { useState } from 'react'
+import {
+  DownloadIcon,
+  FileAudioIcon,
+  FileIcon,
+  FileTextIcon,
+  ImageIcon,
+  VideoIcon,
+} from 'lucide-react'
 import { useAuth } from '@/stores/authStore.ts'
+import { cn } from '@/lib/utils.ts'
+import { Button } from '@/components/ui/button.tsx'
+import { Skeleton } from '@/components/ui/skeleton.tsx'
+import { useAttachment } from '@/features/chats/hooks/useAttachment.ts'
+import AttachmentSale from '@/features/chats/message/attachment/components/attachment-sale.tsx'
 import AttachmentService from '@/features/chats/message/services/AttachmentService.ts'
-
 
 interface AttachmentPreviewProps {
   attachmentId: number | string
@@ -35,11 +42,13 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
     isAvailable,
     isLoadingInfo,
     isCheckingAvailability,
-    fileType
+    fileType,
   } = useAttachment(attachmentId)
 
   const fileName = attachmentInfo?.originalName || 'Archivo'
-  const fileSize = attachmentInfo?.fileSizeBytes ? formatFileSize(attachmentInfo.fileSizeBytes) : ''
+  const fileSize = attachmentInfo?.fileSizeBytes
+    ? formatFileSize(attachmentInfo.fileSizeBytes)
+    : ''
 
   // Manejar la descarga manualmente para evitar re-renderizados
   const handleDownload = async () => {
@@ -51,8 +60,11 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
 
       // Descarga manual usando el servicio directamente
 
-
-      await AttachmentService.downloadAndCreateBlobUrl(attachmentId, accessToken, fileName)
+      await AttachmentService.downloadAndCreateBlobUrl(
+        attachmentId,
+        accessToken,
+        fileName
+      )
     } catch (error) {
       console.error('Error al descargar:', error)
       setLoadError(true)
@@ -70,7 +82,10 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
 
       // Descarga manual para la vista previa
 
-      const blob = await AttachmentService.downloadAttachment(attachmentId, accessToken)
+      const blob = await AttachmentService.downloadAttachment(
+        attachmentId,
+        accessToken
+      )
       const url = URL.createObjectURL(blob)
       setPreviewUrl(url)
     } catch (error) {
@@ -158,85 +173,90 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   // Si es imagen y tiene previewUrl
   if (fileType === 'image' && previewUrl) {
     return (
-      <div
-        className={cn(
-          'group relative overflow-hidden rounded border',
-          className
-        )}
-      >
-        <img
-          src={previewUrl}
-          alt={fileName}
-          className='w-full object-contain'
-          style={{ maxHeight: maxPreviewHeight }}
-        />
+      <AttachmentSale attachment={attachmentInfo}>
+        <div
+          className={cn(
+            'group bg-background hover:bg-accent relative overflow-hidden rounded border p-2 transition-colors',
+            className
+          )}
+        >
+          <img
+            src={previewUrl}
+            alt={fileName}
+            className='w-full object-contain'
+            style={{ maxHeight: maxPreviewHeight }}
+          />
 
-        {showControls && (
-          <div className='absolute inset-0 flex items-center justify-center gap-2 bg-black/30 opacity-0 transition-opacity group-hover:opacity-100'>
-            <Button
-              size='sm'
-              variant='ghost'
-              className='text-white'
-              onClick={handleDownload}
-              disabled={isLoading}
-            >
-              <DownloadIcon className='mr-1 h-4 w-4' />
-              Descargar
-            </Button>
-          </div>
-        )}
-      </div>
+          {showControls && (
+            <div className='absolute inset-0 flex items-center justify-center gap-2 bg-black/30 opacity-0 transition-opacity group-hover:opacity-100'>
+              <Button
+                size='sm'
+                variant='ghost'
+                className='text-white'
+                onClick={handleDownload}
+                disabled={isLoading}
+              >
+                <DownloadIcon className='mr-1 h-4 w-4' />
+                Descargar
+              </Button>
+            </div>
+          )}
+        </div>
+      </AttachmentSale>
     )
   }
 
   // Si es imagen pero no tiene previewUrl aún
   if (fileType === 'image' && !previewUrl) {
     return (
-      <div
-        className={cn(
-          'group relative overflow-hidden rounded border cursor-pointer p-3',
-          className
-        )}
-        onClick={handleLoadPreview}
-      >
-        <div className='flex items-center gap-2'>
-          <ImageIcon className='h-5 w-5 text-blue-500' />
-          <p className='truncate text-sm font-medium'>{fileName}</p>
+      <AttachmentSale attachment={attachmentInfo}>
+        <div
+          className={cn(
+            'group bg-background hover:bg-accent relative cursor-pointer overflow-hidden rounded border p-3 transition-colors',
+            className
+          )}
+          onClick={handleLoadPreview}
+        >
+          <div className='flex items-center gap-2'>
+            <ImageIcon className='h-5 w-5 text-blue-500' />
+            <p className='truncate text-sm font-medium'>{fileName}</p>
+          </div>
+          <p className='text-muted-foreground mt-1 text-xs'>
+            {isLoading ? 'Cargando vista previa...' : 'Clic para previsualizar'}
+          </p>
         </div>
-        <p className='mt-1 text-xs text-muted-foreground'>
-          {isLoading ? 'Cargando vista previa...' : 'Clic para previsualizar'}
-        </p>
-      </div>
+      </AttachmentSale>
     )
   }
 
   // Para el resto de tipos de archivos
   return (
-    <div
-      className={cn(
-        'flex items-center rounded border p-3 transition-colors hover:bg-gray-50',
-        className
-      )}
-    >
-      <div className='mr-3 text-blue-500'>{getFileIcon()}</div>
-      <div className='min-w-0 flex-1'>
-        <p className='truncate text-sm font-medium'>{fileName}</p>
-        <p className='text-muted-foreground text-xs'>{fileSize}</p>
+    <AttachmentSale attachment={attachmentInfo}>
+      <div
+        className={cn(
+          'hover:bg-accent bg-background flex items-center rounded border p-3 transition-colors',
+          className
+        )}
+      >
+        <div className='mr-3 text-blue-500'>{getFileIcon()}</div>
+        <div className='min-w-0 flex-1'>
+          <p className='truncate text-sm font-medium'>{fileName}</p>
+          <p className='text-muted-foreground text-xs'>{fileSize}</p>
+        </div>
+        {showControls && (
+          <Button
+            size='sm'
+            variant='ghost'
+            className='ml-2 flex-shrink-0'
+            onClick={handleDownload}
+            disabled={isLoading}
+          >
+            <DownloadIcon className='h-4 w-4' />
+          </Button>
+        )}
       </div>
-      {showControls && (
-        <Button
-          size='sm'
-          variant='ghost'
-          className='ml-2 flex-shrink-0'
-          onClick={handleDownload}
-          disabled={isLoading}
-        >
-          <DownloadIcon className='h-4 w-4' />
-        </Button>
-      )}
-    </div>
+    </AttachmentSale>
   )
-
 }
 
 export default AttachmentPreview

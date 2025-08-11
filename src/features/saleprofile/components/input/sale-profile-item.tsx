@@ -6,8 +6,21 @@ import { SaleProfileResponse } from '@/features/saleprofile/SaleProfile.type.ts'
 import { SaleProfilesFormValues } from '@/features/saleprofile/components/form/sale-form-schema.ts'
 import { SaleProfileQuantityDrawer } from '@/features/saleprofile/components/input/sale-profile-quantity-input.tsx'
 
+// Tipo extendido para permitir perfiles temporales que no están en la API
+type TempSaleProfile = {
+  profileId: number
+  name: string
+  description: string
+  unitPrice: number
+  quantity: number
+  service: {
+    id: number
+    name: string
+  }
+}
+
 interface Props {
-  saleProfile: SaleProfileResponse
+  saleProfile: SaleProfileResponse | TempSaleProfile
   currentQuantity: number
   fieldIndex: number
   isModified?: boolean

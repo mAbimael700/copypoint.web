@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator.tsx'
 import { DataTableSales } from '@/features/sales/components/datatable/data-table-sale.tsx'
 
 
-const AllSales = () => {
+const SaleList = () => {
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -41,4 +41,4 @@ const AllSales = () => {
   )
 }
 
-export default AllSales
+export default SaleList

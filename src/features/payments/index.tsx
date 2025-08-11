@@ -23,7 +23,7 @@ const Payments = () => {
 
       {/* ===== Content ===== */}
       <Main fixed>
-        <div>
+        <div className={'pb-2'}>
           <h1 className='text-2xl font-bold tracking-tight'>
             Payments
           </h1>

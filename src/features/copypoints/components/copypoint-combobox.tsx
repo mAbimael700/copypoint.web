@@ -15,19 +15,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext.ts'
 import { useStoreContext } from '@/features/stores/context/useStoreContext.ts'
 import type { CopypointResponse } from '../Copypoint.type'
 import useCopypoint from '../hooks/useCopypoint'
-import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext.ts'
 
 interface Props {
-  label?: string
-  handleOnClick: (s: CopypointResponse) => void
+  selectedCopypoint?: CopypointResponse | null
+  onCopypointSelect: (s: CopypointResponse) => void
+  placeholder?: string
 }
 
 export const CopypointCombobox = ({
-  handleOnClick,
-  label = 'Select copypoint',
+  onCopypointSelect,
+  placeholder = 'Select copypoint',
 }: Props) => {
   const { activeStore } = useStoreContext()
   const { copypoints } = useCopypoint(activeStore?.id || 0)
@@ -44,7 +45,7 @@ export const CopypointCombobox = ({
           aria-expanded={open}
           className='h-8 w-[200px] justify-between'
         >
-          {!currentCopypoint ? label : currentCopypoint.name}
+          {!currentCopypoint ? placeholder : currentCopypoint.name}
           <ChevronsUpDownIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
@@ -59,7 +60,7 @@ export const CopypointCombobox = ({
                   key={s.name}
                   value={s.name}
                   onSelect={() => {
-                    handleOnClick(s)
+                    onCopypointSelect(s)
                     setOpen(false)
                   }}
                 >

@@ -1,10 +1,19 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button.tsx'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { useCustomerServicePhoneContext } from '@/features/chats/context/useCustomerServicePhoneContext'
+import { CopypointResponse } from '@/features/copypoints/Copypoint.type'
 import { CopypointSelector } from '@/features/copypoints/components/copypoint-selector'
 import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext'
-import { useCustomerServicePhoneContext } from '@/features/chats/context/useCustomerServicePhoneContext'
 import PhoneSelector from './phone-selector'
-import { CopypointResponse } from '@/features/copypoints/Copypoint.type'
 
 interface CombinedCopypointPhoneSelectorProps {
   className?: string
@@ -14,12 +23,14 @@ interface CombinedCopypointPhoneSelectorProps {
   phonePlaceholder?: string
 }
 
-const CombinedCopypointPhoneSelector: React.FC<CombinedCopypointPhoneSelectorProps> = ({
+const CombinedCopypointPhoneSelector: React.FC<
+  CombinedCopypointPhoneSelectorProps
+> = ({
   className,
   copypointLabel = 'Copypoint',
-  phoneLabel = 'Teléfono',
-  copypointPlaceholder = 'Seleccionar copypoint',
-  phonePlaceholder = 'Seleccionar teléfono',
+  phoneLabel = 'Phone',
+  copypointPlaceholder = 'Select copypoint',
+  phonePlaceholder = 'Select phone',
 }) => {
   // Contextos
   const { setCurrentCopypoint } = useCopypointContext()
@@ -34,26 +45,39 @@ const CombinedCopypointPhoneSelector: React.FC<CombinedCopypointPhoneSelectorPro
   }
 
   return (
-    <div className={cn('space-y-4', className)}>
-      {/* Selector de Copypoint */}
-      <div className="space-y-1">
-        <p className="text-sm font-medium">{copypointLabel}</p>
-        <CopypointSelector 
-          placeholder={copypointPlaceholder}
-          className="w-full"
-          onCopypointSelect={handleCopypointSelect}
-        />
-      </div>
+    <Dialog>
+      <DialogTrigger className={buttonVariants({ variant: 'outline' })}>
+        Select phone
+      </DialogTrigger>
+      <DialogContent className={cn('space-y-2', className)}>
+        <DialogHeader>
+          <DialogTitle>Select customer service phone</DialogTitle>
+          <DialogDescription>
+            Choose a copypoint and select the associated customer service phone
+            number to establish communication.
+          </DialogDescription>
+        </DialogHeader>
 
-      {/* Selector de Teléfono */}
-      <PhoneSelector 
-        label={phoneLabel}
-        placeholder={phonePlaceholder}
-        defaultToFirst={true}
-      />
-    </div>
+        <div className={'space-y-4'}>
+          <div className='space-y-1'>
+            <p className='text-sm font-medium'>{copypointLabel}</p>
+            <CopypointSelector
+              placeholder={copypointPlaceholder}
+              className='w-full'
+              onCopypointSelect={handleCopypointSelect}
+            />
+          </div>
+
+          {/* Selector de Teléfono */}
+          <PhoneSelector
+            label={phoneLabel}
+            placeholder={phonePlaceholder}
+            defaultToFirst={true}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
 export default CombinedCopypointPhoneSelector
-

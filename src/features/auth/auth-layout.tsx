@@ -14,7 +14,6 @@ export default function AuthLayout({ children }: Props) {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundBlendMode: "multiply"
-
       }}
     >
       <div

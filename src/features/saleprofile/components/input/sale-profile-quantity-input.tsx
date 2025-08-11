@@ -1,3 +1,4 @@
+import React from 'react'
 import { Control, FieldPath } from 'react-hook-form'
 import { Minus, PencilLine, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
@@ -46,15 +47,27 @@ export function SaleProfileQuantityDrawer({
   currentQuantity,
   fieldIndex,
   control,
-  onQuantityChange,
   onValueChange,
 }: SaleProfileQuantityDrawerProps) {
   const fieldName =
     `profiles.${fieldIndex}.quantity` as FieldPath<SaleProfilesFormValues>
 
+  // Estado local para mantener el valor dentro del drawer
+  const [localValue, setLocalValue] = React.useState(currentQuantity)
+
+  // Actualizar el estado local cuando cambia currentQuantity (para mantener sincronización)
+  React.useEffect(() => {
+    setLocalValue(currentQuantity)
+  }, [currentQuantity])
+
   const handleInputChange = (value: string) => {
     const numValue = Math.max(1, Number(value) || 1)
-    onValueChange(fieldName, profileId, serviceId, numValue)
+    setLocalValue(numValue)
+  }
+
+  // Aplicar cambios al formulario cuando se cierra el drawer
+  const applyChanges = () => {
+    onValueChange(fieldName, profileId, serviceId, localValue)
   }
 
   // Usar el valor del formulario para mantener la vista previa actualizada
@@ -73,11 +86,12 @@ export function SaleProfileQuantityDrawer({
       <DrawerContent>
         <div className='mx-auto w-full max-w-sm'>
           <DrawerHeader>
-            <DrawerTitle>Editar Cantidad</DrawerTitle>
+            <DrawerTitle>Edit quantity</DrawerTitle>
             <DrawerDescription>
-              Ajusta la cantidad para: {profileName}
-              <p className="text-xs text-muted-foreground mt-1">
-                Los cambios se aplicarán al formulario y se guardarán cuando envíes el formulario
+              Adjust quantity for profile: {profileName}
+              <p className='text-muted-foreground mt-1 text-xs'>
+                The changes will be applied to the form and saved when you
+                submit the form.
               </p>
             </DrawerDescription>
           </DrawerHeader>
@@ -93,8 +107,8 @@ export function SaleProfileQuantityDrawer({
                     variant='outline'
                     size='icon'
                     className='h-8 w-8 shrink-0 rounded-full'
-                    onClick={() => onQuantityChange(profileId, serviceId, -1)}
-                    disabled={formValue <= 1}
+                    onClick={() => setLocalValue(Math.max(1, localValue - 1))}
+                    disabled={localValue <= 1}
                   >
                     <Minus />
                     <span className='sr-only'>Decrease</span>
@@ -104,7 +118,7 @@ export function SaleProfileQuantityDrawer({
                       type='number'
                       id='quantity-currency'
                       className='w-full [appearance:textfield] border-none bg-transparent text-center text-7xl leading-none font-bold tracking-tighter focus:ring-0 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
-                      value={formValue}
+                      value={localValue}
                       onChange={(e) => handleInputChange(e.target.value)}
                       onBlur={(e) => handleInputChange(e.target.value)}
                     />
@@ -114,7 +128,7 @@ export function SaleProfileQuantityDrawer({
                     variant='outline'
                     size='icon'
                     className='h-8 w-8 shrink-0 rounded-full'
-                    onClick={() => onQuantityChange(profileId, serviceId, 1)}
+                    onClick={() => setLocalValue(localValue + 1)}
                   >
                     <Plus />
                     <span className='sr-only'>Increase</span>
@@ -128,8 +142,10 @@ export function SaleProfileQuantityDrawer({
             )}
           />
           <DrawerFooter>
-            <DrawerClose>
-              <Button className='w-full'>Aplicar al Formulario</Button>
+            <DrawerClose asChild>
+              <Button className='w-full' onClick={applyChanges}>
+                Apply
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </div>

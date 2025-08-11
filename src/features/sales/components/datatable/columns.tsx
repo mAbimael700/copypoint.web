@@ -49,7 +49,7 @@ export const columns: ColumnDef<SaleResponse>[] = [
                 <div className="font-medium">
                     {new Intl.NumberFormat("es-MX", {
                         style: "currency",
-                        currency: currency.toString() === "MXN" ? "MXN" : "USD",
+                        currency: currency.toString()
                     }).format(total)}
                 </div>
             );

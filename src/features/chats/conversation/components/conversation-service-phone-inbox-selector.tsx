@@ -3,7 +3,7 @@ import CombinedCopypointPhoneSelector from '@/features/chats/components/combined
 
 const ConversationServicePhoneInboxSelector = () => {
   return (
-    <>
+    <div className={'flex w-full items-center justify-between gap-4'}>
       <div className='flex items-center gap-2'>
         <h1 className='text-2xl font-bold'>Inbox</h1>
         <IconMessages size={20} />
@@ -11,7 +11,7 @@ const ConversationServicePhoneInboxSelector = () => {
 
       {/* Diálogo para seleccionar copypoint */}
       <CombinedCopypointPhoneSelector />
-    </>
+    </div>
   )
 }
 

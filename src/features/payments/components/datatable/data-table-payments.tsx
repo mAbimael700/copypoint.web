@@ -5,10 +5,10 @@ import { CopypointResponse } from '@/features/copypoints/Copypoint.type'
 import { CopypointCombobox } from '@/features/copypoints/components/copypoint-combobox.tsx'
 import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext'
 import useCopypoints from '@/features/copypoints/hooks/useCopypoint'
+import usePayments from '@/features/payments/hooks/usePayments.ts'
 import { useStoreContext } from '@/features/stores/context/useStoreContext'
 import { PaymentResponse } from '../../types/Payment.type'
 import { columns } from './columns'
-import usePayments from '@/features/payments/hooks/usePayments.ts'
 
 export const DataTablePayments = () => {
   const { activeStore } = useStoreContext()
@@ -24,14 +24,17 @@ export const DataTablePayments = () => {
     if (copypoints.length === 1) return
 
     return (
-      <CopypointCombobox
-        handleOnClick={handleOnClick}
-        label={
-          currentCopypoint
-            ? copypoints.find((s) => s.name === currentCopypoint.name)?.name
-            : 'Seleccionar copypoint...'
-        }
-      />
+      <>
+        <div className={'text-sm font-semibold'}>Select copypoint</div>
+        <CopypointCombobox
+          onCopypointSelect={handleOnClick}
+          label={
+            currentCopypoint
+              ? copypoints.find((s) => s.name === currentCopypoint.name)?.name
+              : 'Seleccionar copypoint...'
+          }
+        />
+      </>
     )
   }
 

@@ -1,23 +1,24 @@
 import { useNavigate } from '@tanstack/react-router'
-
+import { Button } from '@/components/ui/button.tsx'
 import {
   Card,
+  CardAction,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card.tsx'
-
 import { Header } from '@/components/layout/header.tsx'
 import { Main } from '@/components/layout/main.tsx'
 import { ProfileDropdown } from '@/components/profile-dropdown.tsx'
 import { Search } from '@/components/search.tsx'
 import { ThemeSwitch } from '@/components/theme-switch.tsx'
-import SaleprofileResumeTable from '@/features/saleprofile/components/table/saleprofile-resume-table'
+import SaleprofileResumeTable from '@/features/saleprofile/components/table/saleprofile-resume-table.tsx'
 import useSaleProfiles from '@/features/saleprofile/hooks/useSaleProfiles.ts'
-import SummarySaleCard from '@/features/sales/components/card/summary-sale-card'
-import SummarySalePayment from '@/features/sales/components/card/summary-sale-payment'
+import { SaleStatus } from '@/features/sales/Sale.type.ts'
+import SaleAdditionalInfo from '@/features/sales/components/card/sale-additional-info.tsx'
+import SummarySaleCard from '@/features/sales/components/card/summary-sale-card.tsx'
+import SummarySalePayment from '@/features/sales/components/card/summary-sale-payment.tsx'
 import { useSaleContext } from '@/features/sales/hooks/useSaleContext.ts'
-import SaleAdditionalInfo from '@/features/sales/components/card/sale-additional-info'
 
 const SaleDetail = () => {
   const { currentSale } = useSaleContext()
@@ -39,6 +40,10 @@ const SaleDetail = () => {
     navigate({ to: '/sales/detail/add-payment' })
   }
 
+  const handleAddProfile = () => {
+    navigate({ to: '/sales/profiles' })
+  }
+
   return (
     <>
       <Header>
@@ -55,6 +60,11 @@ const SaleDetail = () => {
         <Card>
           <CardHeader>
             <CardTitle className='text-2xl'>Sale profiles</CardTitle>
+            <CardAction>
+              {currentSale.status != SaleStatus.COMPLETED && (
+                <Button onClick={handleAddProfile}>Add profile</Button>
+              )}
+            </CardAction>
           </CardHeader>
 
           <CardContent>

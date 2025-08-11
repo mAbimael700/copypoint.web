@@ -1,23 +1,21 @@
-'use client';
+'use client'
 
-import { z } from 'zod';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
-import { useHookFormNavigationGuard } from '@/hooks/use-navigation-guard.tsx';
-import { Button } from '@/components/ui/button.tsx';
-import { Form } from '@/components/ui/form.tsx';
-import { Separator } from '@/components/ui/separator.tsx';
-import { FormProps } from '@/components/FormProps.ts';
-import { ProfileResponse } from '@/features/profiles/Profile.type.ts';
-import { ProfilesCombobox } from '@/features/profiles/components/profile-combobox.tsx';
-import { useProfileByCopypointOperations } from '@/features/profiles/hooks/useProfiles.ts';
-import { SaleProfileItem } from '@/features/saleprofile/components/input/sale-profile-item.tsx';
-import useCreateSaleProfileOperations from '@/features/saleprofile/hooks/useCreateSaleProfile.ts';
-import useSaleProfiles from '@/features/saleprofile/hooks/useSaleProfiles.ts';
-import { ServiceSelector } from '@/features/services/components/selector/service-selector.tsx';
-import { useServiceContext } from '@/features/services/context/service-module-context.tsx';
-
+import { z } from 'zod'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
+import { useHookFormNavigationGuard } from '@/hooks/use-navigation-guard.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import { Form } from '@/components/ui/form.tsx'
+import { Separator } from '@/components/ui/separator.tsx'
+import { FormProps } from '@/components/FormProps.ts'
+import { ProfileResponse } from '@/features/profiles/Profile.type.ts'
+import { ProfilesCombobox } from '@/features/profiles/components/profile-combobox.tsx'
+import { useProfileByCopypointOperations } from '@/features/profiles/hooks/useProfiles.ts'
+import { SaleProfileItem } from '@/features/saleprofile/components/input/sale-profile-item.tsx'
+import useSaleProfiles from '@/features/saleprofile/hooks/useSaleProfiles.ts'
+import { ServiceSelector } from '@/features/services/components/selector/service-selector.tsx'
+import { useServiceContext } from '@/features/services/context/service-module-context.tsx'
 
 type saleProfileInput =
   | 'profiles'
@@ -37,29 +35,38 @@ const formSchema = z.object({
 
 export type SaleProfilesFormValues = z.infer<typeof formSchema>
 
+export interface SaleProfileFormProps extends FormProps<SaleProfilesFormValues> {
+  isSubmitting?: boolean
+}
+
 export function SaleProfileForm({
-  defaultValues = { profiles: [] },
-  handleSubmit,
-}: FormProps<SaleProfilesFormValues>) {
+                                  defaultValues = { profiles: [] },
+                                  handleSubmit,
+                                  isSubmitting = false,
+                                }: SaleProfileFormProps) {
   const { currentService } = useServiceContext()
-  const { profiles, isLoading: isLoadingProfiles } = useProfileByCopypointOperations()
+  const { profiles, isLoading: isLoadingProfiles } =
+    useProfileByCopypointOperations()
   const { saleProfiles } = useSaleProfiles()
-  const { createSaleProfile, updateSaleProfile, isCreating, refetchSales } =
-    useCreateSaleProfileOperations()
 
   // 1. Define your form.
   const form = useForm<SaleProfilesFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   })
+
   // 4. Usar useFieldArray con el tipo explícito
   const profilesArray = useFieldArray({
     control: form.control,
     name: 'profiles',
   })
 
-      const { NavigationGuardDialog, hasUnsavedChanges, markAsSaved, markAsChanged } =
-    useHookFormNavigationGuard(form)
+  const {
+    NavigationGuardDialog,
+    hasUnsavedChanges,
+    markAsSaved,
+    markAsChanged,
+  } = useHookFormNavigationGuard(form)
 
   function handleOnProfileSelect(profile: ProfileResponse) {
     if (currentService) {
@@ -134,92 +141,39 @@ export function SaleProfileForm({
     _serviceId: number,
     value: number
   ) {
-    // Solo actualizar el formulario localmente
-    form.setValue(fieldName as saleProfileInput, value)
+    // Actualizar el formulario localmente y forzar re-render
+    form.setValue(fieldName as saleProfileInput, value, {
+      shouldDirty: true,    // Marca el campo como modificado
+      shouldTouch: true,    // Marca el campo como tocado
+      shouldValidate: true  // Activa la validación
+    })
+
+    // También podemos actualizar manualmente el estado del formulario
+    form.trigger(fieldName as saleProfileInput)
+
     markAsChanged() // Marcar como modificado para la protección de navegación
   }
 
-    // Function to handle form submission and update all profiles
-      async function onSubmit(values: SaleProfilesFormValues) {
-
-        try {
-      // Obtener los perfiles actuales en la API
-      const currentApiProfiles = saleProfiles || []
-
-      // Clasificar los perfiles del formulario
-      const formProfiles = values.profiles
-
-      // Perfiles que necesitan ser creados (no existen en la API)
-      const profilesToCreate = formProfiles.filter(formProfile => {
-        return !currentApiProfiles.some(apiProfile => 
-          apiProfile.profileId === formProfile.profileId && 
-          apiProfile.service.id === formProfile.serviceId
-        )
-      })
-
-      // Perfiles que necesitan ser actualizados (existen pero con valores diferentes)
-      const profilesToUpdate = formProfiles.filter(formProfile => {
-        const apiProfile = currentApiProfiles.find(ap => 
-          ap.profileId === formProfile.profileId && 
-          ap.service.id === formProfile.serviceId
-        )
-        return apiProfile && apiProfile.quantity !== formProfile.quantity
-      })
-
-      // Crear nuevos perfiles
-      const createPromises = profilesToCreate.map(profile => {
-        return createSaleProfile({
-          profileId: profile.profileId,
-          serviceId: profile.serviceId,
-          quantity: profile.quantity
-        })
-      })
-
-      // Actualizar perfiles existentes
-      const updatePromises = profilesToUpdate.map(profile => {
-        return updateSaleProfile(profile.profileId, profile.serviceId, {
-          quantity: profile.quantity
-        })
-      })
-
-      // Ejecutar todas las operaciones
-      await Promise.all([...createPromises, ...updatePromises])
-      await refetchSales()
-
-      const createdCount = profilesToCreate.length
-      const updatedCount = profilesToUpdate.length
-      let message = ''
-
-      if (createdCount > 0 && updatedCount > 0) {
-        message = `${createdCount} perfiles creados y ${updatedCount} actualizados correctamente`
-      } else if (createdCount > 0) {
-        message = `${createdCount} perfiles creados correctamente`
-      } else if (updatedCount > 0) {
-        message = `${updatedCount} perfiles actualizados correctamente`
-      } else {
-        message = 'No se realizaron cambios en los perfiles'
-      }
-
-      toast.success(message)
-
+  // Función simplificada de envío
+  async function onSubmit(values: SaleProfilesFormValues) {
+    try {
       // Marcar el formulario como guardado para que no se active el diálogo de navegación
       markAsSaved()
 
-      // Llamar al manejador de envío proporcionado como prop
+      // Delegar la lógica de procesamiento al componente padre
       if (handleSubmit) {
-        handleSubmit(values)
+        await handleSubmit(values)
       }
     } catch (error: any) {
-      toast.error(`Error al procesar perfiles: ${error.message}`)
+      // El error ya se maneja en el componente padre, pero revertimos el estado
+      markAsChanged()
+      toast.error('Form submission error:', error)
     }
-      }
+  }
 
-      return (
+  return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='w-full space-y-8'
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-8'>
         <div className='space-y-4'>
           <div className='text-xs font-semibold'>SERVICES</div>
           <ServiceSelector />
@@ -228,19 +182,41 @@ export function SaleProfileForm({
           <ProfilesCombobox
             handleOnSelect={handleOnProfileSelect}
             profiles={profiles || []}
-            disabled={isCreating || isLoadingProfiles}
+            disabled={isSubmitting || isLoadingProfiles}
           />
         </div>
 
         <Separator />
 
-        {saleProfiles && saleProfiles.length > 0 && (
+        {((saleProfiles && saleProfiles.length > 0) ||
+          form.watch('profiles').length > 0) && (
           <div className='space-y-6'>
-            {/* Agrupar los perfiles por servicio */}
-            {Array.from(
-              // Crear un Set con las descripciones únicas de servicio
-              new Set(saleProfiles.map((sp) => sp.service.name))
-            ).map((serviceDescription) => (
+            {/* Obtener todos los servicios únicos de la API y del formulario */}
+            {(() => {
+              // Obtener servicios desde saleProfiles
+              const apiServices = saleProfiles
+                ? Array.from(new Set(saleProfiles.map((sp) => sp.service.name)))
+                : []
+
+              // Obtener IDs de servicios desde el formulario
+              const formServiceIds = form
+                .watch('profiles')
+                .map((profile) => profile.serviceId)
+
+              // Combinar servicios
+              const allServices = apiServices
+
+              // Agregar el servicio actual si tiene perfiles en el formulario y no está ya incluido
+              if (
+                currentService &&
+                formServiceIds.includes(currentService.id) &&
+                !apiServices.includes(currentService.name)
+              ) {
+                allServices.push(currentService.name)
+              }
+
+              return allServices
+            })().map((serviceDescription) => (
               <div key={serviceDescription} className='space-y-3'>
                 {/* Título del servicio */}
                 <div className='text-xs font-semibold uppercase'>
@@ -249,24 +225,28 @@ export function SaleProfileForm({
 
                 {/* Listar los perfiles que pertenecen a este servicio */}
                 <ul className='space-y-2'>
-                  {saleProfiles
-                    .filter((sp) => sp.service.name === serviceDescription)
-                    .map((sp) => {
-                      const fieldIndex = form
-                        .watch('profiles')
-                        .findIndex(
-                          (field) =>
-                            field.profileId === sp.profileId &&
-                            field.serviceId === sp.service.id
-                        )
+                  {/* Mostrar perfiles existentes en la API */}
+                  {saleProfiles &&
+                    saleProfiles
+                      .filter((sp) => sp.service.name === serviceDescription)
+                      .map((sp) => {
+                        const fieldIndex = form
+                          .watch('profiles')
+                          .findIndex(
+                            (field) =>
+                              field.profileId === sp.profileId &&
+                              field.serviceId === sp.service.id
+                          )
 
-                                              // Obtener la cantidad actual del formulario (si existe) o usar la cantidad de la API
-                                              const formQuantity = fieldIndex !== -1 
-                        ? form.watch(`profiles.${fieldIndex}.quantity`) 
-                        : sp.quantity
+                        // Obtener la cantidad actual del formulario (si existe) o usar la cantidad de la API
+                        const formQuantity =
+                          fieldIndex !== -1
+                            ? form.watch(`profiles.${fieldIndex}.quantity`)
+                            : sp.quantity
 
                         // Determinar si el perfil ha sido modificado (cantidad diferente a la original)
-                        const isModified = fieldIndex !== -1 && formQuantity !== sp.quantity
+                        const isModified =
+                          fieldIndex !== -1 && formQuantity !== sp.quantity
 
                         return (
                           <SaleProfileItem
@@ -276,12 +256,92 @@ export function SaleProfileForm({
                             saleProfile={sp}
                             currentQuantity={formQuantity}
                             isModified={isModified}
-                          handleRemoveProfile={handleRemoveProfile}
-                          handleQuantityChange={handleQuantityChange}
-                          handleValueChange={handleValueChange}
-                        />
+                            handleRemoveProfile={handleRemoveProfile}
+                            handleQuantityChange={handleQuantityChange}
+                            handleValueChange={handleValueChange}
+                          />
+                        )
+                      })}
+
+                  {/* Mostrar perfiles nuevos que solo existen en el formulario */}
+                  {(() => {
+                    // Encontrar el servicio actual basado en el nombre de descripción
+                    const serviceId =
+                      currentService &&
+                      currentService.name === serviceDescription
+                        ? currentService.id
+                        : null
+
+                    if (!serviceId) return null
+
+                    // Filtrar perfiles que están solo en el formulario (no en la API)
+                    const newProfiles = form
+                      .watch('profiles')
+                      .filter((formProfile) => {
+                        // Si no es del servicio actual, ignorar
+                        if (formProfile.serviceId !== serviceId) return false
+
+                        // Verificar si ya existe en la API
+                        return !saleProfiles?.some(
+                          (apiProfile) =>
+                            apiProfile.profileId === formProfile.profileId &&
+                            apiProfile.service.id === formProfile.serviceId
+                        )
+                      })
+
+                    return newProfiles.map((newProfile) => {
+                      // Buscar el perfil en la lista de perfiles disponibles
+                      const profileData = profiles?.find(
+                        (p) => p.id === newProfile.profileId
                       )
-                    })}
+                      if (!profileData) return null
+
+                      // Encontrar el índice en el formulario
+                      const fieldIndex = form
+                        .watch('profiles')
+                        .findIndex(
+                          (field) =>
+                            field.profileId === newProfile.profileId &&
+                            field.serviceId === serviceId
+                        )
+
+                      // Crear un objeto saleProfile temporal para mostrar
+                      const tempSaleProfile = {
+                        profileId: newProfile.profileId,
+                        name: profileData.name,
+                        description: profileData.description,
+                        unitPrice: profileData.unitPrice,
+                        quantity: newProfile.quantity,
+                        service: {
+                          id: serviceId,
+                          name: serviceDescription,
+                        },
+                      }
+
+                      return (
+                        <div
+                          key={`new-${newProfile.profileId}`}
+                          className='relative'
+                        >
+                          <div className='absolute top-0 right-0 z-10 translate-x-1/2 -translate-y-1/2'>
+                            <span className='rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800'>
+                              New
+                            </span>
+                          </div>
+                          <SaleProfileItem
+                            form={form}
+                            fieldIndex={fieldIndex}
+                            saleProfile={tempSaleProfile}
+                            currentQuantity={newProfile.quantity}
+                            isModified={true}
+                            handleRemoveProfile={handleRemoveProfile}
+                            handleQuantityChange={handleQuantityChange}
+                            handleValueChange={handleValueChange}
+                          />
+                        </div>
+                      )
+                    })
+                  })()}
                 </ul>
 
                 <Separator />
@@ -291,37 +351,55 @@ export function SaleProfileForm({
         )}
 
         {hasUnsavedChanges && (
-          <div className='flex items-center gap-2 text-sm text-amber-600 bg-amber-50 p-3 rounded-md'>
+          <div className='flex items-center gap-2 rounded-md bg-amber-50 p-3 text-sm text-amber-600'>
             <span>⚠️</span>
-            <div className="flex flex-col gap-1">
-              <span>Estás viendo una vista previa de los cambios. Los perfiles se crearán o actualizarán únicamente cuando hagas clic en el botón de envío.</span>
+            <div className='flex flex-col gap-1'>
+              <span>
+                You are viewing a preview of the changes. Profiles will only be
+                created or updated when you click the submit button.
+              </span>
               {saleProfiles && (
-                <div className="text-xs">
+                <div className='text-xs'>
                   {(() => {
                     // Obtener los perfiles actuales en la API y en el formulario
-                    const formProfiles = form.getValues('profiles');
-                    const currentApiProfiles = saleProfiles;
+                    const formProfiles = form.getValues('profiles')
+                    const currentApiProfiles = saleProfiles
 
                     // Contar perfiles nuevos (no existen en la API)
-                    const newProfilesCount = formProfiles.filter(fp => 
-                      !currentApiProfiles.some(ap => ap.profileId === fp.profileId && ap.service.id === fp.serviceId)
-                    ).length;
+                    const newProfilesCount = formProfiles.filter(
+                      (fp) =>
+                        !currentApiProfiles.some(
+                          (ap) =>
+                            ap.profileId === fp.profileId &&
+                            ap.service.id === fp.serviceId
+                        )
+                    ).length
 
                     // Contar perfiles modificados (existen pero con valores diferentes)
-                    const modifiedProfilesCount = formProfiles.filter(fp => {
-                      const apiProfile = currentApiProfiles.find(ap => 
-                        ap.profileId === fp.profileId && ap.service.id === fp.serviceId
-                      );
-                      return apiProfile && apiProfile.quantity !== fp.quantity;
-                    }).length;
+                    const modifiedProfilesCount = formProfiles.filter((fp) => {
+                      const apiProfile = currentApiProfiles.find(
+                        (ap) =>
+                          ap.profileId === fp.profileId &&
+                          ap.service.id === fp.serviceId
+                      )
+                      return apiProfile && apiProfile.quantity !== fp.quantity
+                    }).length
 
                     // Crear mensaje con el conteo
-                    const parts = [];
-                    if (newProfilesCount > 0) parts.push(`${newProfilesCount} ${newProfilesCount === 1 ? 'perfil nuevo' : 'perfiles nuevos'}`);
-                    if (modifiedProfilesCount > 0) parts.push(`${modifiedProfilesCount} ${modifiedProfilesCount === 1 ? 'perfil modificado' : 'perfiles modificados'}`);
+                    const parts = []
+                    if (newProfilesCount > 0)
+                      parts.push(
+                        `${newProfilesCount} ${newProfilesCount === 1 ? 'new profile' : 'new profiles'}`
+                      )
+                    if (modifiedProfilesCount > 0)
+                      parts.push(
+                        `${modifiedProfilesCount} ${modifiedProfilesCount === 1 ? 'modified profile' : 'modified profiles'}`
+                      )
 
-                    return parts.length ? `Cambios pendientes: ${parts.join(' y ')}` : null;
-                  })()} 
+                    return parts.length
+                      ? `Pending changes: ${parts.join(' y ')}`
+                      : null
+                  })()}
                 </div>
               )}
             </div>
@@ -331,8 +409,12 @@ export function SaleProfileForm({
         {/* Renderizar explícitamente el diálogo de confirmación de navegación */}
         <NavigationGuardDialog />
 
-        <Button type='submit' disabled={isCreating}>
-          {isCreating ? 'Procesando...' : hasUnsavedChanges ? 'Guardar Cambios en Perfiles' : 'Confirmar Perfiles'}
+        <Button type='submit' disabled={isSubmitting}>
+          {isSubmitting
+            ? 'Processing...'
+            : hasUnsavedChanges
+              ? 'Save'
+              : 'Confirm'}
         </Button>
       </form>
     </Form>

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import AllSales from '@/features/sales/components/AllSales.tsx'
+import SaleList from '@/features/sales/screens/sale-list.tsx'
 
 export const Route = createFileRoute('/_authenticated/sales/all/')({
-  component: AllSales,
+  component: SaleList,
 })
 

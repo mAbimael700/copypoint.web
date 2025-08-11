@@ -3,7 +3,7 @@ import { Paperclip } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import AttachmentPreview from './attachment-preview'
+import AttachmentPreview from '../attachment/components/attachment-preview.tsx'
 import { Attachment } from '@/features/chats/types/Attachment.type'
 
 interface MessageAttachmentsProps {
