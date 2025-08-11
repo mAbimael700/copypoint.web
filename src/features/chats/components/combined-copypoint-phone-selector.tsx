@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button.tsx'
 import {
@@ -9,10 +9,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { useCustomerServicePhoneContext } from '@/features/chats/context/useCustomerServicePhoneContext'
 import { CopypointResponse } from '@/features/copypoints/Copypoint.type'
 import { CopypointSelector } from '@/features/copypoints/components/copypoint-selector'
 import { useCopypointContext } from '@/features/copypoints/context/useCopypointContext'
+import useCopypoint from '@/features/copypoints/hooks/useCopypoint.ts'
+import { useStoreContext } from '@/features/stores/context/useStoreContext.ts'
 import PhoneSelector from './phone-selector'
 
 interface CombinedCopypointPhoneSelectorProps {
@@ -33,16 +34,21 @@ const CombinedCopypointPhoneSelector: React.FC<
   phonePlaceholder = 'Select phone',
 }) => {
   // Contextos
-  const { setCurrentCopypoint } = useCopypointContext()
-  const { setCurrentPhone } = useCustomerServicePhoneContext()
+  const { activeStore } = useStoreContext()
+  const { currentCopypoint, setCurrentCopypoint } = useCopypointContext()
+  const { copypoints } = useCopypoint(activeStore?.id || 0)
 
   // Handler para la selección de copypoint
   const handleCopypointSelect = (copypoint: CopypointResponse) => {
     // Actualizar el copypoint en el contexto
     setCurrentCopypoint(copypoint)
-    // Resetear el teléfono cuando cambia el copypoint
-    setCurrentPhone(null)
   }
+
+  useEffect(() => {
+    if (!currentCopypoint && copypoints.length > 0) {
+      setCurrentCopypoint(copypoints[0])
+    }
+  }, [])
 
   return (
     <Dialog>

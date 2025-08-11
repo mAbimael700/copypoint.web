@@ -1,8 +1,7 @@
 import React from 'react'
-import { XIcon, FileIcon, ImageIcon, VideoIcon, AudioIcon, FileTextIcon } from 'lucide-react'
-import { useAttachmentStore, useAttachmentActions } from '@/features/chats/stores/attachment-store'
-import { useAttachment } from '@/features/chats/hooks/useAttachment'
-import { Button } from '@/components/ui/button'
+import { XIcon, FileIcon, ImageIcon, VideoIcon, FileAudioIcon, FileTextIcon } from 'lucide-react'
+import { useAttachmentStore, useAttachmentActions } from '@/features/chats/stores/attachment-store.ts'
+import { Button } from '@/components/ui/button.tsx'
 
 interface AttachmentsListProps {
   showActions?: boolean
@@ -21,7 +20,6 @@ const AttachmentsList: React.FC<AttachmentsListProps> = ({
   const clearAttachmentsForSale = useAttachmentStore(state => state.clearAttachmentsForSale)
 
   const { processAttachmentForSale } = useAttachmentActions()
-  const { getReadableFileSize } = useAttachment()
 
   // Si no hay attachments, mostrar mensaje
   if (attachmentsForSale.length === 0) {
@@ -36,8 +34,8 @@ const AttachmentsList: React.FC<AttachmentsListProps> = ({
   const renderFileIcon = (mimeType: string) => {
     if (mimeType.startsWith('image/')) return <ImageIcon className="h-4 w-4" />
     if (mimeType.startsWith('video/')) return <VideoIcon className="h-4 w-4" />
-    if (mimeType.startsWith('audio/')) return <AudioIcon className="h-4 w-4" />
-    if (mimeType.startsWith('application/pdf') || mimeType.includes('document')) 
+    if (mimeType.startsWith('audio/')) return <FileAudioIcon className="h-4 w-4" />
+    if (mimeType.startsWith('application/pdf') || mimeType.includes('document'))
       return <FileTextIcon className="h-4 w-4" />
 
     return <FileIcon className="h-4 w-4" />
@@ -58,7 +56,7 @@ const AttachmentsList: React.FC<AttachmentsListProps> = ({
                   {attachment.originalName}
                 </p>
                 <p className="text-xs text-gray-500">
-                  {getReadableFileSize(attachment.fileSizeBytes)}
+
                 </p>
               </div>
             </div>

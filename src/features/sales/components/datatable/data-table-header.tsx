@@ -29,11 +29,6 @@ const DataTableHeader = (_: Table<SaleResponse>) => {
       <div className={'text-sm font-semibold'}>Select copypoint</div>
       <CopypointCombobox
         onCopypointSelect={handleOnClick}
-        label={
-          currentCopypoint
-            ? copypoints.find((s) => s.name === currentCopypoint.name)?.name
-            : 'Select copypoint...'
-        }
       />
     </>
   )
