@@ -9,6 +9,7 @@ export interface AttachmentResponse {
   isAvailable: boolean
   dateCreated: string
   dateDownloaded?: string
+  pages: number
 }
 
 export interface PresignedUrlResponse {
@@ -31,6 +32,7 @@ export interface Attachment {
   mimeType?: string
   fileSizeBytes?: number
   isAvailable?: boolean
+
 }
 
 // Tipos de archivos soportados para renderizado especial

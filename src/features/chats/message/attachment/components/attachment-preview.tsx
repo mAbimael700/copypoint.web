@@ -14,6 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton.tsx'
 import { useAttachment } from '@/features/chats/hooks/useAttachment.ts'
 import AttachmentSale from '@/features/chats/message/attachment/components/attachment-sale.tsx'
 import AttachmentService from '@/features/chats/message/services/AttachmentService.ts'
+import { formatFileSize } from '@/features/chats/message/attachment/util/formatFileSize.ts'
 
 interface AttachmentPreviewProps {
   attachmentId: number | string
@@ -97,15 +98,7 @@ const AttachmentPreview: React.FC<AttachmentPreviewProps> = ({
   }
 
   // Función auxiliar para formatear tamaños de archivos
-  function formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes'
 
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-  }
 
   // Determinar el icono según el tipo de archivo
   const getFileIcon = () => {

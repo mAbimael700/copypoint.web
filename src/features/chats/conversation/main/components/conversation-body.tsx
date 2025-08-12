@@ -1,6 +1,7 @@
 import Background from '@/assets/chats/background.png'
 import ConversationMessageInput from '@/features/chats/conversation/main/components/conversation-message-input.tsx'
 import MessageList from '@/features/chats/message/components/message-list.tsx'
+import SaleFloatingPanel from '@/features/chats/conversation/main/components/sale-floating-panel.tsx'
 
 const ConversationBody = () => {
   return (
@@ -15,6 +16,8 @@ const ConversationBody = () => {
       ></div>
 
       {/* Contenido encima */}
+      {/* Panel flotante para gestión de ventas */}
+      <SaleFloatingPanel />
       <div className="relative flex size-full flex-1">
         <div className="chat-text-container relative -mr-4 flex flex-1 flex-col overflow-y-hidden">
           <div className="chat-flex flex h-40 w-full grow flex-col-reverse justify-start gap-4 overflow-y-auto py-2 pr-4 pb-4">

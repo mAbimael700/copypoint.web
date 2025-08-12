@@ -1,3 +1,5 @@
+import { AttachmentResponse } from '@/features/chats/types/Attachment.type.ts'
+
 export interface SaleProfileResponse {
   saleId: number
   profileId: number
@@ -10,4 +12,5 @@ export interface SaleProfileResponse {
   unitPrice: number
   quantity: number
   subtotal: number
+  attachment: AttachmentResponse
 }

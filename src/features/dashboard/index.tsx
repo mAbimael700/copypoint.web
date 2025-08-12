@@ -1,225 +1,238 @@
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Header } from '@/components/layout/header'
+import { useMemo } from 'react'
+import { format } from 'date-fns'
+import { subDays } from 'date-fns/fp'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
-import { ThemeSwitch } from '@/components/theme-switch'
-import { Overview } from './components/overview'
-import { RecentSales } from './components/recent-sales'
+import { useSalesTimeline, useSalesByCopypoint, usePaymentStatusDistribution, usePaymentMethodDistribution, useTopServices } from '@/features/dashboard/hooks/useDashboard'
+import { formatCurrency } from '@/lib/utils.currency'
+import { Loader2 } from 'lucide-react'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { Line, LineChart, CartesianGrid, XAxis, YAxis, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts'
 
 export default function Dashboard() {
+  // Rango de fechas por defecto: últimos 30 días
+  const { startDate, endDate } = useMemo(() => {
+    const end = new Date()
+    const start = subDays(30)(end)
+    return {
+      startDate: format(start, 'yyyy-MM-dd'),
+      endDate: format(end, 'yyyy-MM-dd'),
+    }
+  }, [])
 
+  const salesTimelineQuery = useSalesTimeline({ startDate, endDate })
+  const salesByCopypointQuery = useSalesByCopypoint({ startDate, endDate })
+  const paymentStatusQuery = usePaymentStatusDistribution({ startDate, endDate })
+  const paymentMethodQuery = usePaymentMethodDistribution({ startDate, endDate })
+  const topServicesQuery = useTopServices({ startDate, endDate, limit: 5 })
+
+  const isLoading =
+    salesTimelineQuery.isLoading ||
+    salesByCopypointQuery.isLoading ||
+    paymentStatusQuery.isLoading ||
+    paymentMethodQuery.isLoading ||
+    topServicesQuery.isLoading
+
+  const metrics = salesTimelineQuery.data?.metrics
+  const successRate = paymentStatusQuery.data?.metrics.successRate
+
+  // Paleta fija de colores (hex)
+  const COLORS = {
+    sales: '#6366F1', // Indigo 500
+    txs: '#10B981', // Emerald 500
+    revenue: '#F59E0B', // Amber 500
+    top: '#3B82F6', // Blue 500
+    methods: '#8B5CF6', // Violet 500
+  }
+
+  // Colores para gráfico de pastel (segmentos distintos)
+  const PIE_COLORS = [
+    '#6366F1', // indigo
+    '#10B981', // emerald
+    '#F59E0B', // amber
+    '#EF4444', // red
+    '#3B82F6', // blue
+    '#A855F7', // purple
+    '#14B8A6', // teal
+    '#F97316', // orange
+  ]
 
   return (
     <Main>
-      <div>
-        Working on...
+      <div className='mb-6'>
+        <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
+        <p className='text-muted-foreground text-sm'>
+          Rango: {startDate} — {endDate}
+        </p>
       </div>
+
+      {isLoading ? (
+        <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+          <Loader2 className='h-4 w-4 animate-spin' /> Cargando datos...
+        </div>
+      ) : (
+        <div className='space-y-6'>
+          {/* Métricas principales */}
+          <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+            <Card>
+              <CardHeader className='pb-2'>
+                <CardTitle className='text-sm'>Ventas totales</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {metrics ? formatCurrency(metrics.totalSales) : '—'}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className='pb-2'>
+                <CardTitle className='text-sm'>Transacciones</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {metrics?.totalTransactions?.toLocaleString() ?? '—'}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className='pb-2'>
+                <CardTitle className='text-sm'>Promedio por transacción</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {metrics ? formatCurrency(metrics.averagePerTransaction) : '—'}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className='pb-2'>
+                <CardTitle className='text-sm'>Tasa de éxito</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='text-2xl font-bold'>
+                  {typeof successRate === 'number' ? `${successRate.toFixed(1)}%` : '—'}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Gráficas de línea: Ventas y Transacciones */}
+          <div className='grid gap-4 md:grid-cols-2'>
+            <Card>
+              <CardHeader>
+                <CardTitle>Ventas en el tiempo</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer className='w-full' config={{}}>
+                  <LineChart data={salesTimelineQuery.data?.timeline || []} margin={{ left: 12, right: 12 }}>
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='date' tickMargin={8} />
+                    <YAxis tickFormatter={(v) => `${v}`} />
+                    <ChartTooltip content={<ChartTooltipContent nameKey='Ventas' labelKey='date' />} />
+                    <Line type='monotone' dataKey='totalSales' stroke={COLORS.sales} strokeWidth={2} dot={false} />
+                  </LineChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Transacciones en el tiempo</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer className='w-full' config={{}}>
+                  <LineChart data={salesTimelineQuery.data?.timeline || []} margin={{ left: 12, right: 12 }}>
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='date' tickMargin={8} />
+                    <YAxis tickFormatter={(v) => `${v}`} />
+                    <ChartTooltip content={<ChartTooltipContent nameKey='Transacciones' labelKey='date' />} />
+                    <Line type='monotone' dataKey='transactionCount' stroke={COLORS.txs} strokeWidth={2} dot={false} />
+                  </LineChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Barras: Ventas por Copypoint y Top Servicios */}
+          <div className='grid gap-4 md:grid-cols-2'>
+            <Card>
+              <CardHeader>
+                <CardTitle>Ventas por copypoint</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer className='w-full' config={{}}>
+                  <BarChart data={(salesByCopypointQuery.data?.salesByLocation || []).slice(0, 8)} margin={{ left: 12, right: 12 }}>
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='copypointName' tickMargin={8} interval={0} angle={-25} height={60} textAnchor='end' />
+                    <YAxis tickFormatter={(v) => `${v}`} />
+                    <ChartTooltip content={<ChartTooltipContent nameKey='Ventas' labelKey='copypointName' />} />
+                    <Bar dataKey='totalSales' fill={COLORS.revenue} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Top servicios por ingresos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer className='w-full' config={{}}>
+                  <BarChart data={topServicesQuery.data?.topServices || []} margin={{ left: 12, right: 12 }}>
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='serviceName' tickMargin={8} interval={0} angle={-25} height={60} textAnchor='end' />
+                    <YAxis tickFormatter={(v) => `${v}`} />
+                    <ChartTooltip content={<ChartTooltipContent nameKey='Ingresos' labelKey='serviceName' />} />
+                    <Bar dataKey='totalRevenue' fill={COLORS.top} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Pastel: Estado de pagos */}
+          <div className='grid gap-4 md:grid-cols-2'>
+            <Card>
+              <CardHeader>
+                <CardTitle>Distribución por estado de pagos</CardTitle>
+              </CardHeader>
+              <CardContent className='flex items-center justify-center'>
+                <ChartContainer className='w-full max-w-xl' config={{}}>
+                  <PieChart>
+                    <Pie data={paymentStatusQuery.data?.statusDistribution || []} dataKey='count' nameKey='status' outerRadius={110} label>
+                      {(paymentStatusQuery.data?.statusDistribution || []).map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Legend />
+                    <ChartTooltip content={<ChartTooltipContent nameKey='status' />} />
+                  </PieChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Distribución por método de pago</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ChartContainer className='w-full' config={{}}>
+                  <BarChart data={paymentMethodQuery.data?.distribution || []} margin={{ left: 12, right: 12 }}>
+                    <CartesianGrid strokeDasharray='3 3' />
+                    <XAxis dataKey='methodDescription' tickMargin={8} interval={0} angle={-25} height={60} textAnchor='end' />
+                    <YAxis tickFormatter={(v) => `${v}`} />
+                    <ChartTooltip content={<ChartTooltipContent nameKey='usageCount' labelKey='methodDescription' />} />
+                    <Bar dataKey='usageCount' fill={COLORS.methods} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
     </Main>
   )
-  return (
-    <>
-      {/* ===== Top Heading ===== */}
-      <Header>
-        <TopNav links={topNav} />
-        <div className='ml-auto flex items-center space-x-4'>
-          <Search />
-          <ThemeSwitch />
-          <ProfileDropdown />
-        </div>
-      </Header>
-
-      {/* ===== Main ===== */}
-      <Main>
-        <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          <div className='flex items-center space-x-2'>
-            <Button>Download</Button>
-          </div>
-        </div>
-        <Tabs
-          orientation='vertical'
-          defaultValue='overview'
-          className='space-y-4'
-        >
-          <div className='w-full overflow-x-auto pb-2'>
-            <TabsList>
-              <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='analytics' disabled>
-                Analytics
-              </TabsTrigger>
-              <TabsTrigger value='reports' disabled>
-                Reports
-              </TabsTrigger>
-              <TabsTrigger value='notifications' disabled>
-                Notifications
-              </TabsTrigger>
-            </TabsList>
-          </div>
-          <TabsContent value='overview' className='space-y-4'>
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Total Revenue
-                  </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
-                  <p className='text-muted-foreground text-xs'>
-                    +20.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Subscriptions
-                  </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
-                    <circle cx='9' cy='7' r='4' />
-                    <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
-                  <p className='text-muted-foreground text-xs'>
-                    +180.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <rect width='20' height='14' x='2' y='5' rx='2' />
-                    <path d='M2 10h20' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
-                  <p className='text-muted-foreground text-xs'>
-                    +19% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    Active Now
-                  </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='text-muted-foreground h-4 w-4'
-                  >
-                    <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
-                  <p className='text-muted-foreground text-xs'>
-                    +201 since last hour
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-            <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-              <Card className='col-span-1 lg:col-span-4'>
-                <CardHeader>
-                  <CardTitle>Overview</CardTitle>
-                </CardHeader>
-                <CardContent className='pl-2'>
-                  <Overview />
-                </CardContent>
-              </Card>
-              <Card className='col-span-1 lg:col-span-3'>
-                <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>
-                    You made 265 sales this month.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RecentSales />
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </Main>
-    </>
-  )
 }
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: 'dashboard/overview',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
-]

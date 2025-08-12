@@ -1,10 +1,11 @@
 import { UseFormReturn } from 'react-hook-form'
-import { X } from 'lucide-react'
+import { X, Paperclip } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils.currency.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { SaleProfileResponse } from '@/features/saleprofile/SaleProfile.type.ts'
 import { SaleProfilesFormValues } from '@/features/saleprofile/components/form/sale-form-schema.ts'
 import { SaleProfileQuantityDrawer } from '@/features/saleprofile/components/input/sale-profile-quantity-input.tsx'
+import { Badge } from '@/components/ui/badge'
 
 // Tipo extendido para permitir perfiles temporales que no están en la API
 type TempSaleProfile = {
@@ -49,6 +50,9 @@ export const SaleProfileItem = ({
   isModified = false,
   form,
 }: Props) => {
+  // Verificar si el perfil tiene un attachment
+  const hasAttachment = 'attachment' in saleProfile && saleProfile.attachment
+
   return (
     <li className={`flex items-center justify-between py-2 h-15 ${isModified ? 'bg-amber-50/50 rounded px-2 border-l-2 border-amber-400' : ''}`}>
       <div className='space-y-1'>
@@ -63,6 +67,21 @@ export const SaleProfileItem = ({
         <div className='text-muted-foreground text-sm'>
           {formatCurrency(saleProfile.unitPrice)}
         </div>
+        
+        {/* Indicador de attachment */}
+        {hasAttachment && (
+          <div className='flex items-center gap-2 text-xs text-blue-600'>
+            <Paperclip className='h-3 w-3' />
+            <span className='font-medium'>
+              {saleProfile.attachment.originalName}
+            </span>
+            {saleProfile.attachment.pages && (
+              <Badge variant='outline' className='text-xs px-1.5 py-0.5'>
+                {saleProfile.attachment.pages} páginas
+              </Badge>
+            )}
+          </div>
+        )}
       </div>
 
       <div className='flex items-center gap-5'>

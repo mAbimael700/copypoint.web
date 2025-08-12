@@ -55,6 +55,7 @@ import { Route as AuthenticatedSalesDetailIndexImport } from './routes/_authenti
 import { Route as AuthenticatedSalesAllIndexImport } from './routes/_authenticated/sales/all/index'
 import { Route as AuthenticatedCopypointsPhonesIndexImport } from './routes/_authenticated/copypoints/phones/index'
 import { Route as AuthenticatedCopypointsIntegrationsIndexImport } from './routes/_authenticated/copypoints/integrations/index'
+import { Route as AuthenticatedSalesProfilesAttachmentsImport } from './routes/_authenticated/sales/profiles/attachments'
 import { Route as AuthenticatedCopypointsPhonesCreateImport } from './routes/_authenticated/copypoints/phones/create'
 import { Route as AuthenticatedSalesDetailAddPaymentIndexImport } from './routes/_authenticated/sales/detail/add-payment/index'
 import { Route as AuthenticatedPaymentsMercadoPagoAddPaymentIndexImport } from './routes/_authenticated/payments/mercado-pago/add-payment/index'
@@ -350,6 +351,13 @@ const AuthenticatedCopypointsIntegrationsIndexRoute =
   AuthenticatedCopypointsIntegrationsIndexImport.update({
     id: '/copypoints/integrations/',
     path: '/copypoints/integrations/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+
+const AuthenticatedSalesProfilesAttachmentsRoute =
+  AuthenticatedSalesProfilesAttachmentsImport.update({
+    id: '/sales/profiles/attachments',
+    path: '/sales/profiles/attachments',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -651,6 +659,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCopypointsPhonesCreateImport
       parentRoute: typeof AuthenticatedRouteImport
     }
+    '/_authenticated/sales/profiles/attachments': {
+      id: '/_authenticated/sales/profiles/attachments'
+      path: '/sales/profiles/attachments'
+      fullPath: '/sales/profiles/attachments'
+      preLoaderRoute: typeof AuthenticatedSalesProfilesAttachmentsImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/copypoints/integrations/': {
       id: '/_authenticated/copypoints/integrations/'
       path: '/copypoints/integrations'
@@ -779,6 +794,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedCopypointsPhonesCreateRoute: typeof AuthenticatedCopypointsPhonesCreateRoute
+  AuthenticatedSalesProfilesAttachmentsRoute: typeof AuthenticatedSalesProfilesAttachmentsRoute
   AuthenticatedCopypointsIntegrationsIndexRoute: typeof AuthenticatedCopypointsIntegrationsIndexRoute
   AuthenticatedCopypointsPhonesIndexRoute: typeof AuthenticatedCopypointsPhonesIndexRoute
   AuthenticatedSalesAllIndexRoute: typeof AuthenticatedSalesAllIndexRoute
@@ -811,6 +827,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedCopypointsPhonesCreateRoute:
     AuthenticatedCopypointsPhonesCreateRoute,
+  AuthenticatedSalesProfilesAttachmentsRoute:
+    AuthenticatedSalesProfilesAttachmentsRoute,
   AuthenticatedCopypointsIntegrationsIndexRoute:
     AuthenticatedCopypointsIntegrationsIndexRoute,
   AuthenticatedCopypointsPhonesIndexRoute:
@@ -914,6 +932,7 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/copypoints/phones/create': typeof AuthenticatedCopypointsPhonesCreateRoute
+  '/sales/profiles/attachments': typeof AuthenticatedSalesProfilesAttachmentsRoute
   '/copypoints/integrations': typeof AuthenticatedCopypointsIntegrationsIndexRoute
   '/copypoints/phones': typeof AuthenticatedCopypointsPhonesIndexRoute
   '/sales/all': typeof AuthenticatedSalesAllIndexRoute
@@ -962,6 +981,7 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
   '/copypoints/phones/create': typeof AuthenticatedCopypointsPhonesCreateRoute
+  '/sales/profiles/attachments': typeof AuthenticatedSalesProfilesAttachmentsRoute
   '/copypoints/integrations': typeof AuthenticatedCopypointsIntegrationsIndexRoute
   '/copypoints/phones': typeof AuthenticatedCopypointsPhonesIndexRoute
   '/sales/all': typeof AuthenticatedSalesAllIndexRoute
@@ -1015,6 +1035,7 @@ export interface FileRoutesById {
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
   '/_authenticated/copypoints/phones/create': typeof AuthenticatedCopypointsPhonesCreateRoute
+  '/_authenticated/sales/profiles/attachments': typeof AuthenticatedSalesProfilesAttachmentsRoute
   '/_authenticated/copypoints/integrations/': typeof AuthenticatedCopypointsIntegrationsIndexRoute
   '/_authenticated/copypoints/phones/': typeof AuthenticatedCopypointsPhonesIndexRoute
   '/_authenticated/sales/all/': typeof AuthenticatedSalesAllIndexRoute
@@ -1068,6 +1089,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/copypoints/phones/create'
+    | '/sales/profiles/attachments'
     | '/copypoints/integrations'
     | '/copypoints/phones'
     | '/sales/all'
@@ -1115,6 +1137,7 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/copypoints/phones/create'
+    | '/sales/profiles/attachments'
     | '/copypoints/integrations'
     | '/copypoints/phones'
     | '/sales/all'
@@ -1166,6 +1189,7 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
     | '/_authenticated/copypoints/phones/create'
+    | '/_authenticated/sales/profiles/attachments'
     | '/_authenticated/copypoints/integrations/'
     | '/_authenticated/copypoints/phones/'
     | '/_authenticated/sales/all/'
@@ -1253,6 +1277,7 @@ export const routeTree = rootRoute
         "/_authenticated/tasks/",
         "/_authenticated/users/",
         "/_authenticated/copypoints/phones/create",
+        "/_authenticated/sales/profiles/attachments",
         "/_authenticated/copypoints/integrations/",
         "/_authenticated/copypoints/phones/",
         "/_authenticated/sales/all/",
@@ -1416,6 +1441,10 @@ export const routeTree = rootRoute
     },
     "/_authenticated/copypoints/phones/create": {
       "filePath": "_authenticated/copypoints/phones/create.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/sales/profiles/attachments": {
+      "filePath": "_authenticated/sales/profiles/attachments.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/copypoints/integrations/": {

@@ -217,7 +217,7 @@ export function SaleProfileForm({
                 </div>
 
                 {/* Listar los perfiles que pertenecen a este servicio */}
-                <ul className='space-y-2'>
+                <ul className='space-y-6'>
                   {/* Mostrar perfiles existentes en la API */}
                   {saleProfiles &&
                     saleProfiles
