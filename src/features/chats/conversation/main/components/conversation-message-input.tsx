@@ -36,6 +36,7 @@ const ConversationMessageInput = () => {
           <span className='sr-only'>Chat Text Box</span>
           <input
             type='text'
+            disabled
             placeholder='Type your messages...'
             className='h-8 w-full bg-inherit focus-visible:outline-hidden'
           />
